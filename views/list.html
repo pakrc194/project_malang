@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list</title>
+</head>
+<body>
+    <h1>list</h1>
+     <table border="">
+        {%for perf in res%}
+            <tr>
+                <td>{{perf.id}}</td>
+                <td>{{perf.name}}</td>
+                <td>{{perf.location}}</td>
+                <td>{{perf.seat_class}}</td>
+            </tr>    
+        {%endfor%}
+    </table>
+    <a href="/perf/upload">등록</a>
+</body>
+</html>

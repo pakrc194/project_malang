@@ -1,0 +1,12 @@
+db
+func
+img
+routes
+views
+
+
+
+
+
+[npm install]
+npm i express multer nunjucks mysql2
