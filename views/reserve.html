@@ -10,7 +10,7 @@
 <body>
     <!-- <h1>좌석선택하기</h1> -->
     <div class="Big">
-        <div class="musical_name">뮤지컬 〈MAD HATTER〉</div>
+        <!-- <div class="musical_name">뮤지컬 〈MAD HATTER〉</div> -->
         <div class="musical_info">
             <div class="musical_seat">
 
@@ -18,15 +18,21 @@
 
             </div>
             <div class="seat_aside">
-                <div>
-                    뮤지컬 〈MAD HATTER〉
+                <div class="m_title">
+                    <div>뮤지컬 〈MAD HATTER〉긴 이름의 뮤지컬 테스트 긴 이름의</div>
+                    <div class="show_th">{{res[0].name}}</div>
                 </div>
+                
                 <div  class="choiceDate">
                     {% include 'minicalendar.html' %}
                 </div>
-                <div>좌석 안내</div>
-                <div>선택 좌석 정보</div>
-                <div>좌석 선택 완료</div>
+                <div class="seatG">좌석 안내
+                    R석
+                </div>
+                <div class="seatC">선택 좌석 정보</div>
+                <div class="doneBtn">
+                    <div class="seat_tot_price">좌석의 가격 합산 정보</div>
+                    <input type="button" value="좌석 선택 완료"></div>
             </div>
         </div>
     </div>

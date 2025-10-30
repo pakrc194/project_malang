@@ -87,8 +87,56 @@
 }
 
 .seat_aside {
+    position: relative;
     align-items: center;
     text-align: center;
     border: 1px solid #000;
     width: 400px;
+    height: 800px;
+}
+
+.seat_aside > .m_title > div:first-of-type {
+    font-size: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    height: 70px;
+    line-height: 30px;
+}
+
+.show_th {
+    height: 30px;
+}
+
+.m_title {
+    height: 100px;
+    background-color: #dbf;
+}
+
+.seatG {
+    height: 100px;
+    line-height: 100px;
+    background-color: #3cf;
+}
+
+.seatC {
+    height: 100px;
+    line-height: 100px;
+    background-color: #aaf;
+}
+
+.doneBtn {
+    height: 100px;
+    /* line-height: 100px; */
+    background-color: #afa;
+    bottom: 0;
+}
+
+.doneBtn > .seat_tot_price {
+    line-height: 30px;
+    height: 30px;
+}
+
+.seat_tot_price + input {
+    height: 50px;
+    width: 300px;
 }

@@ -79,7 +79,7 @@
     height: 260px;
     text-align: center;
     font-size: 13px;
-    background-color: #ff0;
+    /* background-color: #ff0; */
 }
 
 .section {
@@ -93,7 +93,7 @@
 .hallway {
     width: 800px;
     height: 10px;
-    background-color: #ff0;
+    /* background-color: #ff0; */
 }
 
 .seat_ {
