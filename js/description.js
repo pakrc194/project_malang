@@ -6,6 +6,6 @@ function click_poster(){
 
 function ck_big(){
     console.log('큰 포스터 클릭')
-    document.querySelector("body").style.overflow = "none"
     document.querySelector(".big_poster").style.display = "none"
+    document.querySelector("body").style.overflow = "visible"
 }

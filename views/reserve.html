@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌석선택하기</title>
+    <link rel="stylesheet" href="../style/reserve.css">
+
+</head>
+<body>
+    <!-- <h1>좌석선택하기</h1> -->
+    <div class="Big">
+        <div class="musical_name">뮤지컬 〈MAD HATTER〉</div>
+        <div class="musical_info">
+            <div class="musical_seat">
+
+                {%  include 'seatB1.html' %}
+
+            </div>
+            <div class="seat_aside">
+                <div>
+                    뮤지컬 〈MAD HATTER〉
+                </div>
+                <div  class="choiceDate">
+                    {% include 'minicalendar.html' %}
+                </div>
+                <div>좌석 안내</div>
+                <div>선택 좌석 정보</div>
+                <div>좌석 선택 완료</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

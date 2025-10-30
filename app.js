@@ -13,6 +13,7 @@ nunjucks.configure('views', {
 
 app.use('/style', express.static(path.join(__dirname, 'style')))
 app.use('/img', express.static(path.join(__dirname, 'img')))
+app.use('/js', express.static(path.join(__dirname, 'js')))
 
 
 const perfRouter = require('./routes/perfRouter')

@@ -1,0 +1,94 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.Big {
+    width: 1200px;
+    margin: auto;
+}
+.musical_name {
+    height: 70px;
+    /* text-align: center; */
+    font-size: 40px;
+    line-height: 70px;
+}
+.des_main {
+    border: 1px solid #f00;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.musical_info {
+    border: 1px solid #000;
+    display: flex;
+    width: 1200px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.musical_seat {
+    width: 800px;
+}
+
+.musical_info > img{
+    width: 250px;
+    height: 350px;
+}
+
+.actor {
+    /* height: 200px; */
+    background-color: #faa;
+}
+
+.actor > img {
+    /* height: 200px; */
+    width: 1200px;
+}
+
+.story {
+    /* height: 200px; */
+    background-color: #afa;
+    align-items: center;
+    text-align: center;
+}
+.story > img {
+    width: 1200px;
+}
+
+.seat {
+    /* height: 200px; */
+    background-color: #dbf;
+}
+.seat > img {
+    width: 1200px;
+}
+
+.casting {
+    /* height: 200px; */
+    background-color: #aaf;
+}
+.casting > img {
+    width: 1200px;
+}
+
+.review {
+    /* height: 200px; */
+    background-color: #3cf;
+}
+.review > img {
+    width: 1200px;
+}
+
+.footer {
+    /* height: 200px; */
+    background-color: #f77;
+}
+.footer > img {
+    width: 1200px;
+}
+
+.seat_aside {
+    align-items: center;
+    text-align: center;
+    border: 1px solid #000;
+    width: 400px;
+}

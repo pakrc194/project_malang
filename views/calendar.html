@@ -137,7 +137,7 @@
 
             document.querySelector(".reserve").onclick = function() {
                 console.log(cc())
-                fetch(`/temp`, {
+                fetch(`/desc/temp`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(cc())
@@ -205,7 +205,7 @@
             <div class="time"></div>
         </div>
         <div>
-            <form action="/reserve" target="_blank">
+            <form action="/desc/reserve" target="_blank">
                 <input type="submit" value="예매하기" class="reserve">
             </form>
         </div>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seat</title>
+    <link rel="stylesheet" href="../style/seatB1.css">
+    <script src="../js/seatB1.js"></script>
+    <!-- <script>
+        window.onload = ()=>{
+            let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+            let row = ["first", "second", "third"]
+            let color = ["red", "green", "blue"]
+            for(let aa = 0; aa < 3; aa++) {
+
+                for (let i = 0; i < 10; i++) {
+                    for (let j = 0; j < 12; j++) {
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${area[aa*3]} ${i+1} ${j+1}" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 12*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+    
+                for (let i = 0; i < 10; i++) {
+                    for (let j = 0; j < 12; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${area[aa*3+1]} ${i+1} ${j+1}" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 12*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+    
+                for (let i = 0; i < 10; i++) {
+                    for (let j = 0; j < 12; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${area[aa*3+2]} ${i+1} ${j+1}" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 12*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+            }
+
+        }
+        var cnt = 0
+        // 예매 개수 4개로 제한
+        function ck_cnt(obj) {
+            
+            if (obj.checked == true){
+                ++cnt
+            }
+            else {
+                --cnt
+            }
+            console.log(obj.value, cnt)
+            if (cnt > 4){
+                alert('선택 안됨')
+                obj.checked = false
+                --cnt
+            }
+
+            
+        }
+    </script> -->
+</head>
+<body>
+    <!-- <h1>대공연장1 좌석표</h1> -->
+    <div class="seat_wrapper">
+        <div class="first">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <div class="hallway"></div>
+
+        <div class="second">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <div class="hallway"></div>
+        <div class="third">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <!-- <input type="checkbox"> -->
+    </div>
+</body>
+</html>

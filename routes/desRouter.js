@@ -11,11 +11,12 @@ nunjucks.configure('views', {
 
 // 상세페이지
 router.get('/', (req, res)=>{
-    // res.send("이동")
     res.render("description.html")
 })
 
-router.get('/desc/reserve', (req, res)=>{
+let arr={}
+
+router.get('/reserve', (req, res)=>{
     res.render("reserve.html", arr)
 })
 
