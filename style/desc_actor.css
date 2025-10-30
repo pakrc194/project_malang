@@ -1,0 +1,53 @@
+.act_wrapper {
+    width: 1200px;
+    height: 200px;
+    background-color: palegreen;
+}
+.casting {
+    position: relative;
+    width: 1200px;
+    height: 50px;
+    background-color: beige;
+}
+
+.casting_schedule {
+    width: 120px;
+    height: 40px;
+    position: absolute;
+    right: 30px;
+    top: 5px;
+}
+
+.letter_casting {
+    height: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+.actor_box{
+    display: flex;
+    height: 150px;
+    justify-content: space-evenly;
+}
+
+.ind_actor {
+    width: 150px;
+    height: 150px;
+    background-color: pink;
+    text-align: center;
+}
+
+.ind_actor > img{
+    width: 100px;
+    height: 100px;
+}
+
+.actor_name{
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.cast_name {
+    font-size: 10px;
+}
