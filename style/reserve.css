@@ -114,7 +114,7 @@
 
 .seatG {
     height: 100px;
-    line-height: 100px;
+    /* line-height: 100px; */
     background-color: #3cf;
 }
 
