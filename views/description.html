@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뮤지컬 상세페이지</title>
+    <link rel="stylesheet" href="../style/description.css">
+
+    <script src="../js/description.js"></script>
+    
+</head>
+<body>
+    <div class="big_poster" onclick="ck_big()"><img src="../img/mad_hatter.png"><div class="b_p_tx">클릭하여 창 나가기</div></div>
+    <div class="Big">
+        <div class="site_header">
+            사이트 로고 - 메인화면 헤더 가져오기
+        </div>
+        <div class="musical_name">뮤지컬 〈MAD HATTER〉</div>
+        <div class="des_main">
+            <div class="musical_info">
+                <!-- <a href="/main_poster" target="_blank"> -->
+                    <img class="main_poster" onclick="click_poster()" src="../img/mad_hatter.png">
+                <!-- </a> -->
+                <div class="musical_description">
+                    <div>
+                        장소<br/>
+                        공연기간<br/>
+                        공연시간<br/>
+                        관람연령<br/>
+                        가격
+                    </div>
+                    <div>
+                        대공연장<br/>
+                        2025.10.22 ~ 2026.01.18<br/>
+                        100분<br/>
+                        14세 이상 관람가<br/>
+                        전석 66,000원
+                    </div>
+                </div>
+            </div>
+            <div  class="choiceDate">
+                {% include 'calendar.html' %}
+            </div>
+        </div>
+        <div class="actor">
+            <img src="../img/actor.png" alt="">
+            배우정보 - html 따로 만들기
+        </div>
+        <div class="story">
+            <img src="../img/story1.jpg" alt="">
+
+            뮤지컬 스토리 (시놉시스 등) - 이미지
+        </div>
+        <div class="seat">
+            <img src="../img/seat.jpg" alt="">
+            공연장 좌석배치도 (공연장에 맞춰서 만든 배치도)
+        </div>
+        <div class="casting">
+            <img src="../img/casting.jpg" alt="">
+            배역소개 - 이미지
+        </div>
+        <div class="review">
+            <img src="../assets/review.png" alt="">
+            후기 - 댓글창처럼 만들기
+        </div>
+        <div class="footer">
+            <img src="../img/footer.png" alt="">
+            푸터 - 메인화면 푸터 가져오기
+        </div>
+    </div>
+</body>
+</html>
