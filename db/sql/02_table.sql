@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
 drop table theater_info;
 
 CREATE TABLE theater_info(  
