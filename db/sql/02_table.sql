@@ -27,19 +27,18 @@ CREATE TABLE user_info(
     pw varchar(20),
     email VARCHAR(30),
     score int,
-    sign_method varchar(10)
+    sign_method varchar(10)  
 );
 
 drop table grade_info;
 
 CREATE TABLE grade_info(  
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    uid varchar(20),
     name varchar(10),
-    pw varchar(20),
-    email VARCHAR(30),
-    score int,
-    sign_method varchar(10)
+    shape varchar(50),
+    point int,
+    discount int,
+    coupon_value varchar(10)
 );
 
 drop table product_info;
@@ -50,6 +49,17 @@ CREATE TABLE product_info(
     poster VARCHAR(50),
     synopsis VARCHAR(50)
 );
+
+drop table actor_info;
+
+CREATE TABLE actor_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(20),
+    birth int,
+    gender varchar(5),
+    profile varchar(50)
+);
+
 
 drop table cast_info;
 

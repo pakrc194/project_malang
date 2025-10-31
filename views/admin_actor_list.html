@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배우 목록</title>
+    <style>
+        img {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>배우 목록</h1>
+    <h2>
+        <a href="/admin/perf">공연관리</a>
+        <a href="/admin/actor">배우관리</a>
+        <a href="/admin/reply">리뷰관리</a>
+        <a href="/admin/reserv">예매관리</a>
+    </h2>
+     <table border="">
+         <tr>
+            <td>번호</td>
+            <td>이름</td>
+            <td>사진</td>
+            <td>출생년도</td>
+            <td>성별</td>
+        </tr>
+        {%for actor in res%}
+            <tr>
+                <td>{{actor.id}}</td>
+                <td>{{actor.name}}</td>
+                <td><img src="/img/{{actor.profile}}" alt=""></td>
+                <td>{{actor.birth}}</td>
+                <td>{{actor.gender}}</td>
+            </tr>    
+        {%endfor%}
+    </table>
+    <a href="/admin/actor/upload">배우등록</a>
+</body>
+</html>

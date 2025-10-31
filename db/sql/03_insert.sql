@@ -20,7 +20,6 @@ insert into user_info (uid, name, pw, email, score ,sign_method) VALUES
     (,'박재윤','',),
     (,'이광재','',);
 
-
 insert into product_info (name, poster, synopsis) VALUES 
     ("hook", "hook_poster.jpg", "hook_synopsis.jpg");
 
@@ -29,3 +28,10 @@ insert into cast_info (pr_id, name, background) VALUES
     (1, "피터", "나랑 놀자. 하루 종일. 놀기 위해 태어났는걸"),
     (1, "웬디", "여긴 너와 내가 만든 세상, 모든게 가능해");
 
+
+insert into grade_info (name, shape, point, discount, coupon_value) VALUES 
+    ("입문", 'grade_shape_3.jpg', 0, 0, 0),
+    ("애호", 'grade_shape_4.jpg', 10, 0, 3000),
+    ("열정", 'grade_shape_5.jpg', 30, 5, 5000),
+    ("전문", 'grade_shape_6.jpg', 100, 8, 10000),
+    ("명예", 'grade_shape_star.jpg', 500, 10, 30000);    

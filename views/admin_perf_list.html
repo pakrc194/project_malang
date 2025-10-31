@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list</title>
+</head>
+<body>
+    <h1>list</h1>
+    <h2>
+        <a href="/admin/perf">공연관리</a>
+        <a href="/admin/actor">배우관리</a>
+        <a href="/admin/reply">리뷰관리</a>
+        <a href="/admin/reserv">예매관리</a>
+    </h2>
+     <table border="">
+        {%for perf in res%}
+            <tr>
+                <td>{{perf.id}}</td>
+                <td>{{perf.name}}</td>
+                <td>{{perf.location}}</td>
+                <td>{{perf.seat_class}}</td>
+            </tr>    
+        {%endfor%}
+    </table>
+    <a href="/admin/perf/upload">등록</a>
+</body>
+</html>
