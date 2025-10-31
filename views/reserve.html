@@ -6,6 +6,25 @@
     <title>좌석선택하기</title>
     <link rel="stylesheet" href="../style/reserve.css">
 
+    <script>
+        // 1 웹소켓 서버에 연결시도
+        const socket = new WebSocket('ws://localhost:80')
+        // 2 웹소켓 서버에 연결성공
+        socket.onopen = ()=>{
+            // 3.1 클라이언트가 송신
+            socket.send('연결성공')
+        }
+        // 3.2 클라이언트가 수신
+        socket.onmessage = (e)=>{
+            console.log(`reserve에서 수신: `, e.data)
+            // seatD = e.data
+            // document.querySelector(".seatC").innerHTML += `<br/>${e.data}`
+            // document.querySelector(".seatC").innerHTML = `<br/>${e.data}`
+        }
+
+        
+    </script>
+
 </head>
 <body>
     <!-- <h1>좌석선택하기</h1> -->
@@ -27,17 +46,17 @@
                     {% include 'minicalendar.html' %}
                 </div>
                 <div class="seatG">
-                    좌석 안내<br/>
                     [yellowgreen] R석<br/>
                     [violet] S석<br/>
                     [skyblue] A석<br/>
                 </div>
-                <div class="seatC">선택 좌석 정보</div>
+                <div class="seatC">{% include 'selectSeat.html' %}</div>
                 <div class="doneBtn">
                     <div class="seat_tot_price">좌석의 가격 합산 정보</div>
                     <form action="/">
-                        <input type="submit" value="좌석 선택 완료"></div>
+                        <input type="submit" value="좌석 선택 완료">
                     </form>
+                </div>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
     <script>
 
         window.onload = function(){
-            
+            console.log("{{date}} {{time}} {{flag}}")
             let date = new Date()
             let s_date = new Date("2025-10-22")
             let e_date = new Date("2026-01-18")
@@ -28,8 +28,7 @@
             let selectM = selectDate.getMonth()
             let selectY = selectDate.getFullYear()
 
-            let dd=''
-            var tt=''
+            
 
             /*
                 공연이 시작 안 했을 경우
@@ -160,18 +159,15 @@
                 // "{{flag}}" = 0
             })    
 
-            document.querySelector(".reserve").onclick = function() {
-                console.log(cc())
-                // fetch(`/temp`, {
-                //     method: 'POST',
-                //     headers: {'Content-Type': 'application/json'},
-                //     body: JSON.stringify(cc())
-                // })
-                // .then(answer=>answer.json())
-                // .then(data=>console.log(data))
+            document.querySelector(".selectBtn").onclick = function() {
+                let {dd, tt} = cc()
+                let arr = [dd, tt]
+                socket.send(`${arr}`)
             }
         }
-
+        
+        var dd="{{date}}"
+        var tt="{{time}}"
         let flag = 0
         function clickE(year, month, day, cnt){
             // console.log(`${year}년 ${month+1}월 ${day}일 ${cnt}`)
@@ -202,9 +198,7 @@
         }
 
         function cc() {
-            // console.log(dd, tt)
             return {dd, tt}
-
             // module.exports = {dd, tt}
         }
 
@@ -241,9 +235,10 @@
         </div>
         <div>
             <!-- <form action="/reserve" target="_blank"> -->
-                <input type="submit" value="선택하기" class="reserve">
+                <input type="submit" value="선택하기" class="selectBtn">
             <!-- </form> -->
         </div>
+        <div class="seatDa"></div>
     </div>
 
 </body>

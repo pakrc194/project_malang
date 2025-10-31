@@ -113,15 +113,15 @@
 }
 
 .seatG {
-    height: 100px;
+    height: 80px;
     /* line-height: 100px; */
     background-color: #3cf;
 }
 
 .seatC {
-    height: 100px;
-    line-height: 100px;
-    background-color: #aaf;
+    height: 120px;
+    /* line-height: 100px; */
+    /* background-color: #aaf; */
 }
 
 .doneBtn {

@@ -4,6 +4,8 @@ const conn = require('../db/db')
 const router = express.Router()
 const app = express()
 
+
+
 // template
 nunjucks.configure('views', {
     autoescape: true,
@@ -24,16 +26,13 @@ router.get('/reserve', (req, res)=>{
 
 router.post('/temp', (req, res)=>{
     const {dd, tt, flag} = req.body
-    console.log(dd, tt)
-    
     
     conn.query('select * from theater_info where id = "1"', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
             res.render('../views/list.html')
-        } else {
-            console.log('sql 성공', resQuery)
-            // res.render('../views/list.html', {res : resQuery})
+        }
+        else {
             arr = {
                 date: dd,
                 time: tt,
@@ -41,7 +40,7 @@ router.post('/temp', (req, res)=>{
                 res: resQuery
             }
         }
-        console.log(arr)
+        // console.log(arr)
     })
     
     res.json({message: 'receive'})

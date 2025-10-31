@@ -38,10 +38,11 @@ const wss = new websocket.Server({server})
 wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
     ws.on('message', (msg)=>{
-        console.log(`클라이언트로부터 받은 메세지 : ${msg}`)
+        console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
+        ws.send(msg.toString())
     })
-    // 5.2 서버가 메세지 수신
-    ws.send('서버가 메세지 보냄')
+    // 5.2 서버가 메세지 송신
+    // ws.send('서버가 메세지 보냄')
 
     ws.on('err', (err)=>{
         console.log(`에러발생 : ${err.message}`)
