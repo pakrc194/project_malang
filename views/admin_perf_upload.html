@@ -5,12 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공연 등록</title>
 </head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+
+    }
+    td > input {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<script>
+    window.onload = function() {
+        let ipAddCast = document.querySelector("#admin_tb_add_cast")
+        let ipAddBg = document.querySelector("#admin_tb_add_bg")
+        let tbCast = document.querySelector(".admin_tb_cast")
+        var castArrIdx = 0;
+        var castArr = []
+        document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
+            let trCast = document.createElement("tr")
+            trCast.id = `trCast${castArrIdx}`
+            let tdCastName = document.createElement("td")
+            tdCastName.innerHTML = ipAddCast.value
+            let tdCastBg = document.createElement("td")
+            tdCastBg.innerHTML = ipAddBg.value
+            let tdCastBtn = document.createElement("td")
+            let removeBtn = document.createElement("input")
+            removeBtn.setAttribute("type", "button")
+            removeBtn.setAttribute("value", "-")
+            removeBtn.id = `removeBtn${castArrIdx}`
+            removeBtn.addEventListener("click", () => {
+                tbCast.removeChild(trCast)
+                console.log(castArr)
+                
+            })
+            tdCastBtn.append(removeBtn)
+
+            trCast.append(tdCastName)
+            trCast.append(tdCastBg)
+            trCast.append(tdCastBtn)
+            tbCast.append(trCast)
+            let keyArr = {}
+            keyArr[removeBtn.id] = trCast.id
+            castArr.push(keyArr)
+        }
+
+        
+    }
+</script>
 <body>
     <h1>insert</h1>
     <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data">
-        fid : <input type="text" name="fid"><br/>
-        <input type="file" name="fname"><br/>
-        <input type="file" name="fname"><br/>
+        공연이름 <input type="text" name="fname"><br/>
+        포스터 <input type="file" name="fposter"><br/>
+        시놉시스 <input type="file" name="fsynopsis"><br/>
+        공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
+        출연 배역 
+        <table class="admin_tb_cast" border="">
+            <tr>
+                <td>배역</td>
+                <td>줄거리</td>
+                <td>삭제</td>
+            </tr>
+        </table>
+        <hr/>
+        배역 <input type="text" name="fcast" id="admin_tb_add_cast"/>
+        줄거리 <input type="text" name="fbg" id="admin_tb_add_bg"/>
+        <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
+        <hr/>
+        <div class="pe_up_div_actor_conn">
+            <div class="pe_up_div_actor_info">
+
+            </div>
+        </div>
+
+        <div class="pe_up_div_actor_list">
+            <div class="pe_up_div_actor_info">
+                
+            </div>
+        </div>
         <input type="submit" value="업로드">
         <a href="/admin/perf">뒤로</a>
         <hr/>

@@ -24,11 +24,17 @@ router.get('/perf/list', (req, res)=>{
 })
 
 router.get('/perf/upload', (req, res)=>{
-    res.render('../views/admin_actor_upload.html')
+    res.render('../views/admin_perf_upload.html')
 })
 
-router.post('/perf/upload', multer.single('fname'), (req, res)=>{
+const arr = [
+    {name: 'fposter'},
+    {name: 'fsynopsis'}
+]
+
+router.post('/perf/upload', multer.fields(arr), (req, res)=>{
     console.log('req : ', req.body)
+    console.log(req.file)
     res.redirect('/')
 })
 
