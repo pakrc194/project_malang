@@ -28,10 +28,10 @@
         </tr>
         {%for actor in res%}
             <tr>
-                <td>{{actor.id}}</td>
-                <td>{{actor.name}}</td>
-                <td><img src="/img/{{actor.profile}}" alt=""></td>
-                <td>{{actor.birth}}</td>
+                <td>{{actor.actor_id}}</td>
+                <td>{{actor.actor_name}}</td>
+                <td><img src="/img/{{actor.profile_image_url}}" alt=""></td>
+                <td>{{actor.birth_year}}</td>
                 <td>{{actor.gender}}</td>
             </tr>    
         {%endfor%}

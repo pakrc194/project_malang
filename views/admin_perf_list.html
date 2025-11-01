@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>list</title>
+    <style>
+        img {
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
     <h1>list</h1>
@@ -16,10 +21,13 @@
      <table border="">
         {%for perf in res%}
             <tr>
-                <td>{{perf.id}}</td>
+                <td>{{loop.index}}</td>
                 <td>{{perf.name}}</td>
-                <td>{{perf.location}}</td>
-                <td>{{perf.seat_class}}</td>
+                <td><img src="/img/{{perf.poster_url}}" alt=""></td>
+                <td>{{perf.genre}}</td>
+                <td>{{perf.running_time}}</td>
+                <td>{{perf.start_date}}</td>
+                <td>{{perf.end_date}}</td>
             </tr>    
         {%endfor%}
     </table>

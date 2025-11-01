@@ -116,19 +116,9 @@
         btn_upload.addEventListener('click', (e)=>{
             const uploadData = new FormData(document.uploadFrm)
             
-            const uploadPoster = document.querySelector('#fposter')
-            const uploadSynopsis = document.querySelector('#fsynopsis')
-
-            // uploadData.append('actorArr', JSON.stringify(uploadActor));
-            // uploadData.append('castArr', JSON.stringify(castArr));
-
-            // if (uploadPoster.files.length > 0) {
-            //     uploadData.append('fposter', uploadPoster.files[0]);
-            // }
-
-            // if (uploadSynopsis.files.length > 0) {
-            //     uploadData.append('fsynopsis', uploadSynopsis.files[0]);
-            // }
+            uploadData.append('castData', JSON.stringify(castArr))
+            uploadData.append('actorData', uploadActor)
+            
             //내용확인
             for(const [kk,vv] of uploadData.entries()){
                 console.log(`${kk} , ${vv}`)
@@ -190,8 +180,8 @@
         출연 목록
         <div class="admin_actor_list">
             {%for actor in res%}
-                <div class="admin_actor_info" id="actor{{actor.id}}">
-                    {{actor.id}}{{actor.name}}<br/>{{actor.birth}}{{actor.gender}}
+                <div class="admin_actor_info" id="actor{{actor.actor_id}}">
+                    {{actor.actor_id}}{{actor.actor_name}}<br/>{{actor.birth_year}}{{actor.gender}}
                 </div>
             {%endfor%}
         </div>
