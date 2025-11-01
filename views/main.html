@@ -55,14 +55,14 @@
 
   /* 연두색 박스 위에 말랑뮤즈 이미지 */
 	.lbox > img {
-      width: 600px;
+      width: 300px;
       height: 500px;
       float: left;
     }
 
 	/* 남색 박스 */
 	.main_banner > .nbox {
-      width: 300px;
+      width: 220px;
       height: 500px;
       background-color: navy;
       float: left;
@@ -121,26 +121,25 @@
 	<div id="wrapper">
         <!-- 하늘색 베너 -->
     	<section class="main_banner">
+          {%for 미노 in res %}
             <div class="nbox">
-              <a href="https://www.interpark.com" target="_blank" class="nbox">
-              <img src="img/malrang.png" alt="">
-              </a>
+              <img src="../img/{{미노.poster_url}}" alt="">
             </div>
-            <div class="lbox">
-             <a href="https://www.yes24.com" target="_blank" class="lbox">
-             <img src="img/malrang.png" alt="">
-             </a>
-             </div>
-            <div class="rbox">
-             <a href="https://ticket.melon.com" target="_blank" class="rbox">
-             <img src="img/malrang.png" alt="">
-             </a>
-             </div>
+          {%endfor%}
     	</section>
 
 		<!-- 초록색 메인 포스터 -->
 		<section class="main_poster">
-			<div class="box">
+      {% for 아무이름 in res %}
+        <div class="box">
+            <div class="pbox"><img src="../img/{{아무이름.poster_url}}" alt=""></div>
+            <div class="wbox">
+              {{아무이름.name}}<br/>
+              {{아무이름.start_date}} / {{아무이름.running_time}}
+            </div>
+        </div>
+      {% endfor %}
+			<!-- <div class="box">
 			    <div class="pbox"><img src="../img/kim.jpg" alt=""></div>
           <div class="wbox">
             <a href="/main/search">search</a>
@@ -161,7 +160,7 @@
 			<div class="box">
 				<div class="pbox"><img src="../img/cheon.jpg" alt=""></div>
 				<div class="wbox"></div>
-			</div>
+			</div> -->
 		</section>
   </div>
 </body>
