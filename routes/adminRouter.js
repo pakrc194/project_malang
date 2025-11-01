@@ -24,7 +24,15 @@ router.get('/perf/list', (req, res)=>{
 })
 
 router.get('/perf/upload', (req, res)=>{
-    res.render('../views/admin_perf_upload.html')
+    conn.query('select * from actor_info', (err, resQuery)=>{
+        if(err) {
+            console.log('sql 실패', err.message)
+            res.render('../views/admin_perf_upload.html')
+        } else {
+            console.log('sql 성공', resQuery)
+            res.render('../views/admin_perf_upload.html', {res : resQuery})
+        }
+    })
 })
 
 const arr = [
@@ -33,8 +41,10 @@ const arr = [
 ]
 
 router.post('/perf/upload', multer.fields(arr), (req, res)=>{
+    for(let idx in req.files) {
+        req.body[idx] = req.files[idx][0].filename
+    }
     console.log('req : ', req.body)
-    console.log(req.file)
     res.redirect('/')
 })
 
@@ -51,6 +61,8 @@ router.get('/actor/list', (req, res)=>{
 })
 
 router.get('/actor/upload', (req, res)=>{
+
+
     res.render('../views/admin_actor_upload.html')
 })
 

@@ -41,15 +41,6 @@ CREATE TABLE grade_info(
     coupon_value varchar(10)
 );
 
-drop table product_info;
-
-CREATE TABLE product_info(  
-    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    name VARCHAR(20),
-    poster VARCHAR(50),
-    synopsis VARCHAR(50)
-);
-
 drop table actor_info;
 
 CREATE TABLE actor_info(  
@@ -78,4 +69,27 @@ CREATE TABLE actor_schedule_info(
     ac_id int
 );
 
+drop table perf_info;
 
+CREATE TABLE perf_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(20),
+    poster varchar(50),
+    synopsis varchar(50),
+    start_date varchar(20),
+    end_date varchar(20),
+    genre varchar(20),
+    running_time int,
+    th_id int,
+    reg_date varchar(50)
+);
+
+drop table perf_th_price;
+
+CREATE TABLE perf_th_price(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    perf_id int,
+    th_id int,
+    grade varchar(2),
+    price int
+);

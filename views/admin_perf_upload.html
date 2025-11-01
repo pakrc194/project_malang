@@ -15,9 +15,14 @@
         width: 100%;
         height: 100%;
     }
-    .admin_actor_list > div {
+    .admin_actor_list, .admin_upload_actor {
+        width: 1200px;
+        height: 150px;
+    }
+    .admin_actor_list > .admin_actor_info, .admin_upload_actor > .admin_actor_info {
         width:100px;
         height:150px;
+        float: left;
     }
 </style>
 <script>
@@ -27,7 +32,6 @@
         let tbCast = document.querySelector(".admin_tb_cast")
         var castArrIdx = 0;
         var castArr = []
-        var actorArr = [{id: '0', name:'박규원', birth:'1984', gender:'남자', profile:'hook_pkw_841761909473010.png'}]
         var uploadActor = []
         document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
             const newCastData = {
@@ -72,38 +76,100 @@
 
         let divUploadActor = document.querySelector(".admin_upload_actor")
         let divActorList = document.querySelector(".admin_actor_list")
-        let divActorInfo = document.querySelector('.admin_actor_info')
+        let divActorInfoList = document.querySelectorAll('.admin_actor_info')
 
-        divActorInfo.addEventListener("click", (e)=>{
-            console.log(divActorInfo.parentNode)
-            console.log(divActorInfo.parentNode===divActorList)
-            if(divActorInfo.parentNode===divActorList) {
-                divActorList.removeChild(divActorInfo)
-                divUploadActor.appendChild(divActorInfo)
-                if(!uploadActor.includes(divActorInfo.id.split('actor')[1]))
-                    uploadActor.push(divActorInfo.id.split('actor')[1])
+        for(const divActorInfo of divActorInfoList) {
+            divActorInfo.addEventListener("click", (e)=>{
+                console.log(divActorInfo.parentNode)
+                console.log(divActorInfo.parentNode===divActorList)
+                if(divActorInfo.parentNode===divActorList) {
+                    divActorList.removeChild(divActorInfo)
+                    divUploadActor.appendChild(divActorInfo)
+                    if(!uploadActor.includes(divActorInfo.id.split('actor')[1]))
+                        uploadActor.push(divActorInfo.id.split('actor')[1])
+                } else {
+                    divUploadActor.removeChild(divActorInfo)
+                    divActorList.appendChild(divActorInfo)
+                    console.log(`$pop ${divActorInfo.id.split('actor')[1]}`)
+                    const indexToRemove = uploadActor.indexOf(divActorInfo.id.split('actor')[1]); // 값의 인덱스를 찾음
+                        
+                    if (indexToRemove > -1) {
+                        uploadActor.splice(indexToRemove, 1);
+                    }
+                }
+                console.log(uploadActor)
+            })
+        }
+
+        let selectorTh = document.querySelector('#ftheator')
+        let seatR = document.querySelector('#seatR')
+        selectorTh.addEventListener('change', (e)=>{
+            console.log('theator change', e.target.value)
+            if(e.target.value=="th_big") {
+                seatR.disabled = false
             } else {
-                divUploadActor.removeChild(divActorInfo)
-                divActorList.appendChild(divActorInfo)
-                if(uploadActor.includes(divActorInfo.id.split('actor')[1]))
-                    uploadActor.pop(divActorInfo.id.split('actor')[1])
+                seatR.disabled = true
             }
-            console.log(uploadActor)
+        })
+
+        let btn_upload = document.querySelector('#btn_upload')
+        btn_upload.addEventListener('click', (e)=>{
+            const uploadData = new FormData(document.uploadFrm)
+            
+            const uploadPoster = document.querySelector('#fposter')
+            const uploadSynopsis = document.querySelector('#fsynopsis')
+
+            // uploadData.append('actorArr', JSON.stringify(uploadActor));
+            // uploadData.append('castArr', JSON.stringify(castArr));
+
+            // if (uploadPoster.files.length > 0) {
+            //     uploadData.append('fposter', uploadPoster.files[0]);
+            // }
+
+            // if (uploadSynopsis.files.length > 0) {
+            //     uploadData.append('fsynopsis', uploadSynopsis.files[0]);
+            // }
+            //내용확인
+            for(const [kk,vv] of uploadData.entries()){
+                console.log(`${kk} , ${vv}`)
+            }
+
+            fetch(`/admin/perf/upload`,{
+                    method:'POST',
+                    // header 불필요 FormData 가 자동 생성
+                    body:uploadData
+                })     
+               .then(answer=> answer.text())
+               .then(data=>console.log(data))
+               .catch(err=>console.log('에러 : ',err.message))
+            
         })
     }
 </script>
 <body>
     <h1>insert</h1>
-    <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data">
+    <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data" name="uploadFrm">
         공연이름 <input type="text" name="fname"><br/>
-        포스터 <input type="file" name="fposter"><br/>
-        시놉시스 <input type="file" name="fsynopsis"><br/>
+        포스터 <input type="file" name="fposter" id="fposter"><br/>
+        시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
+        공연장르 <select name="fgenre" id="fgenre">
+            <option value="오리지널">오리지널</option>
+            <option value="창작">창작</option>
+            <option value="라이선스">라이선스</option>
+            <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
+        </select><br/>
+        러닝타임 <input type="text" name="frunning"><br/>
         공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
-        공연장 <input type="text" name="ftheator"><br/>
+        공연장 <select name="ftheator" id="ftheator">
+            <option value="1">샤롯데씨어터</option>
+            <option value="2">드림씨어터</option>
+            <option value="3">대학로예술극장</option>
+            <option value="4">창원성산아트홀</option>
+        </select><br/>
         좌석별 가격<br/>
-        R<input type="text" name="fclassR"><br/>
-        S<input type="text" name="fclassS"><br/>
-        A<input type="text" name="fclassA"><br/>
+        R<input type="text" name="fclassR" id="seatR"><br/>
+        S<input type="text" name="fclassS" id="seatS"><br/>
+        A<input type="text" name="fclassA" id="seatA"><br/>
         출연 배역 
         <table class="admin_tb_cast" border="">
             <tr>
@@ -113,8 +179,8 @@
             </tr>
         </table>
         <hr/>
-        배역 <input type="text" name="fcast" id="admin_tb_add_cast"/>
-        줄거리 <input type="text" name="fbg" id="admin_tb_add_bg"/>
+        배역 <input type="text" id="admin_tb_add_cast"/>
+        줄거리 <input type="text" id="admin_tb_add_bg"/>
         <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
         <hr/>
         출연 배우
@@ -123,12 +189,14 @@
         </div>
         출연 목록
         <div class="admin_actor_list">
-            {%set actor = {id: '0', name:'박규원', birth:'1984', gender:'남자', profile:'hook_pkw_841761909473010.png'}%}
-            <div class="admin_actor_info" id="actor{{actor.id}}">
-                {{actor.name}}<br/>{{actor.birth}}{{actor.gender}}
-            </div>
+            {%for actor in res%}
+                <div class="admin_actor_info" id="actor{{actor.id}}">
+                    {{actor.id}}{{actor.name}}<br/>{{actor.birth}}{{actor.gender}}
+                </div>
+            {%endfor%}
         </div>
-        <input type="submit" value="업로드">
+        <hr/>
+        <input type="button" value="업로드" id="btn_upload">
         <a href="/admin/perf">뒤로</a>
         <hr/>
     </form>
