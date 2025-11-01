@@ -16,14 +16,30 @@
         }
         // // 3.2 클라이언트가 수신
         socket.onmessage = (e)=>{
+
             console.log(`reserve에서 수신: `, e.data)
             // seatD = e.data
             // document.querySelector(".seatC").innerHTML += `<br/>${e.data}`
             // document.querySelector(".seatC").innerHTML = `<br/>${e.data}`
-            console.log(e.data)
+            // console.log(e.data)
+            const data = JSON.parse(e.data);
+            console.log(data)
+            if (data.error) {
+                console.log('데이터 받아오기 실패: ', data.error)
+            }
+            else {
+                document.querySelector(".seatC").innerHTML = `선택한 좌석<br/>`
+                for (let i = 0; i < data.result.length; i++) {
+                    let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
+                    let area = JSON.stringify(data.result[i].area).replace(/\"/g, '')
+                    let s_row = JSON.stringify(data.result[i].s_row).replace(/\"/g, '')
+                    let s_col = JSON.stringify(data.result[i].s_col).replace(/\"/g, '')
+                    let price = JSON.stringify(data.result[i].price).replace(/\"/g, '')
+                    document.querySelector(".seatC").innerHTML += `좌석등급 ${grade} ${area}구역 ${s_row}열 ${s_col} ${price}원<br/>`
+                }
+            }
         }
 
-        
     </script>
 
 </head>
@@ -51,7 +67,7 @@
                     [violet] S석<br/>
                     [skyblue] A석<br/>
                 </div>
-                <div class="seatC">{% include 'selectSeat.html' %}</div>
+                <div class="seatC">선택한 좌석</div>
                 <div class="doneBtn">
                     <div class="seat_tot_price">좌석의 가격 합산 정보</div>
                     <form action="/">

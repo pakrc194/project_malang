@@ -59,21 +59,21 @@ wss.on('connection', (ws, req)=>{
         */
         arr = msg.toString().split(' ')
 
-        let find_seat = `select * from seat_temp where area = "${arr[0]}" and s_row = "${arr[1]}" and s_col = "${arr[2]}";`
+        let find_seat = `select * from seat_temp where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}";`
 
         function st_in(sql, arr){
             conn.query(sql, arr, (err, res, field)=>{
+                send_data()
             })
         }
 
         function st_sel(sql, arr){
             conn.query(sql, (err, res, field)=>{
                 if (res.length == 0) {
-
-                    st_in(`insert into seat_temp (area, s_row, s_col) values (?, ?, ?)`, arr)
+                    st_in(`insert into seat_temp (grade, area, s_row, s_col) values (?, ?, ?, ?)`, arr)
                 }
                 else {
-                    st_del(`delete from seat_temp where area = "${arr[0]}" and s_row = "${arr[1]}" and s_col = "${arr[2]}"`)
+                    st_del(`delete from seat_temp where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"`)
                 }
             })
         }
@@ -83,23 +83,18 @@ wss.on('connection', (ws, req)=>{
                 if (err){
                     console.log('임시 좌석 삭제 에러')
                 }
+                send_data()
+            })
+        }
+
+        function send_data() {
+            conn.query(`select * from seat_temp INNER JOIN seat_price where seat_temp.grade = seat_price.grade`, (err, result)=>{
+                ws.send(JSON.stringify({ result }))
             })
         }
         
-        let resarr = []
-        conn.query(`select * from seat_temp`, (err, res)=>{
-            for (let i of res) {
-                for (let kk in i){
-                    // console.log(i[kk])
-                    resarr[kk] = i
-                }
-                ws.send(resarr)
-                // ws.send(i)
-            }
-            // ws.send(res)
-        })
 
-        ws.send('서버가 보냄')
+        // ws.send('서버가 보냄')
         
         st_sel(find_seat, arr)
 

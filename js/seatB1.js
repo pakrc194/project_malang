@@ -14,12 +14,13 @@ window.addEventListener('DOMContentLoaded', function(){
     let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
     let row = ["first", "second", "third"]
     let color = ["red", "green", "blue"]
+    let grade = ["R", "S", "A"]
 
     for(let aa = 0; aa < 3; aa++) {
 
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 12; j++) {
-                document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
             }
         }
         for (let i = 1; i < 12*10+1; i++) {
@@ -28,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 12; j++) {
-                document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
             }
         }
         for (let i = 1; i < 12*10+1; i++) {
@@ -37,7 +38,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 12; j++) {
-                document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
             }
         }
         for (let i = 1; i < 12*10+1; i++) {
