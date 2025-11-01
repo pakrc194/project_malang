@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761830851051@@127.0.0.1@3306@malang_db
 drop table theater_info;
 
 CREATE TABLE theater_info(  
@@ -22,12 +22,13 @@ drop table user_info;
 
 CREATE TABLE user_info(  
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    uid varchar(20),
     name varchar(10),
     pw varchar(20),
     email VARCHAR(30),
     score int,
-    sign_method varchar(10)
+    sign_method varchar(10),
+    question varchar(50),
+    answer varchar(50)
 );
 
 drop table grade_info;

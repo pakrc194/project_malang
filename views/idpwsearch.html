@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        header {
+            width: 100%;
+            height: 100px;
+            background-color: #ff0;
+            border: 1px solid #000;
+        }
+
+        footer {
+            width: 100%;
+            height: 100px;
+            background-color: #ff0;
+            border: 1px solid #000;
+        }
+
+        wrapper {
+            width: 1200px;
+            background-color: #fa0;
+            border: 1px solid #000;
+            margin: auto;
+            display: block;
+        }
+
+        section {
+            border: 1px solid #000;
+            width: 400px;
+            margin: auto;
+            display: block;
+            height: 300px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+
+            // --------------------------------------------------------------------------------- 이메일 나타나는 창구
+            function consLog(msg) {
+                document.querySelector(".cons").innerHTML = msg
+            }
+
+            // --------------------------------------------------------------------------------- 아이디 찾기 누르면 발생하는 거
+
+            document.querySelector("#submit1").onclick = function (e) {
+                e.preventDefault();
+
+                let params = {
+                    name: document.querySelector("#name").value.trim(),
+                    question: document.querySelector("#question").value.trim(),
+                    answer: document.querySelector("#answer").value.trim()
+                };
+
+                if (!params.name || !params.question || !params.answer) {
+                    consLog("모든 항목 입력")
+                    return;
+                }
+
+                fetch("/findid", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(params)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            consLog("이메일: <br>" + data.emails.join("<br>"))
+                        } else {
+                            consLog("일치하는 정보 없습니다")
+                        }
+                    })
+                    .catch(err => consLog("서버 오류"))
+            };
+
+            // --------------------------------------------------------------------------------- 비밀번호 찾기 누르면 발생하는 거
+
+            // value값 받기(email, 비밀번호 찾기 버튼, 새비밀번호, 새비밀번호 확인, 비밀번호 변경)
+            const emailconfirm = document.querySelector('#email1').value.trim()
+            const submit2 = document.querySelector('#submit2')
+            const newpw1 = document.querySelector('#newpw1')
+            const newpw2 = document.querySelector('#newpw2')
+            const submit3 = document.querySelector('#submit3')
+
+            // 새비밀번호 숨기고 있다가 이메일 입력 후 비밀번호 찾기 버튼 클릭 시 DB 확인 후 나타나기
+
+            newpw1.style.display = 'none'
+            newpw2.style.display = 'none'
+            submit3.style.display = 'none'
+
+            // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
+            document.querySelector("#submit2").addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const email = emailconfirm
+
+                if (!email) {
+                    return alert('이메일 입력')
+                }
+
+                let ttt = JSON.stringify(email)
+
+                fetch(`/login/chkmail`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+
+                    },
+                    body: ttt
+
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.exists) {
+                            alert('이메일 확인 완료')
+                            newpw1.style.display = 'block'
+                            newpw2.style.display = 'block'
+                            submit3.style.display = 'block'
+                        } else {
+                            alert('없는 이메일')
+                        }
+                    })
+                    .catch(err => console.log('에러 :', err.message))
+            })
+
+
+            // --------------------------------------------------------------------------------- 비밀번호 변경 누르면 발생하는 거
+
+
+            const newchangepw = newpw1.value.trim()
+            const newchangepw2 = newpw2.value.trim()
+
+
+
+            // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
+            document.querySelector("#submit3").addEventListener("click", (e) => {
+                e.preventDefault();
+
+                if (!newchangepw || !newchangepw2) { return alert('비밀번호 입력') }
+                if (newchangepw !== newchangepw2) { return alert('비밀번호 불일치') }
+
+                fetch(`/login/changepw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+
+                    },
+                    body: JSON.stringify({ newchangepw, newchangepw2 })
+
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.href = "/login";
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => console.log('에러 :', err.message))
+
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <header>아이디/비밀번호 찾기</header>
+    <wrapper>
+        <section>
+            아이디찾기
+            <form action="" method="post">
+                <!--이름 입력란-->
+                <input type="text" name="name" id="name" placeholder="이름">
+                <br>
+                <div>
+                    <!-- 질문 선택 -->
+                    <select id="question">
+                        <option value="">---질문 선택---</option>
+                        <option value="food" class="question">어떤 음식을 좋아합니까?</option>
+                        <option value="hobby" class="question">어떤 취미가 있습니까?</option>
+                        <option value="exercise" class="question">어떤 운동을 좋아합니까?</option>
+                        <option value="music" class="question">좋아하는 음악 장르는 무엇입니까?</option>
+                        <option value="season" class="question">좋아하는 계절은 무엇입니까?</option>
+                        <option value="trip" class="question">가장 기억에 남는 여행은 무엇입니까?</option>
+                        <option value="animal" class="question">어떤 동물을 좋아합니까?</option>
+                        <option value="place" class="question">추억의 장소는 어디입니까?</option>
+                        <option value="movie" class="question">가장 좋아하는 영화는 무엇입니까?</option>
+                        <option value="color">좋아하는 색깔은 무엇입니까?</option>
+                    </select>
+                    <br>
+                    <!-- 답변 입력란 -->
+                    <input type="text" name="answer" id="answer" placeholder="답변">
+                    <br>
+                    <!-- 이메일 표시란 -->
+                    <div class="cons">
+                        <!-- 여기에 아이디(이메일)가 표시됩니다. -->
+                    </div>
+                    <br>
+                    <!-- 제출 버튼 -->
+                    <input type="submit" value="아이디찾기" id="submit1">
+            </form>
+        </section>
+        <section>
+            비밀번호찾기
+            <form action="" method="post">
+                <!--이메일 입력란-->
+                <input type="email" name="email" id="email" placeholder="아이디(이메일)">
+                <br>
+                <!--인증번호 받기 버튼-->
+                <input type="button" id="confirmcode" value="인증번호 받기">
+                <br>
+                <!--인증번호 입력란-->
+                <input type="text" id="code" placeholder="인증번호 입력">
+                <br>
+                <!-- 비밀번호 찾기 버튼 -->
+                <input type="submit" value="비밀번호찾기" id="submit2">
+                <br>
+                <input type="password" name="newpw" id="newpw1" placeholder="새 비밀번호">
+                <br>
+                <input type="password" name="newpw2" id="newpw2" placeholder="새 비밀번호 확인">
+                <br>
+                <input type="submit3" value="비밀번호 변경" id="submit3">
+            </form>
+        </section>
+    </wrapper>
+    <footer>푸터영역</footer>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //         const emailInput = document.querySelector("#email");
+        // const submit2 = document.querySelector("#submit2");
+        // const newPwInput = document.querySelector("#newpw");
+        // const newPw2Input = document.querySelector("#newpw2");
+        // const submit3 = document.querySelector("#submit3");
+
+        // // 새 비밀번호 입력란 처음엔 숨기기
+        // newPwInput.style.display = "none";
+        // newPw2Input.style.display = "none";
+        // submit3.style.display = "none";
+
+        // // 비밀번호 찾기 버튼 클릭 (이메일 확인)
+        // submit2.addEventListener("click", (e) => {
+        //     e.preventDefault();
+        //     const email = emailInput.value.trim();
+        //     if (!email) return alert("이메일을 입력하세요.");
+
+        //     fetch("/login/checkEmail", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ email })
+        //     })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         if (data.exists) {
+        //             alert("이메일 확인 완료. 새 비밀번호를 입력하세요.");
+        //             newPwInput.style.display = "block";
+        //             newPw2Input.style.display = "block";
+        //             submit3.style.display = "block";
+        //         } else {
+        //             alert("존재하지 않는 이메일입니다.");
+        //         }
+        //     })
+        //     .catch(err => alert("서버 오류 발생"));
+        // });
+
+        // // 비밀번호 변경 버튼 클릭
+        // submit3.addEventListener("click", (e) => {
+        //     e.preventDefault();
+        //     const email = emailInput.value.trim();
+        //     const newPw = newPwInput.value.trim();
+        //     const confirmPw = newPw2Input.value.trim();
+
+        //     if (!newPw || !confirmPw) return alert("새 비밀번호를 모두 입력하세요.");
+        //     if (newPw !== confirmPw) return alert("비밀번호가 일치하지 않습니다.");
+
+        //     fetch("/login/changePw", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ email, newPw })
+        //     })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         alert(data.message);
+        //         if (data.success) {
+        //             window.location.href = "/login"; // 변경 후 로그인 페이지로 이동
+        //         }
+        //     })
+        //     .catch(err => alert("서버 오류 발생"));
+        // });
