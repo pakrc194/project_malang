@@ -1,9 +1,12 @@
 const express = require('express')
+const path = require('path')
 const nunjucks = require('nunjucks')
 const app = express()
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+
+app.use('/img', express.static(path.join(__dirname, 'img')))
 
 nunjucks.configure('views', {
     autoescape: true,

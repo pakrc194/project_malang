@@ -1,13 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>main</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>말랑뮤즈</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 보라색 배경 (화면 전체) */
+    body {
+      background-color: purple;
+    }
+
+    /* 오렌지 wrapper (가운데 60%, 양옆 20% 여백) */
+    #wrapper {
+      width: 1200px; /* 화면 너비의 60% */
+      height: 2000px;
+      margin: auto;
+      background-color: orange;
+    } 
+
+    /* 하늘색 (main_banner) 박스 */
+    .main_banner {
+      width: 1200px; /* wrapper에 맞게 */
+      height: 500px; /* 화면 비율 기반 높이 */
+      background-color: skyblue;
+    }
+
+	/* 빨간색 박스 */
+    .main_banner > .rbox {
+      width: 300px;
+      height: 500px;
+      background-color: red;
+      float: left;
+    }
+
+  /* 빨간색 박스 위에 말랑뮤즈 이미지 */
+	.rbox > img {
+      width: 300px;
+      height: 500px;
+      float: left;
+    }
+   
+	/* 연두색 박스 */
+	.main_banner > .lbox {
+      width: 600px;
+      height: 500px;
+      background-color: lightgreen;
+      float: left;
+    }
+
+  /* 연두색 박스 위에 말랑뮤즈 이미지 */
+	.lbox > img {
+      width: 600px;
+      height: 500px;
+      float: left;
+    }
+
+	/* 남색 박스 */
+	.main_banner > .nbox {
+      width: 300px;
+      height: 500px;
+      background-color: navy;
+      float: left;
+    }
+
+  /* 남색 박스 위에 말랑뮤즈 이미지 */
+	.nbox > img {
+      width: 300px;
+      height: 500px;
+      float: left;
+    }
+
+
+    /* 초록색 section (main_poster) */
+    .main_poster {
+      width: 1200px; /* wrapper에 맞게 */
+      height: 500px; /* 화면 비율 기반 높이 */
+      background-color: green;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    /* 파란색 박스 */
+    .main_poster > .box {
+      width: 200px;
+      height: 350px;
+      background-color: blue;
+    }
+   
+	/* 분홍색 박스 */
+	.main_poster > .box > .pbox {
+      width: 200px;
+      height: 300px;
+      background-color: pink;
+    }
+
+  /* 분홍색 박스 위에 포스터 */
+  	.pbox > img {
+      width: 200px;
+      height: 300px;
+      float: left;
+    }
+
+	/* 흰색 박스 */
+	.main_poster > .box > .wbox {  
+      width: 200px;
+      height: 50px;
+      background-color: white;
+    }
+
+  </style>
 </head>
 <body>
-    <h1>main</h1>
-    <a href="/admin">admin</a>
-    <a href="/perf">perflist</a>
+    <!-- 주황색 -->
+	<div id="wrapper">
+        <!-- 하늘색 베너 -->
+    	<section class="main_banner">
+            <div class="nbox">
+              <a href="https://www.interpark.com" target="_blank" class="nbox">
+              <img src="img/malrang.png" alt="">
+              </a>
+            </div>
+            <div class="lbox">
+             <a href="https://www.yes24.com" target="_blank" class="lbox">
+             <img src="img/malrang.png" alt="">
+             </a>
+             </div>
+            <div class="rbox">
+             <a href="https://ticket.melon.com" target="_blank" class="rbox">
+             <img src="img/malrang.png" alt="">
+             </a>
+             </div>
+    	</section>
+
+		<!-- 초록색 메인 포스터 -->
+		<section class="main_poster">
+			<div class="box">
+			    <div class="pbox"><img src="../img/kim.jpg" alt=""></div>
+          <div class="wbox">
+            <a href="/main/search">search</a>
+          </div>
+			</div>
+			<div class="box">
+			    <div class="pbox"><img src="../img/mi.gif" alt=""></div>
+			    <div class="wbox"></div>
+			</div>
+			<div class="box">
+				<div class="pbox"><img src="../img/cabin.jpg" alt=""></div>
+				<div class="wbox"></div>
+			</div>
+			<div class="box">
+				<div class="pbox"><img src="../img/wel.jpg" alt=""></div>
+				<div class="wbox"></div>
+			</div>
+			<div class="box">
+				<div class="pbox"><img src="../img/cheon.jpg" alt=""></div>
+				<div class="wbox"></div>
+			</div>
+		</section>
+  </div>
 </body>
 </html>
