@@ -68,10 +68,19 @@ CREATE TABLE actor_schedule_info(
     ac_id int
 );
 
-
+DROP TABLE seat_temp;
 -- 좌석정보 임시 저장할 테이블
 CREATE TABLE seat_temp (
+    grade VARCHAR(10),
     area VARCHAR(10),
     s_row int,
     s_col int
 );
+
+-- 좌석 가격 테이블
+CREATE TABLE seat_price (
+    grade VARCHAR(10),
+    price int
+)
+
+DROP TABLE seat_price;

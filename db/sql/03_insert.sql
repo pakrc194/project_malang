@@ -29,3 +29,9 @@ insert into cast_info (pr_id, name, background) VALUES
     (1, "피터", "나랑 놀자. 하루 종일. 놀기 위해 태어났는걸"),
     (1, "웬디", "여긴 너와 내가 만든 세상, 모든게 가능해");
 
+
+-- 좌석 가격
+INSERT INTO seat_price (grade, price) VALUES
+    ("R", 160000),
+    ("S", 130000),
+    ("A", 90000);
