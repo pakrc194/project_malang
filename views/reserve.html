@@ -12,14 +12,15 @@
         // 2 웹소켓 서버에 연결성공
         socket.onopen = ()=>{
             // 3.1 클라이언트가 송신
-            socket.send('연결성공')
+            socket.send('reserve 연결성공')
         }
-        // 3.2 클라이언트가 수신
+        // // 3.2 클라이언트가 수신
         socket.onmessage = (e)=>{
             console.log(`reserve에서 수신: `, e.data)
             // seatD = e.data
             // document.querySelector(".seatC").innerHTML += `<br/>${e.data}`
             // document.querySelector(".seatC").innerHTML = `<br/>${e.data}`
+            console.log(e.data)
         }
 
         

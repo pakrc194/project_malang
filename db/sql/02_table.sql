@@ -69,3 +69,9 @@ CREATE TABLE actor_schedule_info(
 );
 
 
+-- 좌석정보 임시 저장할 테이블
+CREATE TABLE seat_temp (
+    area VARCHAR(10),
+    s_row int,
+    s_col int
+);

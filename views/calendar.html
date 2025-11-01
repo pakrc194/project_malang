@@ -6,19 +6,6 @@
     <title>calendar</title>
     <link rel="stylesheet" href="../style/calendar.css">
     <script>
-
-        // 1 웹소켓 서버에 연결시도
-        // const socket = new WebSocket('ws://localhost:80')
-        // 2 웹소켓 서버에 연결성공
-        socket.onopen = ()=>{
-            // 3.1 클라이언트가 송신
-            socket.send('연결성공')
-        }
-        // 3.2 클라이언트가 수신
-        socket.onmessage = (e)=>{
-            console.log(`cal에서 수신: `, e.data)
-        }
-
         window.onload = function(){
             
             let date = new Date()
@@ -151,7 +138,6 @@
                 // console.log(cc())
                 let {dd, tt, flag} = cc()
                 let arr = [dd, tt, flag]
-                socket.send(arr)
                 fetch(`/desc/temp`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},

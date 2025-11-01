@@ -3,12 +3,12 @@
         // 2 웹소켓 서버에 연결성공
         socket.onopen = ()=>{
             // 3.1 클라이언트가 송신
-            socket.send('연결성공')
+            socket.send('seatB1 연결성공')
         }
         // 3.2 클라이언트가 수신
-        socket.onmessage = (e)=>{
-            console.log(`seatB1에서 수신: `, e.data)
-        }
+        // socket.onmessage = (e)=>{
+        //     console.log(`seatB1에서 수신: `, e.data)
+        // }
 
 window.addEventListener('DOMContentLoaded', function(){
     let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
@@ -47,29 +47,28 @@ window.addEventListener('DOMContentLoaded', function(){
 
     // document.querySelector(".indiseat").onclick = ()=>{
     //     console.log(`좌석클릭 : ${document.querySelector(".indiseat").value}`)
-        
     // }
 })
 
 let cnt = 0
 // 예매 개수 4개로 제한
 function ck_cnt(obj) {
-    
+    socket.send(obj.value)
+
     if (obj.checked == true){
         cnt++
-        let arr = [obj.value, cnt]
-        socket.send(arr)
     }
     else {
         cnt--
-        arr = [obj.value, cnt]
-        socket.send(arr)
     }
-    if (cnt > 4){
+
+    if (cnt > 4) {
         alert('선택 안됨')
         obj.checked = false
-        --cnt
+        cnt--
+        socket.send(obj.value)
     }
+    
     console.log(obj.value, cnt)
     
 }

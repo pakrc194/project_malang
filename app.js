@@ -4,6 +4,8 @@ const app = express()
 const path = require('path')
 const websocket = require('ws')
 const http = require('http')
+const conn = require('./db/db')
+
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
@@ -35,12 +37,74 @@ const server = http.createServer(app)
 // 2 WebSocket 서버 생성
 const wss = new websocket.Server({server})
 // 4 클라이언트 접속
+
+let arr = []
+
 wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
-        ws.send(msg.toString())
+
+        // ws.send(msg.toString())
+
+        // db에 선택된 좌석정보 임시저장
+        // db에 저장된 좌석이 있는지 확인하기
+        // 있으면 삭제
+        // 없으면 추가
+
+        /*
+            area VARCHAR(10),
+            s_row int,
+            s_col int
+        */
+        arr = msg.toString().split(' ')
+
+        let find_seat = `select * from seat_temp where area = "${arr[0]}" and s_row = "${arr[1]}" and s_col = "${arr[2]}";`
+
+        function st_in(sql, arr){
+            conn.query(sql, arr, (err, res, field)=>{
+            })
+        }
+
+        function st_sel(sql, arr){
+            conn.query(sql, (err, res, field)=>{
+                if (res.length == 0) {
+
+                    st_in(`insert into seat_temp (area, s_row, s_col) values (?, ?, ?)`, arr)
+                }
+                else {
+                    st_del(`delete from seat_temp where area = "${arr[0]}" and s_row = "${arr[1]}" and s_col = "${arr[2]}"`)
+                }
+            })
+        }
+
+        function st_del(sql, arr) {
+            conn.query(sql, (err, res)=>{
+                if (err){
+                    console.log('임시 좌석 삭제 에러')
+                }
+            })
+        }
+        
+        let resarr = []
+        conn.query(`select * from seat_temp`, (err, res)=>{
+            for (let i of res) {
+                for (let kk in i){
+                    // console.log(i[kk])
+                    resarr[kk] = i
+                }
+                ws.send(resarr)
+                // ws.send(i)
+            }
+            // ws.send(res)
+        })
+
+        ws.send('서버가 보냄')
+        
+        st_sel(find_seat, arr)
+
     })
+    
     // 5.2 서버가 메세지 송신
     // ws.send('서버가 메세지 보냄')
 
