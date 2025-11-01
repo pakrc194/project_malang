@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="../style/reserve.css">
 
     <script>
+        let ddd = ""
+            function returndata(dd) {
+                ddd = dd
+            }
+        
         // 1 웹소켓 서버에 연결시도
         const socket = new WebSocket('ws://localhost:80')
         // 2 웹소켓 서버에 연결성공
         socket.onopen = ()=>{
             // 3.1 클라이언트가 송신
-            socket.send('reserve 연결성공')
+            socket.send('reserve')
         }
         // // 3.2 클라이언트가 수신
         socket.onmessage = (e)=>{
@@ -23,25 +28,40 @@
             // document.querySelector(".seatC").innerHTML = `<br/>${e.data}`
             // console.log(e.data)
             const data = JSON.parse(e.data);
-            console.log(data)
-            if (data.error) {
-                console.log('데이터 받아오기 실패: ', data.error)
-            }
-            else {
-                document.querySelector(".seatC").innerHTML = `선택한 좌석<br/>`
-                let totprice = 0
-                for (let i = 0; i < data.result.length; i++) {
-                    let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
-                    let area = JSON.stringify(data.result[i].area).replace(/\"/g, '')
-                    let s_row = JSON.stringify(data.result[i].s_row).replace(/\"/g, '')
-                    let s_col = JSON.stringify(data.result[i].s_col).replace(/\"/g, '')
-                    let price = JSON.stringify(data.result[i].price).replace(/\"/g, '')
-                    document.querySelector(".seatC").innerHTML += `좌석등급 ${grade} ${area}구역 ${s_row}열 ${s_col} ${price}원<br/>`
-                    totprice += eval(price)
+            returndata(data.result)
+            if (data.type == 'temp') {
+                if (data.error) {
+                    console.log('데이터 받아오기 실패: ', data.error)
                 }
-                document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                else {
+                    document.querySelector(".seatC").innerHTML = `선택한 좌석<br/>`
+                    let totprice = 0
+                    for (let i = 0; i < data.result.length; i++) {
+                        let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
+                        let area = JSON.stringify(data.result[i].area).replace(/\"/g, '')
+                        let s_row = JSON.stringify(data.result[i].s_row).replace(/\"/g, '')
+                        let s_col = JSON.stringify(data.result[i].s_col).replace(/\"/g, '')
+                        let price = JSON.stringify(data.result[i].price).replace(/\"/g, '')
+                        document.querySelector(".seatC").innerHTML += `좌석등급 ${grade} ${area}구역 ${s_row}열 ${s_col} ${price}원<br/>`
+                        totprice += eval(price)
+                    }
+                    document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                }
             }
         }
+
+        window.addEventListener('DOMContentLoaded', function(){
+            
+            document.querySelector(".select_done").onclick = function() {
+                    fetch(`/desc/coupon`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(ddd)
+                        // body: ddd
+                    })
+                    .then(answer=>answer.json())
+                }
+        })
 
     </script>
 
@@ -73,7 +93,7 @@
                 <div class="seatC">선택한 좌석</div>
                 <div class="doneBtn">
                     <div class="seat_tot_price">좌석의 가격 합산 정보</div>
-                    <form action="/">
+                    <form action="/desc/coupon">
                         <input type="submit" class="select_done" value="좌석 선택 완료">
                     </form>
                 </div>

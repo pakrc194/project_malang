@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coupon</title>
+    <script>
+        window.addEventListener('DOMContentLoaded', function(){
+            let data1 = "{{temp_data}}"
+            console.log(data1)
+            
+            let dd = JSON.stringify(data1)
+            // let dd = JSON.parse(data)
+            document.querySelector(".write").innerHTML = "넘겨받은 데이터<br/>"
+            document.querySelector(".write").innerHTML += "{{ptot}}<br/>"
+            document.querySelector(".write").innerHTML += data1
+            document.querySelector(".write").innerHTML += "<br/>"
+            // document.querySelector(".write").innerHTML += 
+
+            // fetch('/desc/coupon', {
+            //     method: 'GET', 
+            //     headers: {
+            //         'Accept': 'application/json'
+            //     }
+            // })
+            // .then(answer=>answer.json())
+            // .then(data=>
+            // console.log('json 받기: ', data))
+        })
+        
+
+
+    </script>
+</head>
+<body>
+    <h1>coupon데이터</h1>
+    <div class="write"></div>
+    go_data: {{temp_data[0].grade}}<br/>
+
+</body>
+</html>

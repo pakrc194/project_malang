@@ -45,18 +45,6 @@ wss.on('connection', (ws, req)=>{
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
 
-        // ws.send(msg.toString())
-
-        // db에 선택된 좌석정보 임시저장
-        // db에 저장된 좌석이 있는지 확인하기
-        // 있으면 삭제
-        // 없으면 추가
-
-        /*
-            area VARCHAR(10),
-            s_row int,
-            s_col int
-        */
         arr = msg.toString().split(' ')
 
         let find_seat = `select * from seat_temp where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}";`
@@ -89,7 +77,7 @@ wss.on('connection', (ws, req)=>{
 
         function send_data() {
             conn.query(`select * from seat_temp INNER JOIN seat_price where seat_temp.grade = seat_price.grade`, (err, result)=>{
-                ws.send(JSON.stringify({ result }))
+                ws.send(JSON.stringify({ type: 'temp', result }))
             })
         }
         
