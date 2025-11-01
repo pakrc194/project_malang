@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761919734604@@127.0.0.1@3306@malang_db
 insert into theater_info (name, location, seat_class) VALUES 
     ("샤롯데씨어터", "서울", "R,S,A"),
     ("드림씨어터", "부산", "R,S,A"),
@@ -35,3 +35,15 @@ insert into grade_info (name, shape, point, discount, coupon_value) VALUES
     ("열정", 'grade_shape_5.jpg', 30, 5, 5000),
     ("전문", 'grade_shape_6.jpg', 100, 8, 10000),
     ("명예", 'grade_shape_star.jpg', 500, 10, 30000);    
+
+
+insert into actor_info (name, profile, birth, gender) VALUES 
+    ('박규원', 'hook_pkw_841761909473010.png','1984','남자'),
+    ('최호승', 'hook_chs_851761909445555.png','1985','남자'),
+    ('박상혁', 'hook_psh_991761909601674.png','1999','남자'),
+    ('김도빈', 'feter_kdb_821761909330222.png','1982','남자'),
+    ('최민우', 'feter_cmw_921761909027638.png','1992','남자'),
+    ('정우연', 'wendy_jwy_921761909636454.png','1992','여자'),
+    ('김주연', 'wendy_kjy_931761909650953.png','1993','여자'),
+    ('박새힘', 'wendy_psh_941761909667609.png','1994','여자'),
+    ('동현', 'feter_dh_891761909243536.png','1989','남자');

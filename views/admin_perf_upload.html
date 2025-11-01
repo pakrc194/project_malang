@@ -15,6 +15,10 @@
         width: 100%;
         height: 100%;
     }
+    .admin_actor_list > div {
+        width:100px;
+        height:150px;
+    }
 </style>
 <script>
     window.onload = function() {
@@ -23,22 +27,36 @@
         let tbCast = document.querySelector(".admin_tb_cast")
         var castArrIdx = 0;
         var castArr = []
+        var actorArr = [{id: '0', name:'박규원', birth:'1984', gender:'남자', profile:'hook_pkw_841761909473010.png'}]
+        var uploadActor = []
         document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
+            const newCastData = {
+                id: castArrIdx, // 배열에서 쉽게 찾기 위한 고유 ID 추가
+                castName: ipAddCast.value,
+                castBg: ipAddBg.value
+            }
+
             let trCast = document.createElement("tr")
             trCast.id = `trCast${castArrIdx}`
+            trCast.dataset.id = castArrIdx;
             let tdCastName = document.createElement("td")
             tdCastName.innerHTML = ipAddCast.value
+            ipAddCast.value = '';
             let tdCastBg = document.createElement("td")
             tdCastBg.innerHTML = ipAddBg.value
+            ipAddBg.value = '';
             let tdCastBtn = document.createElement("td")
             let removeBtn = document.createElement("input")
             removeBtn.setAttribute("type", "button")
             removeBtn.setAttribute("value", "-")
             removeBtn.id = `removeBtn${castArrIdx}`
-            removeBtn.addEventListener("click", () => {
+            removeBtn.addEventListener("click", (e) => {
                 tbCast.removeChild(trCast)
-                console.log(castArr)
+                const removeId = Number(trCast.dataset.id); 
+        
+                castArr = castArr.filter(item => item.id !== removeId);
                 
+                console.log('삭제 후 castArr:', castArr)
             })
             tdCastBtn.append(removeBtn)
 
@@ -46,12 +64,32 @@
             trCast.append(tdCastBg)
             trCast.append(tdCastBtn)
             tbCast.append(trCast)
-            let keyArr = {}
-            keyArr[removeBtn.id] = trCast.id
-            castArr.push(keyArr)
+
+            castArr.push(newCastData)
+
+            castArrIdx++;
         }
 
-        
+        let divUploadActor = document.querySelector(".admin_upload_actor")
+        let divActorList = document.querySelector(".admin_actor_list")
+        let divActorInfo = document.querySelector('.admin_actor_info')
+
+        divActorInfo.addEventListener("click", (e)=>{
+            console.log(divActorInfo.parentNode)
+            console.log(divActorInfo.parentNode===divActorList)
+            if(divActorInfo.parentNode===divActorList) {
+                divActorList.removeChild(divActorInfo)
+                divUploadActor.appendChild(divActorInfo)
+                if(!uploadActor.includes(divActorInfo.id.split('actor')[1]))
+                    uploadActor.push(divActorInfo.id.split('actor')[1])
+            } else {
+                divUploadActor.removeChild(divActorInfo)
+                divActorList.appendChild(divActorInfo)
+                if(uploadActor.includes(divActorInfo.id.split('actor')[1]))
+                    uploadActor.pop(divActorInfo.id.split('actor')[1])
+            }
+            console.log(uploadActor)
+        })
     }
 </script>
 <body>
@@ -61,6 +99,11 @@
         포스터 <input type="file" name="fposter"><br/>
         시놉시스 <input type="file" name="fsynopsis"><br/>
         공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
+        공연장 <input type="text" name="ftheator"><br/>
+        좌석별 가격<br/>
+        R<input type="text" name="fclassR"><br/>
+        S<input type="text" name="fclassS"><br/>
+        A<input type="text" name="fclassA"><br/>
         출연 배역 
         <table class="admin_tb_cast" border="">
             <tr>
@@ -74,15 +117,15 @@
         줄거리 <input type="text" name="fbg" id="admin_tb_add_bg"/>
         <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
         <hr/>
-        <div class="pe_up_div_actor_conn">
-            <div class="pe_up_div_actor_info">
+        출연 배우
+        <div class="admin_upload_actor">
 
-            </div>
         </div>
-
-        <div class="pe_up_div_actor_list">
-            <div class="pe_up_div_actor_info">
-                
+        출연 목록
+        <div class="admin_actor_list">
+            {%set actor = {id: '0', name:'박규원', birth:'1984', gender:'남자', profile:'hook_pkw_841761909473010.png'}%}
+            <div class="admin_actor_info" id="actor{{actor.id}}">
+                {{actor.name}}<br/>{{actor.birth}}{{actor.gender}}
             </div>
         </div>
         <input type="submit" value="업로드">
