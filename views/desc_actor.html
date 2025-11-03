@@ -6,6 +6,17 @@
     <title>상세페이지 배우 캐스팅</title>
     <link rel="stylesheet" href="../style/desc_actor.css">
 
+    <script>
+        window.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll(".fav_act").forEach(btn =>{
+                btn.addEventListener('click', ()=>{
+                    console.log('버튼 클릭', btn.value)
+                    
+                    // console.log(document.querySelectorAll(".fav_act").value)
+                })
+            })
+        })
+    </script>
 </head>
 <body>
     <div class="act_wrapper">
