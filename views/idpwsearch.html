@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>아이디/비밀번호찾기</title>
     <style>
         * {
             margin: 0px;
@@ -65,7 +65,7 @@
                     return;
                 }
 
-                fetch("/findid", {
+                fetch("/idpwsearch/findid", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(params)
@@ -84,7 +84,7 @@
             // --------------------------------------------------------------------------------- 비밀번호 찾기 누르면 발생하는 거
 
             // value값 받기(email, 비밀번호 찾기 버튼, 새비밀번호, 새비밀번호 확인, 비밀번호 변경)
-            const emailconfirm = document.querySelector('#email1').value.trim()
+
             const submit2 = document.querySelector('#submit2')
             const newpw1 = document.querySelector('#newpw1')
             const newpw2 = document.querySelector('#newpw2')
@@ -100,15 +100,16 @@
             document.querySelector("#submit2").addEventListener("click", (e) => {
                 e.preventDefault();
 
+                const emailconfirm = document.querySelector('#email').value.trim()
                 const email = emailconfirm
 
                 if (!email) {
                     return alert('이메일 입력')
                 }
 
-                let ttt = JSON.stringify(email)
+                let ttt = JSON.stringify({ email })
 
-                fetch(`/login/chkmail`, {
+                fetch(`/idpwsearch/checkmail`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -135,25 +136,25 @@
             // --------------------------------------------------------------------------------- 비밀번호 변경 누르면 발생하는 거
 
 
-            const newchangepw = newpw1.value.trim()
-            const newchangepw2 = newpw2.value.trim()
-
-
 
             // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
             document.querySelector("#submit3").addEventListener("click", (e) => {
                 e.preventDefault();
 
+                const email = document.querySelector('#email').value.trim();
+                const newchangepw = newpw1.value.trim()
+                const newchangepw2 = newpw2.value.trim()
+
                 if (!newchangepw || !newchangepw2) { return alert('비밀번호 입력') }
                 if (newchangepw !== newchangepw2) { return alert('비밀번호 불일치') }
 
-                fetch(`/login/changepw`, {
+                fetch(`/idpwsearch/changepw`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
 
                     },
-                    body: JSON.stringify({ newchangepw, newchangepw2 })
+                    body: JSON.stringify({ newchangepw, email })
 
                 })
                     .then(res => res.json())
@@ -228,7 +229,7 @@
                 <br>
                 <input type="password" name="newpw2" id="newpw2" placeholder="새 비밀번호 확인">
                 <br>
-                <input type="submit3" value="비밀번호 변경" id="submit3">
+                <input type="submit" value="비밀번호 변경" id="submit3">
             </form>
         </section>
     </wrapper>
@@ -275,63 +276,63 @@
 
 
 
- //         const emailInput = document.querySelector("#email");
-        // const submit2 = document.querySelector("#submit2");
-        // const newPwInput = document.querySelector("#newpw");
-        // const newPw2Input = document.querySelector("#newpw2");
-        // const submit3 = document.querySelector("#submit3");
+// const emailInput = document.querySelector("#email");
+// const submit2 = document.querySelector("#submit2");
+// const newPwInput = document.querySelector("#newpw");
+// const newPw2Input = document.querySelector("#newpw2");
+// const submit3 = document.querySelector("#submit3");
 
-        // // 새 비밀번호 입력란 처음엔 숨기기
-        // newPwInput.style.display = "none";
-        // newPw2Input.style.display = "none";
-        // submit3.style.display = "none";
+// // 새 비밀번호 입력란 처음엔 숨기기
+// newPwInput.style.display = "none";
+// newPw2Input.style.display = "none";
+// submit3.style.display = "none";
 
-        // // 비밀번호 찾기 버튼 클릭 (이메일 확인)
-        // submit2.addEventListener("click", (e) => {
-        //     e.preventDefault();
-        //     const email = emailInput.value.trim();
-        //     if (!email) return alert("이메일을 입력하세요.");
+// // 비밀번호 찾기 버튼 클릭 (이메일 확인)
+// submit2.addEventListener("click", (e) => {
+// e.preventDefault();
+// const email = emailInput.value.trim();
+// if (!email) return alert("이메일을 입력하세요.");
 
-        //     fetch("/login/checkEmail", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify({ email })
-        //     })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (data.exists) {
-        //             alert("이메일 확인 완료. 새 비밀번호를 입력하세요.");
-        //             newPwInput.style.display = "block";
-        //             newPw2Input.style.display = "block";
-        //             submit3.style.display = "block";
-        //         } else {
-        //             alert("존재하지 않는 이메일입니다.");
-        //         }
-        //     })
-        //     .catch(err => alert("서버 오류 발생"));
-        // });
+// fetch("/login/checkEmail", {
+// method: "POST",
+// headers: { "Content-Type": "application/json" },
+// body: JSON.stringify({ email })
+// })
+// .then(res => res.json())
+// .then(data => {
+// if (data.exists) {
+// alert("이메일 확인 완료. 새 비밀번호를 입력하세요.");
+// newPwInput.style.display = "block";
+// newPw2Input.style.display = "block";
+// submit3.style.display = "block";
+// } else {
+// alert("존재하지 않는 이메일입니다.");
+// }
+// })
+// .catch(err => alert("서버 오류 발생"));
+// });
 
-        // // 비밀번호 변경 버튼 클릭
-        // submit3.addEventListener("click", (e) => {
-        //     e.preventDefault();
-        //     const email = emailInput.value.trim();
-        //     const newPw = newPwInput.value.trim();
-        //     const confirmPw = newPw2Input.value.trim();
+// // 비밀번호 변경 버튼 클릭
+// submit3.addEventListener("click", (e) => {
+// e.preventDefault();
+// const email = emailInput.value.trim();
+// const newPw = newPwInput.value.trim();
+// const confirmPw = newPw2Input.value.trim();
 
-        //     if (!newPw || !confirmPw) return alert("새 비밀번호를 모두 입력하세요.");
-        //     if (newPw !== confirmPw) return alert("비밀번호가 일치하지 않습니다.");
+// if (!newPw || !confirmPw) return alert("새 비밀번호를 모두 입력하세요.");
+// if (newPw !== confirmPw) return alert("비밀번호가 일치하지 않습니다.");
 
-        //     fetch("/login/changePw", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify({ email, newPw })
-        //     })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         alert(data.message);
-        //         if (data.success) {
-        //             window.location.href = "/login"; // 변경 후 로그인 페이지로 이동
-        //         }
-        //     })
-        //     .catch(err => alert("서버 오류 발생"));
-        // });
+// fetch("/login/changePw", {
+// method: "POST",
+// headers: { "Content-Type": "application/json" },
+// body: JSON.stringify({ email, newPw })
+// })
+// .then(res => res.json())
+// .then(data => {
+// alert(data.message);
+// if (data.success) {
+// window.location.href = "/login"; // 변경 후 로그인 페이지로 이동
+// }
+// })
+// .catch(err => alert("서버 오류 발생"));
+// });

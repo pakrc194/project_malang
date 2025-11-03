@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
         return res.json({ success: false, message: '이메일, 비밀번호 입력하세요' })
     }
     // DB에서 사용자 정보 조회
-    const sql = 'SELECT email, pw FROM user_info WHERE email = ? AND pw = ?';
+    const sql = 'SELECT email, password, sign_method FROM USER_INFO WHERE email = ? AND password = ?';
     conn.query(sql, [email, pw], (err, results) => {
         if (err) {
             console.error('DB 오류:', err);
@@ -43,76 +43,26 @@ router.post('/login', (req, res) => {
 
         if (results.length > 0) {
             const user = results[0];
+            const signMethod = user.sign_method
 
             // ✅ 세션 정보 저장
             req.session.email = user.email;
             req.session.pw = user.pw;
+            req.session.signMethod = signMethod;
 
             console.log('로그인 성공:', user.email)
-            return res.json({ success: true, message: '로그인 성공' })
-            // console.log('이름:', req.session.pname);
-            // console.log('이메일:', req.session.email);
-            // console.log('비밀번호:', req.session.pw);
 
-            // console.log('세션 정보:', user.pw, user.email);
-            // ✅ 로그인 성공 시 main.html로 이동
-            // return res.send(`
-            //     <script>
-            //         alert('${msg}');
-            //         location.href='/main.html';
-            //     </script>
-            // `);
+            if(signMethod === 'admin'){
+                return res.json({ success: true, message: '로그인 성공(매니저)', redirect: '/managermain.html' })
+            }else{
+            return res.json({ success: true, message: '로그인 성공(일반회원)', redirect: '/main' })
+            }
+           
         }
         res.json({ message: '이메일 또는 비밀번호가 올바르지 않습니다' })
     });
 
-    const sql2 = 'SELECT * FROM user_info WHERE sign_method = "manager"'
-        conn.query(sql2, [email, pw1], (err, resQuery) => {
-            if (err) {
-                console.log('매니저 sql 실패', err.message)
-                res.sendFile(path.join(__dirname, '../views/joinmem.html'))
-            } else {
-                console.log('매니저 sql 성공', resQuery)
-                res.sendFile(path.join(__dirname, '../views/managermain.html'))
-            }
-            res.json({ message: '이메일 또는 비밀번호가 올바르지 않습니다' })
-        })
 });
-
-// router.post("/checkEmail", (req, res) => {
-//   const { email } = req.body;
-//   const sql = "SELECT * FROM user_info WHERE email = ?";
-//   conn.query(sql, [email], (err, results) => {
-//     if (err) {
-//       console.error("이메일 확인 오류:", err);
-//       return res.status(500).json({ exists: false });
-//     }
-//     res.json({ exists: results.length > 0 });
-//   });
-// });
-
-// // 비밀번호 변경
-// router.post("/changePw", (req, res) => {
-//   const { email, newPw } = req.body;
-//   if (!email || !newPw) {
-//     return res.status(400).json({ success: false, message: "필수 정보가 누락되었습니다." });
-//   }
-
-//   const sql = "UPDATE user_info SET pw = ? WHERE email = ?";
-//   conn.query(sql, [newPw, email], (err, result) => {
-//     if (err) {
-//       console.error("비밀번호 변경 오류:", err);
-//       return res.status(500).json({ success: false, message: "DB 오류" });
-//     }
-
-//     if (result.affectedRows > 0) {
-//       res.json({ success: true, message: "비밀번호가 성공적으로 변경되었습니다." });
-//     } else {
-//       res.json({ success: false, message: "존재하지 않는 이메일입니다." });
-//     }
-//   });
-// });
-
 
 
 

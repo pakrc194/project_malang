@@ -227,7 +227,7 @@
   <wrapper>
     <section class="login">
       <div>
-        <!-- ✅ form 기본 제출 막기 위해 button으로 변경 -->
+        
         <div class="formdata">
           <input type="text" id="email" placeholder="아이디(이메일)">
           <br>
@@ -248,7 +248,7 @@
         <div class="container">
           <div class="vertical-layout">
 
-            <!-- ✅ 카카오 로그인 -->
+            
             <script>
               const domain = window.location.origin;
 
@@ -310,7 +310,6 @@
 
   <footer>footer</footer>
 
-  <!-- ✅ JS 코드 정리 -->
   <script>
     window.addEventListener('load', () => {
       document.querySelector("#submit").addEventListener("click", (e) => {
@@ -320,7 +319,7 @@
         const pw = document.querySelector("#pw").value.trim();
 
         if (!email || !pw) {
-          alert("이메일과 비밀번호를 입력해주세요");
+          alert("이메일, 비밀번호 입력");
           return;
         }
 
@@ -333,8 +332,15 @@
           .then(data => {
             if (data.success) {
               alert(data.message);
+
+              if(data.redirect){
+                location.href = data.redirect
+              } else{
               location.href = "/main";
-            } else {
+            }
+          }
+            
+            else {
               alert(data.message);
             }
           })

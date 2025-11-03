@@ -26,11 +26,15 @@ app.use(express.static(path.join(__dirname, 'views')));
 const perfRouter = require('./routes/perfRouter')
 const mainRouter = require('./routes/mainRouter')
 const loginRouter = require('./routes/loginRouter')
+const joinmemRouter = require('./routes/joinmemRouter')
+const idpwsearchRouter = require('./routes/idpwsearchRouter')
 
 
 app.use('/perf', perfRouter)
 app.use('/main', mainRouter)
 app.use('/login', loginRouter)
+app.use('/joinmem', joinmemRouter)
+app.use('/idpwsearch', idpwsearchRouter)
 
 
 app.get('/', (req, res)=>{
@@ -40,3 +44,6 @@ app.get('/', (req, res)=>{
 app.listen(80, ()=>{
     console.log('app 80 서버 확인')
 })
+
+// const mypageRouter = require("./routes/mypageRouter");
+// app.use("/mypage", mypageRouter);

@@ -13,8 +13,8 @@ const port = 80;
 
 
 // 변수 지정
-const client_id = "539aca6ea7a35fe0b2c0d6aa713ffa33";               // 내 앱의 REST API 키로 변경 필수
-const client_secret = "KoCocYemMVcZ0SoKtxWahznQdiPd9lCE";
+const client_id = "9010fbf47377b2f34b0e443ad62a2326";               // 내 앱의 REST API 키로 변경 필수
+const client_secret = "XeIcIaPxVYR4u4ZKhOT8VUDqAxGzuyhc";
 const domain = "http://192.168.0.22/login/kakao";
 const redirect_uri = `${domain}/redirect`;
 const token_uri = "https://kauth.kakao.com/oauth/token"; // 액세스 토큰 요청을 보낼 카카오 인증 서버 주소 
@@ -143,7 +143,7 @@ router.get("/profile", async function (req, res) {
   }
 
   // 기존 가입자
-  const originMember = "SELECT * FROM user_info WHERE email = ?";
+  const originMember = "SELECT * FROM USER_INFO WHERE email = ?";
   conn.query(originMember, [email], (err, results) => {
     if (err) {
       console.error("DB 에러:", err);
@@ -154,7 +154,7 @@ router.get("/profile", async function (req, res) {
     if (results.length === 0) {
       // 신규 로그인
       const insertQuery = `
-        INSERT INTO user_info (name, email, score, sign_method)
+        INSERT INTO USER_INFO (name, email, score, sign_method)
         VALUES (?, ?, ?, ?)
       `;
       conn.query(insertQuery, [name, email, score, sign_method], (err2) => {
