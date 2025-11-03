@@ -5,21 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>coupon</title>
     <script>
-        window.addEventListener('DOMContentLoaded', function(){
-            document.querySelector(".write").innerHTML += "{{ptot}}<br/>"
-        })
+        // window.addEventListener('DOMContentLoaded', function(){
+        //     document.querySelector(".write").innerHTML += "{{ptot}}<br/>"
+        // })
         
-
-
     </script>
 </head>
 <body>
     <h1>coupon데이터</h1>
-    <div class="write"></div>
-    go_data: {{temp_data[0].grade}}<br/>
+    <div class="coupon_menu">
+        {% for i in coupon %}
+        <label>
+        <input type="checkbox">
+        {{i.cid}} {{i.coupon_name}} {{i.discount_price}}<br/>
+        </label>
+        {% endfor %}
+
+    </div>
+    <div class="side_info">
     {% for i in temp_data %}
     좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
     {% endfor %}
+    </div>
 
+    <input type="submit" value="{{ptot}}">
 </body>
 </html>

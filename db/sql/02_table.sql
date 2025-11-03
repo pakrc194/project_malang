@@ -74,7 +74,10 @@ CREATE TABLE seat_temp (
     grade VARCHAR(10),
     area VARCHAR(10),
     s_row int,
-    s_col int
+    s_col int,
+    choice_date DATE,
+    choice_time int,
+    expires DATETIME
 );
 
 -- 좌석 가격 테이블

@@ -97,10 +97,6 @@
 
                     cnt++
                 }
-
-                
-                // document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
-                        
                 
                 daysTag.innerHTML = liTag;
 
@@ -123,16 +119,19 @@
 
                 
                 
+                
             }
             renderCalendar()
 
+            
             const selDate = ()=>{
                 document.querySelector(".time").innerHTML = `${selectY}년 ${selectM+1}월 ${selectD}일`
                 document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${1})" class="btn1">1회차 14:00</label></li>`
                 document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${2})" class="btn2">2회차 19:00</label></li>`
                 document.querySelector(".btn{{time}}").checked = true;
                 document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
-
+                // let init_arr = ["select_date", `${selectY}-${selectM+1}-${selectD}`, "{{time}}"]
+                socket.send(`select_date ${selectY}-${selectM+1}-${selectD} {{time}}`)
             }
 
             selDate()
@@ -158,11 +157,13 @@
                 renderCalendar()
                 // "{{flag}}" = 0
             })    
+            
 
             document.querySelector(".selectBtn").onclick = function() {
                 let {dd, tt} = cc()
-                let arr = [dd, tt]
-                socket.send(`${arr}`)
+                let arr = ["select_date", dd, tt]
+                // socket.send(`${arr}`)
+                socket.send(`select_date ${dd} ${tt}`)                
             }
         }
         
@@ -198,6 +199,7 @@
         }
 
         function cc() {
+            
             return {dd, tt}
             // module.exports = {dd, tt}
         }

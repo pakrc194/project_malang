@@ -39,10 +39,10 @@ router.post('/temp', (req, res)=>{
         }
         else {
             arr = {
-                date: dd,
-                time: tt,
-                flag: flag,
-                res: resQuery
+                date: dd,  // 선택 날짜
+                time: tt,  // 선택 회차
+                flag: flag, // 표시해야할 날짜
+                res: resQuery // 공연장 이름
             }
         }
         // console.log(arr)
@@ -58,7 +58,11 @@ router.get('/coupon', (req, res)=>{
         ptot += temp_data[i].price
     }
 
-    res.render('../views/coupon.html', {ptot: ptot, temp_data})
+    conn.query('select * from coupon_info', (err, resQ)=>{
+        console.log(res)
+        res.render('../views/coupon.html', {ptot: ptot, temp_data, coupon:resQ})
+    })
+
 })
 
 router.post('/coupon', (req, res)=>{

@@ -3,7 +3,7 @@
         // 2 웹소켓 서버에 연결성공
         socket.onopen = ()=>{
             // 3.1 클라이언트가 송신
-            socket.send('seatB1 연결성공')
+            // socket.send('seatB1 연결성공')
         }
         // 3.2 클라이언트가 수신
         // socket.onmessage = (e)=>{
