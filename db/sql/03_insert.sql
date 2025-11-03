@@ -31,7 +31,18 @@ insert into cast_info (pr_id, name, background) VALUES
 
 
 -- 좌석 가격
-INSERT INTO seat_price (grade, price) VALUES
-    ("R", 160000),
-    ("S", 130000),
-    ("A", 90000);
+INSERT INTO seat_price (grade, price, color) VALUES
+    ("R", 160000, "yellowgreen"),
+    ("S", 130000, "violet"),
+    ("A", 90000, "skyblue");
+
+    insert into actor_info (name, profile, birth, gender) VALUES 
+    ('박규원', 'hook_pkw_841761909473010.png','1984','M'),
+    ('최호승', 'hook_chs_851761909445555.png','1985','M'),
+    ('박상혁', 'hook_psh_991761909601674.png','1999','M'),
+    ('김도빈', 'feter_kdb_821761909330222.png','1982','M'),
+    ('최민우', 'feter_cmw_921761909027638.png','1992','M'),
+    ('정우연', 'wendy_jwy_921761909636454.png','1992','F'),
+    ('김주연', 'wendy_kjy_931761909650953.png','1993','F'),
+    ('박새힘', 'wendy_psh_941761909667609.png','1994','F'),
+    ('동현', 'feter_dh_891761909243536.png','1989','M');

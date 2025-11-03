@@ -80,7 +80,8 @@ CREATE TABLE seat_temp (
 -- 좌석 가격 테이블
 CREATE TABLE seat_price (
     grade VARCHAR(10),
-    price int
+    price int,
+    color VARCHAR(20)
 )
 
 DROP TABLE seat_price;

@@ -31,14 +31,18 @@
                         가격
                     </div>
                     <div>
-                        대공연장<br/>
+                        {{musical[0].name}}<br/>
                         2025.10.22 ~ 2026.01.18<br/>
                         100분<br/>
                         14세 이상 관람가<br/>
                         창작뮤지컬<br/>
-                        R석 160,000원<br/>
+                        {% for info in musical %}
+                        {{info.grade}}석 {{info.price}}원<br/>
+                        {% endfor %}
+
+                        <!-- R석 160,000원<br/>
                         S석 130,000원<br/>
-                        A석 90,000원
+                        A석 90,000원 -->
                     </div>
                 </div>
             </div>
@@ -48,30 +52,34 @@
         </div>
         <div class="actor">
             <!-- <img src="../img/actor.png" alt=""> -->
-             {% include 'desc_actor.html' %}
+             <div class="act_wrapper">
+                <div class="view_casting">
+                    <div class="letter_casting">캐스팅</div>
+                    <form action="/" target="_blank">
+                        <input type="submit" value="캐스팅 일정조회" class="casting_schedule">
+                    </form>
+                </div>
+                <div class="actor_box">
+
+                </div>
+            </div>
+             
         </div>
-                    <!-- <img class="main_poster" onclick="click_poster()" src="../img/mad_hatter.png"> -->
 
         <div class="story">
             <img src="../img/story1.jpg" alt="">
-
-            뮤지컬 스토리 (시놉시스 등) - 이미지
         </div>
         <div class="seat">
-            <img src="../img/seat.jpg" alt="">
-            공연장 좌석배치도 (공연장에 맞춰서 만든 배치도)
+            <img src="../img/seat.png" alt="">
         </div>
         <div class="casting">
             <img src="../img/casting.jpg" alt="">
-            배역소개 - 이미지
         </div>
         <div class="review">
             <img src="../img/review.png" alt="">
-            후기 - 댓글창처럼 만들기
         </div>
         <div class="footer">
             <img src="../img/footer.png" alt="">
-            푸터 - 메인화면 푸터 가져오기
         </div>
     </div>
 </body>

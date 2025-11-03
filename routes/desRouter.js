@@ -12,9 +12,14 @@ nunjucks.configure('views', {
     express: app
 })
 
+
 // 상세페이지
 router.get('/', (req, res)=>{
-    res.render("description.html")
+    conn.query(`select * from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="1" `, (err, resP)=>{
+        res.render("description.html", {musical:resP})
+    })
+    // conn.query(`select * from actor_info`)
+
 })
 
 let arr={}
@@ -57,13 +62,18 @@ router.get('/coupon', (req, res)=>{
 })
 
 router.post('/coupon', (req, res)=>{
-    console.log('쿠폰에 넘길 데이터: ', req.body)
     temp_data = req.body
 })
 
-router.get('/main_poster', (req, res)=>{
-    res.render("main_poster.html")
+router.get('/actor', (req, res)=>{
+    console.log('배우 상세정보 페이지로 이동')
+    console.log(req.query.actor_id)
+    // console.logo(req.body)
+    // conn.query('select * from actor_info', (err, res)=>{
+    //     console.log(res)
+    // })
 })
+
 
 
 module.exports = router
