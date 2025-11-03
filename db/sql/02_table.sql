@@ -84,3 +84,59 @@ CREATE TABLE seat_price (
 )
 
 DROP TABLE seat_price;
+
+
+drop table actor_info;
+
+CREATE TABLE actor_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(20),
+    birth int,
+    gender varchar(5),
+    profile varchar(50)
+);
+
+
+drop table perf_info;
+
+CREATE TABLE perf_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(20),
+    poster varchar(50),
+    synopsis varchar(50),
+    start_date varchar(20),
+    end_date varchar(20),
+    genre varchar(20),
+    running_time int,
+    th_id int,
+    reg_date varchar(50)
+);
+
+drop table perf_th_price;
+
+CREATE TABLE perf_th_price(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    perf_id int,
+    th_id int,
+    grade varchar(2),
+    price int
+);
+
+DROP TABLE user_coupon;
+
+CREATE TABLE user_coupon (
+    uid VARCHAR(20),
+    cid VARCHAR(100),
+    coupon_issuance_date date,
+    expiration_date date,
+    coupon_use_date date,
+    coupon_state VARCHAR(20)
+);
+
+DROP TABLE coupon_info;
+
+CREATE TABLE coupon_info(
+    cid VARCHAR(100),
+    coupon_name VARCHAR(100),
+    discount_price int
+);
