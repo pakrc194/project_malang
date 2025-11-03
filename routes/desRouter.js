@@ -80,9 +80,21 @@ router.get('/actor', (req, res)=>{
     // })
 })
 
+let payment_info = {}
 router.get('/payment', (req, res)=>{
-    
+
+    conn.query('select seat_temp.*, seat_price.price from seat_temp join seat_price on find_in_set (seat_temp.grade, seat_price.grade)', (err, resQ)=>{
+
+        console.log(resQ)
+        res.render('../views/payment.html', {payment_info, ticket: resQ})
+    })
 })
+
+router.post('/payment', (req, res)=>{
+    console.log('쿠폰정보: ', req.body)
+    payment_info = req.body
+})
+
 
 
 module.exports = router

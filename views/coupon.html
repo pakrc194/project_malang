@@ -9,7 +9,8 @@
             let cnt = "{{cnt}}"
             let totprice = "{{ptot}}"
             let use = 0
-            // let arr = []
+            let arr = []
+
             document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
             document.querySelectorAll(".coupon_ck").forEach(cck =>{
                 cck.addEventListener('click', ()=>{
@@ -18,41 +19,39 @@
                     if (cck.checked == true){
                         use++
                         totprice -= eval(cck.classList[2])
-                        // arr.push(
-                        //     {
-                        //         coupon_name: cck.classList[1],
-                        //         discount_price: cck.classList[2]
-                        //     }
-                        // )
+                        arr.push(
+                            {
+                                coupon_name: cck.classList[1],
+                                discount_price: cck.classList[2]
+                            }
+                        )
                         if (use > cnt){
                             alert('쿠폰 선택 안됨')
                             cck.checked = false
                             use--
                             totprice += eval(cck.classList[2])
-                            // arr.pop()
+                            arr.pop()
                         }
                         document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
                     }
                     else {
                         use--
                         totprice += eval(cck.classList[2])
-                        // arr.pop()
+                        arr.pop()
                         document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
                     }
                 })
             })
 
-            
-            // document.querySelector(".total_price_btn").onclick = function() {
-                // arr.unshift({total: totprice})
-                // fetch(`/desc/payment`, {
-                //     method: 'GET',
-                //     // headers: {'Content-Type': 'application/json'},
-                //     body: JSON.stringify(arr)
-                //     // body: ddd
-                // })
-                // .then(answer=>answer.json())
-            // }
+            document.querySelector(".total_price_btn").onclick = function() {
+                fetch(`/desc/payment`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(arr)
+                    // body: ddd
+                })
+                .then(answer=>answer.json())
+            }
             
         })
 
@@ -71,11 +70,11 @@
 
     </div>
     <div class="side_info">
-    {% for i in temp_data %}
-    좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
-    {% endfor %}
+        {% for i in temp_data %}
+        좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
+        {% endfor %}
     </div>
-    <form action="/coupon">
+    <form action="/desc/payment">
     <input type="submit" class="total_price_btn">
     </form>
 </body>
