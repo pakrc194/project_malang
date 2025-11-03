@@ -28,12 +28,17 @@
 
 .actor_box{
     display: flex;
-    height: 150px;
+    /* height: 150px; */
+    width: 1200px;
     justify-content: space-evenly;
+    /* flex-wrap: wrap; */
+    overflow-x: auto;
+    
 }
 
 .ind_actor {
-    width: 150px;
+    /* width: 150px; */
+    width: 200px;
     height: 210px;
     background-color: pink;
     text-align: center;
@@ -44,6 +49,9 @@
 .ind_actor > img{
     width: 100px;
     height: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 20px;
 }
 
 .fav_act {

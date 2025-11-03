@@ -8,11 +8,22 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', function(){
-            document.querySelectorAll(".fav_act").forEach(btn =>{
-                btn.addEventListener('click', ()=>{
-                    console.log('버튼 클릭', btn.value)
+            for (let i=0 ; i<10; i++) {
+
+                document.querySelector(".actor_box").innerHTML += 
+                `<div class="ind_actor">
+                    <img src="../img/cat3_cut.jpg" alt="">
+                    <div class="actor_name">배우${i}</div>
+                    <div calss="cast_name">배역${i}</div>
+                </div>`
+            }
+            document.querySelectorAll(".ind_actor").forEach(act_box =>{
+                act_box.addEventListener("click", ()=>{
                     
-                    // console.log(document.querySelectorAll(".fav_act").value)
+                    console.log(`배우 상세 페이지로 이동`)
+                    // window.location.href="/"
+                    window.open("/")
+                    
                 })
             })
         })
@@ -22,42 +33,38 @@
     <div class="act_wrapper">
         <div class="casting">
             <div class="letter_casting">캐스팅</div>
-            <input type="submit" value="캐스팅 일정조회" class="casting_schedule">
+            <form action="/" target="_blank">
+                <input type="submit" value="캐스팅 일정조회" class="casting_schedule">
+            </form>
         </div>
         <div class="actor_box">
             <div class="ind_actor">
                 <img src="../img/cat3_cut.jpg" alt=""> 
-                <input type="submit" value="관심배우설정" class="fav_act">
                 <div class="actor_name">배우1</div>
                 <div calss="cast_name">배역1</div>
             </div>
             <div class="ind_actor">
                 <img src="../img/cat3_cut.jpg" alt="">
-                <input type="submit" value="관심배우설정" class="fav_act">  
                 <div class="actor_name">배우2</div>
                 <div calss="cast_name">배역2</div>
             </div>
             <div class="ind_actor">
-                <img src="../img/cat3_cut.jpg" alt="">
-                <input type="submit" value="관심배우설정" class="fav_act">  
+                <img src="../img/cat3_cut.jpg" alt=""> 
                 <div class="actor_name">배우3</div>
                 <div calss="cast_name">배역3</div>
             </div>
             <div class="ind_actor">
                 <img src="../img/cat3_cut.jpg" alt="">
-                <input type="submit" value="관심배우설정" class="fav_act">  
                 <div class="actor_name">배우4</div>
                 <div calss="cast_name">배역4</div>
             </div>
             <div class="ind_actor">
-                <img src="../img/cat3_cut.jpg" alt="">
-                <input type="submit" value="관심배우설정" class="fav_act">  
+                <img src="../img/cat3_cut.jpg" alt="">  
                 <div class="actor_name">배우5</div>
                 <div calss="cast_name">배역5</div>
             </div>
             <div class="ind_actor">
                 <img src="../img/cat3_cut.jpg" alt="">
-                <input type="submit" value="관심배우설정" class="fav_act">  
                 <div class="actor_name">배우6</div>
                 <div calss="cast_name">배역6</div>
             </div>

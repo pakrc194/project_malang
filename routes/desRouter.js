@@ -49,21 +49,10 @@ router.post('/temp', (req, res)=>{
 let temp_data = {}
 router.get('/coupon', (req, res)=>{
     let ptot = 0
-    // go_data = JSON.stringify(temp_data)
-    // go_data = JSON.parse(temp_data)
-    // go_data = temp_data
-    // res.render('../views/coupon.html', {ptot: ptot, temp_data})
-    // console.log(go_data[0])
-    // if (temp_data.length == 1) {
-
-    // }
-    // JSON.stringify(go_data[0])
-    // console.log(JSON.parse(temp_data))
     for (let i in temp_data){
         ptot += temp_data[i].price
     }
-    // res.render('../views/coupon.html')
-    // res.render('../views/coupon.html', {ptot: ptot, go_data: JSON.stringify(temp_data)})
+
     res.render('../views/coupon.html', {ptot: ptot, temp_data})
 })
 
