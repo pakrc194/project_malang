@@ -6,7 +6,6 @@
     <title>calendar</title>
     <link rel="stylesheet" href="../style/minicalendar.css">
     <script>
-
         window.onload = function(){
             console.log("{{date}} {{time}} {{flag}}")
             let date = new Date()
@@ -131,7 +130,7 @@
                 document.querySelector(".btn{{time}}").checked = true;
                 document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
                 // let init_arr = ["select_date", `${selectY}-${selectM+1}-${selectD}`, "{{time}}"]
-                socket.send(`select_date ${selectY}-${selectM+1}-${selectD} {{time}}`)
+                // socket.send(`select_date ${selectY}-${selectM+1}-${selectD} {{time}}`)
             }
 
             selDate()

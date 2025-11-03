@@ -138,6 +138,8 @@
                 // console.log(cc())
                 let {dd, tt, flag} = cc()
                 let arr = [dd, tt, flag]
+                socket.send(`select_date ${dd} ${tt}`)
+
                 fetch(`/desc/temp`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},

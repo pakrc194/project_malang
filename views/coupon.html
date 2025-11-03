@@ -5,9 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>coupon</title>
     <script>
-        // window.addEventListener('DOMContentLoaded', function(){
-        //     document.querySelector(".write").innerHTML += "{{ptot}}<br/>"
-        // })
+        window.addEventListener('DOMContentLoaded', function(){
+            let cnt = "{{cnt}}"
+            let totprice = "{{ptot}}"
+            let use = 0
+            // let arr = []
+            document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
+            document.querySelectorAll(".coupon_ck").forEach(cck =>{
+                cck.addEventListener('click', ()=>{
+                    console.log(cck.classList)
+                    console.log('쿠폰 클릭')
+                    if (cck.checked == true){
+                        use++
+                        totprice -= eval(cck.classList[2])
+                        // arr.push(
+                        //     {
+                        //         coupon_name: cck.classList[1],
+                        //         discount_price: cck.classList[2]
+                        //     }
+                        // )
+                        if (use > cnt){
+                            alert('쿠폰 선택 안됨')
+                            cck.checked = false
+                            use--
+                            totprice += eval(cck.classList[2])
+                            // arr.pop()
+                        }
+                        document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
+                    }
+                    else {
+                        use--
+                        totprice += eval(cck.classList[2])
+                        // arr.pop()
+                        document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
+                    }
+                })
+            })
+
+            
+            // document.querySelector(".total_price_btn").onclick = function() {
+                // arr.unshift({total: totprice})
+                // fetch(`/desc/payment`, {
+                //     method: 'GET',
+                //     // headers: {'Content-Type': 'application/json'},
+                //     body: JSON.stringify(arr)
+                //     // body: ddd
+                // })
+                // .then(answer=>answer.json())
+            // }
+            
+        })
+
         
     </script>
 </head>
@@ -16,7 +64,7 @@
     <div class="coupon_menu">
         {% for i in coupon %}
         <label>
-        <input type="checkbox">
+        <input type="checkbox" class="coupon_ck {{i.coupon_name}} {{i.discount_price}}">
         {{i.cid}} {{i.coupon_name}} {{i.discount_price}}<br/>
         </label>
         {% endfor %}
@@ -27,7 +75,8 @@
     좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
     {% endfor %}
     </div>
-
-    <input type="submit" value="{{ptot}}">
+    <form action="/coupon">
+    <input type="submit" class="total_price_btn">
+    </form>
 </body>
 </html>

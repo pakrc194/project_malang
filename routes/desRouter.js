@@ -57,16 +57,18 @@ router.get('/coupon', (req, res)=>{
     for (let i in temp_data){
         ptot += temp_data[i].price
     }
+    let cnt = temp_data.length
 
     conn.query('select * from coupon_info', (err, resQ)=>{
-        console.log(res)
-        res.render('../views/coupon.html', {ptot: ptot, temp_data, coupon:resQ})
+        // 회원 등급 정보도 전달해야함
+        res.render('../views/coupon.html', {ptot: ptot, temp_data, coupon:resQ, cnt: cnt})
     })
 
 })
 
 router.post('/coupon', (req, res)=>{
     temp_data = req.body
+    res.json({message: 'receive'})
 })
 
 router.get('/actor', (req, res)=>{
@@ -78,6 +80,9 @@ router.get('/actor', (req, res)=>{
     // })
 })
 
+router.get('/payment', (req, res)=>{
+    
+})
 
 
 module.exports = router
