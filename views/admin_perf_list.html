@@ -19,6 +19,17 @@
         <a href="/admin/reserv">예매관리</a>
     </h2>
      <table border="">
+            <tr>
+                <td>번호</td>
+                <td>공연이름</td>
+                <td>포스터</td>
+                <td>장르</td>
+                <td>러닝타임</td>
+                <td>시작날짜</td>
+                <td>종료날짜</td>
+                <td>예매상태</td>
+                <td>등록일</td>
+            </tr>  
         {%for perf in res%}
             <tr>
                 <td>{{loop.index}}</td>
@@ -28,6 +39,8 @@
                 <td>{{perf.running_time}}</td>
                 <td>{{perf.start_date}}</td>
                 <td>{{perf.end_date}}</td>
+                <td>{{perf.resv_status}}</td>
+                <td>{{perf.reg_date}}</td>
             </tr>    
         {%endfor%}
     </table>

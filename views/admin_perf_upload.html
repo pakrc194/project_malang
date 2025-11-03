@@ -32,10 +32,12 @@
         let tbCast = document.querySelector(".admin_tb_cast")
         var castArrIdx = 0;
         var castArr = []
-        var uploadActor = []
+        var actArr = []
+        var perfCastArr = []
+
         document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
             const newCastData = {
-                id: castArrIdx, // 배열에서 쉽게 찾기 위한 고유 ID 추가
+                id: `tempCast${castArrIdx}`,
                 castName: ipAddCast.value,
                 castBg: ipAddBg.value
             }
@@ -49,55 +51,130 @@
             let tdCastBg = document.createElement("td")
             tdCastBg.innerHTML = ipAddBg.value
             ipAddBg.value = '';
-            let tdCastBtn = document.createElement("td")
+            let tdRemoveBtn = document.createElement("td")
             let removeBtn = document.createElement("input")
             removeBtn.setAttribute("type", "button")
             removeBtn.setAttribute("value", "-")
             removeBtn.id = `removeBtn${castArrIdx}`
             removeBtn.addEventListener("click", (e) => {
                 tbCast.removeChild(trCast)
+                
                 const removeId = Number(trCast.dataset.id); 
         
-                castArr = castArr.filter(item => item.id !== removeId);
+                castArr = castArr.filter(item => {
+                    let filterId = item.id.split('tempCast')[1]
+                    return filterId != removeId
+                });
                 
                 console.log('삭제 후 castArr:', castArr)
             })
-            tdCastBtn.append(removeBtn)
+            tdRemoveBtn.append(removeBtn)
+
+
+            let tdActorList = document.createElement("td")
+            let slActor = document.createElement("select")
+             
+            for(const actor of actArr) {
+                let optActor = document.createElement("option")
+                optActor.value = `${actor.id}`
+                optActor.innerHTML = `${actor.name}`
+                slActor.append(optActor)
+            }
+
+            slActor.id=`selectActor${castArrIdx}`
+            tdActorList.append(slActor)
+
+            let tdCastBtn = document.createElement("td")
+            let castBtn = document.createElement("input")
+            castBtn.setAttribute("type", "button")
+            castBtn.setAttribute("value", "지정")
+            castBtn.id = `castBtn${castArrIdx}`
+            
+            let tdCastList = document.createElement("td")
+            let spanCastList = document.createElement("span")
+            spanCastList.id = `castList${castArrIdx}`
+            tdCastList.append(spanCastList)
+
+            let prefCastData = {}
+            
+            
+            castBtn.addEventListener("click", (e) => {
+                console.log(slActor.value, slActor.options[slActor.selectedIndex].innerHTML.trim())
+                let selectOptionName = slActor.options[slActor.selectedIndex].innerHTML.trim()
+                let cast_id = castBtn.id.split('castBtn')[1]
+                if(spanCastList.innerHTML) {
+                    
+                    spanCastList.innerHTML += `,${selectOptionName}`
+                    prefCastData[`tempCast${cast_id}`] += `,${slActor.value.split('actor')[1]}`
+                } else {
+                    spanCastList.innerHTML = `${selectOptionName}`
+                    prefCastData[`tempCast${cast_id}`] = `${slActor.value.split('actor')[1]}`
+                }
+                console.log("prefCast",prefCastData)
+            })
+            tdCastBtn.append(castBtn)
+
+            let tdInitCast = document.createElement("td")
+            let initCastBtn = document.createElement("input")
+            initCastBtn.setAttribute("type", "button")
+            initCastBtn.setAttribute("value", "초기화")
+            initCastBtn.id = `initCastBtn${castArrIdx}`
+            tdInitCast.append(initCastBtn)
+            initCastBtn.addEventListener("click", (e) => {
+                spanCastList.innerHTML = ''
+                prefCastData[castBtn.id.split('castBtn')[1]] = ''
+            })
+
 
             trCast.append(tdCastName)
             trCast.append(tdCastBg)
+            trCast.append(tdRemoveBtn)
+            trCast.append(tdActorList)
             trCast.append(tdCastBtn)
+            trCast.append(tdCastList)
+            trCast.append(tdInitCast)
             tbCast.append(trCast)
 
             castArr.push(newCastData)
 
             castArrIdx++;
+
+            if(Object.keys(prefCastData).length!=0)
+                perfCastArr.push(prefCastData)
         }
 
         let divUploadActor = document.querySelector(".admin_upload_actor")
         let divActorList = document.querySelector(".admin_actor_list")
         let divActorInfoList = document.querySelectorAll('.admin_actor_info')
-
+        
+        
         for(const divActorInfo of divActorInfoList) {
             divActorInfo.addEventListener("click", (e)=>{
                 console.log(divActorInfo.parentNode)
                 console.log(divActorInfo.parentNode===divActorList)
+                let actorInfoId = divActorInfo.id.split('actor')[1]
+                divActorInfo.dataset.id = actorInfoId
                 if(divActorInfo.parentNode===divActorList) {
                     divActorList.removeChild(divActorInfo)
                     divUploadActor.appendChild(divActorInfo)
-                    if(!uploadActor.includes(divActorInfo.id.split('actor')[1]))
-                        uploadActor.push(divActorInfo.id.split('actor')[1])
+                    let pActorName = document.querySelector(`#actorName${actorInfoId}`)
+                    let actorName = pActorName.innerHTML
+                    let actorData = {id:`actor${actorInfoId}`, name:actorName}
+                    actArr.push(actorData)
                 } else {
                     divUploadActor.removeChild(divActorInfo)
                     divActorList.appendChild(divActorInfo)
-                    console.log(`$pop ${divActorInfo.id.split('actor')[1]}`)
-                    const indexToRemove = uploadActor.indexOf(divActorInfo.id.split('actor')[1]); // 값의 인덱스를 찾음
-                        
-                    if (indexToRemove > -1) {
-                        uploadActor.splice(indexToRemove, 1);
-                    }
+                    console.log(`$pop ${actorInfoId}`)
+                    const removeId = Number(divActorInfo.dataset.id); 
+            
+                    actArr = actArr.filter(item => {
+                        console.log(`${item.id} : ${removeId} = ${item.id != removeId}`)
+                        return item.id != removeId
+                    });
+                    
+                    console.log('삭제 후 actArr:', actArr)
                 }
-                console.log(uploadActor)
+                console.log(actArr)
             })
         }
 
@@ -117,7 +194,8 @@
             const uploadData = new FormData(document.uploadFrm)
             
             uploadData.append('castData', JSON.stringify(castArr))
-            uploadData.append('actorData', uploadActor)
+            uploadData.append('actorData', JSON.stringify(actArr))
+            uploadData.append('prefCastData', JSON.stringify(perfCastArr))
             
             //내용확인
             for(const [kk,vv] of uploadData.entries()){
@@ -160,6 +238,26 @@
         R<input type="text" name="fclassR" id="seatR"><br/>
         S<input type="text" name="fclassS" id="seatS"><br/>
         A<input type="text" name="fclassA" id="seatA"><br/>
+
+        <hr/>
+        출연 배우
+        <div class="admin_upload_actor">
+
+        </div>
+        출연 목록
+        <div class="admin_actor_list">
+            {%for actor in res%}
+                <div class="admin_actor_info" id="actor{{actor.actor_id}}">
+                    <div>
+                        <img src="../../img/{{actor.profile_image_url}}" width="50px" alt="">
+                    </div>
+                    <p id="actorName{{actor.actor_id}}">
+                        {{actor.actor_name}}({{actor.birth_year}}/{{actor.gender}})
+                    </p>
+                </div>
+            {%endfor%}
+        </div>
+
         출연 배역 
         <table class="admin_tb_cast" border="">
             <tr>
@@ -172,19 +270,7 @@
         배역 <input type="text" id="admin_tb_add_cast"/>
         줄거리 <input type="text" id="admin_tb_add_bg"/>
         <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
-        <hr/>
-        출연 배우
-        <div class="admin_upload_actor">
-
-        </div>
-        출연 목록
-        <div class="admin_actor_list">
-            {%for actor in res%}
-                <div class="admin_actor_info" id="actor{{actor.actor_id}}">
-                    {{actor.actor_id}}{{actor.actor_name}}<br/>{{actor.birth_year}}{{actor.gender}}
-                </div>
-            {%endfor%}
-        </div>
+        
         <hr/>
         <input type="button" value="업로드" id="btn_upload">
         <a href="/admin/perf">뒤로</a>

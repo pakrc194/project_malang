@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const conn = require('../db/db')
+const {iPerfSql, iCastSql, iPerfCastSql, iPerfPriceSql, iActorSql} = require('../db/admin_insert_db')
 const {multer} = require('../func/multer')
+const {base_date_format} = require('../func/date')
 const util = require('util');
 
 router.get('/perf', (req, res)=>{
@@ -21,6 +23,11 @@ router.get('/perf/list', (req, res)=>{
             res.render('../views/admin_perf_list.html')
         } else {
             console.log('sql 성공', resQuery)
+            for(const perf of resQuery) {
+                perf.start_date = base_date_format(perf.start_date)
+                perf.end_date = base_date_format(perf.end_date)
+                perf.reg_date = base_date_format(perf.reg_date)
+            }
             res.render('../views/admin_perf_list.html', {res : resQuery})
         }
     })
@@ -53,64 +60,81 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
 
     let castDataArr = req.body.castData
     let actorDataArr = req.body.actorData
+    let prefCastDataArr = req.body.prefCastData
 
     var venue_id = req.body.ftheator
     let seatData = {R:req.body.fclassR, S:req.body.fclassS, A:req.body.fclassA}
 
+    let sSeatGradeSql = `SELECT DISTINCT grade_code FROM SEAT_LAYOUT WHERE venue_id = ?`
+
+    const tempPrefCastData = {};
+
     console.log(`perf Info : ${perfData}`)
     console.log(`cast Info : ${castDataArr}`)
     console.log(`actor Info : ${actorDataArr}`)
+    console.log(`prefCast Info : ${prefCastDataArr}`)
+    console.log(`seat data :`, seatData)
+    
 
-    let perfSql = `insert into performance_info (name, poster_url, synopsis_url, start_date, end_date, genre, running_time)
-                        values(?, ?, ?, ?, ?, ?, ?)`
-    let castSql = `insert into cast_info (perf_id, cast_name, cast_story)
-                        values(?, ?, ?)`
-    let perfCastSql = `insert into perf_cast (perf_id, cast_id, actor_id)
-                        values(?, ?, ?)`
-    let perfPriceSql = `insert into perf_price (perf_id, venue_id, grade_code, price)
-                        values(?, ?, ?, ?)`    
+    const gradeRet = await conn.query(sSeatGradeSql, [venue_id]);
 
     try {
-        const perfRet = await conn.query(perfSql, perfData)
+        const perfRet = await conn.query(iPerfSql, perfData)
         const perf_id = perfRet.insertId
         console.log('perf query 성공', perf_id)
 
         const tasks = []
-        for (let grade in seatData) {
-            const perfPriceData = [perf_id, venue_id, grade, seatData[grade]];
-            tasks.push(conn.query(perfPriceSql, perfPriceData));
+            for (const gradeRow of gradeRet) {
+            const grade = gradeRow.grade_code;
+            const price = seatData[grade];
+            
+            if (price) {
+                const perfPriceData = [perf_id, venue_id, grade, price];
+                tasks.push(conn.query(iPerfPriceSql, perfPriceData));
+            }
         }
 
-        
+
         for (const cast of JSON.parse(castDataArr)) {
+            const tempId = cast.id
             const castData = [perf_id, cast.castName, cast.castBg];
             
             // castSql은 반드시 순차적으로 실행하여 cast_id를 얻어야 함
-            const castRet = await conn.query(castSql, castData); 
-            const cast_id = castRet.insertId;
-            console.log('cast query 성공', cast_id);
-
-            // 2-3. PERF_CAST 등록 (배역 등록 후 바로 기본 캐스팅 연결)
-            for (let actor_id of actorDataArr.split(',')) {
-                const perfCastData = [perf_id, cast_id, actor_id];
-                // Promise를 tasks 배열에 추가
-                tasks.push(conn.query(perfCastSql, perfCastData));
+            const castRet = await conn.query(iCastSql, castData); 
+            const newCastId = castRet.insertId
+            
+            tempPrefCastData[tempId] = newCastId
+            console.log('cast query 성공', tempId, castRet.insertId);
+        }
+        
+        // 2-3. PERF_CAST 등록 (배역 등록 후 바로 기본 캐스팅 연결)
+        for (let prefCast of JSON.parse(prefCastDataArr)) {
+            console.log('prefCast', prefCast, Object.keys(prefCast).length > 0)
+            if(Object.keys(prefCast).length > 0) {
+                for(const cast_id in prefCast) {
+                    for(const act_id of prefCast[cast_id].split(',')) {
+                        console.log('castId : ', cast_id, tempPrefCastData[cast_id])
+                        const perfCastData = [perf_id, tempPrefCastData[cast_id], act_id];
+                        
+                        tasks.push(conn.query(iPerfCastSql, perfCastData));
+                    }
+                }   
             }
         }
+        
         // 3. 모든 병렬 작업 완료 대기
         await Promise.all(tasks);
         
         // 4. 모든 DB 작업이 성공적으로 완료되면 응답 전송
         console.log('모든 DB 작업 성공적으로 완료.');
-        res.redirect('/admin/perf/list'); // ⭐ 여기서 안전하게 응답 처리
+        res.redirect('/admin/perf/list');
 
     } catch(err) {
         console.error('공연 등록 전체 트랜잭션 실패:', err.message);
-        // 트랜잭션 사용 시: 롤백 처리
-        // 사용자에게 에러 페이지 또는 메시지 전송
         res.status(500).send('공연 등록 중 오류가 발생했습니다.');
     }
 })
+
 
 router.get('/actor/list', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{
@@ -125,20 +149,17 @@ router.get('/actor/list', (req, res)=>{
 })
 
 router.get('/actor/upload', (req, res)=>{
-
-
     res.render('../views/admin_actor_upload.html')
 })
 
 router.post('/actor/upload', multer.single('fprofile'), (req, res)=>{
     console.log('actor upload req : ', req.body.name, req.body.fbirth, req.body.fgender)
     console.log('actor upload req fname: ', req.file.filename)
-    let sql = `insert into actor_info (actor_name, profile_image_url, birth_year, gender)
-                values(?, ?, ?, ?)`
+    
     let {fname, fbirth, fgender} = req.body
     let data =[fname, req.file.filename, fbirth, fgender]
 
-    conn.query(sql, data, (err, ret)=>{
+    conn.query(iActorSql, data, (err, ret)=>{
         if(err) {
             console.log('글쓰기 실패', err.message)
         } else {

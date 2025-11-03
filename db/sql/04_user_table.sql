@@ -23,7 +23,7 @@ CREATE TABLE USER_INFO (
     name VARCHAR(50) NOT NULL COMMENT '이름',
     question VARCHAR(255) COMMENT '이메일 찾기 질문',
     answer VARCHAR(255) COMMENT '이메일 찾기 답변',
-    sign_method ENUM('local', 'kakao', 'manager') NOT NULL COMMENT '가입/로그인 방식', 
+    sign_method ENUM('local', 'kakao', 'admin') NOT NULL COMMENT '가입/로그인 방식', 
     account_status ENUM('ACTIVE', 'WITHDRAWAL') NOT NULL DEFAULT 'ACTIVE' COMMENT '계정 상태 (ACTIVE:정상, WITHDRAWAL:탈퇴)',
     score DECIMAL(10, 0) NOT NULL DEFAULT 0 COMMENT '누적 등급 점수',
     grade_id INT NOT NULL DEFAULT 1 COMMENT '회원 등급 FK',

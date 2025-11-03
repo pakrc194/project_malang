@@ -1,0 +1,13 @@
+let iPerfSql = `insert into performance_info (name, poster_url, synopsis_url, start_date, end_date, genre, running_time)
+                    values(?, ?, ?, ?, ?, ?, ?)`
+let iActorSql = `insert into actor_info (actor_name, profile_image_url, birth_year, gender)
+                values(?, ?, ?, ?)`
+let iCastSql = `insert into cast_info (perf_id, cast_name, cast_story)
+                    values(?, ?, ?)`
+let iPerfCastSql = `insert into perf_cast (perf_id, cast_id, actor_id)
+                    values(?, ?, ?)`
+let iPerfPriceSql = `insert into perf_price (perf_id, venue_id, grade_code, price)
+                    values(?, ?, ?, ?)`    
+
+
+module.exports = {iPerfSql, iActorSql, iCastSql, iPerfCastSql, iPerfPriceSql}
