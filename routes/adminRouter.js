@@ -32,6 +32,35 @@ router.get('/perf/list', (req, res)=>{
         }
     })
 })
+router.get('/perf/detail/:id', (req, res)=>{
+    console.log(req.params)
+    conn.query('select * from performance_info where perf_id = ?', [req.params.id], (perfInfoErr, perfInfoQuery)=>{
+        if(perfInfoErr) {
+            console.log('sql 실패', perfInfoErr.message)
+            res.render('../views/admin_perf_list.html')
+        } else {
+            console.log('sql 성공', perfInfoQuery)
+            perfInfoQuery.start_date = base_date_format(perfInfoQuery.start_date)
+            perfInfoQuery.end_date = base_date_format(perfInfoQuery.end_date)
+            perfInfoQuery.reg_date = base_date_format(perfInfoQuery.reg_date)
+            
+            let prefCastSql = ``
+
+            conn.query(prefCastSql, [req.params.id], (perfCastErr, perfCastQuery)=>{
+                if(perfCastErr) {
+                    console.log('sql 실패', perfCastErr.message)
+                    res.render('../views/admin_perf_list.html')
+                } else {
+                    console.log('prefCast : ', perfCastQuery)
+                    res.render('../views/admin_perf_detail.html', {perfInfo : perfInfoQuery, perfCast : perfCastQuery})
+                }
+            })
+
+
+            
+        }
+    })
+})
 
 router.get('/perf/upload', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{
@@ -75,15 +104,16 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
     console.log(`prefCast Info : ${prefCastDataArr}`)
     console.log(`seat data :`, seatData)
     
-
-    const gradeRet = await conn.query(sSeatGradeSql, [venue_id]);
+    const tasks = []
 
     try {
+        const gradeRet = await conn.query(sSeatGradeSql, [venue_id]);
+
         const perfRet = await conn.query(iPerfSql, perfData)
         const perf_id = perfRet.insertId
         console.log('perf query 성공', perf_id)
 
-        const tasks = []
+        
             for (const gradeRow of gradeRet) {
             const grade = gradeRow.grade_code;
             const price = seatData[grade];
@@ -112,12 +142,19 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
             console.log('prefCast', prefCast, Object.keys(prefCast).length > 0)
             if(Object.keys(prefCast).length > 0) {
                 for(const cast_id in prefCast) {
-                    for(const act_id of prefCast[cast_id].split(',')) {
-                        console.log('castId : ', cast_id, tempPrefCastData[cast_id])
-                        const perfCastData = [perf_id, tempPrefCastData[cast_id], act_id];
-                        
-                        tasks.push(conn.query(iPerfCastSql, perfCastData));
+                    const finalCastId = tempPrefCastData[tempCastId];
+                    if (finalCastId) {
+                        const actorIdsString = prefCast[tempCastId];
+                        for(const act_id of actorIdsString.split(',')) {
+                            if (act_id.trim()) {
+                                const perfCastData = [perf_id, finalCastId, act_id.trim()];
+                                tasks.push(conn.query(iPerfCastSql, perfCastData));
+                            }
+                        }
+                    } else {
+                        console.warn(`경고: 캐스팅 정보의 임시 ID (${tempCastId})에 대한 최종 DB ID가 맵에 없어 건너뜁니다.`);
                     }
+                    
                 }   
             }
         }
@@ -127,7 +164,7 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
         
         // 4. 모든 DB 작업이 성공적으로 완료되면 응답 전송
         console.log('모든 DB 작업 성공적으로 완료.');
-        res.redirect('/admin/perf/list');
+        res.redirect('/');
 
     } catch(err) {
         console.error('공연 등록 전체 트랜잭션 실패:', err.message);

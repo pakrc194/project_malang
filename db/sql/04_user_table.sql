@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761919734604@@127.0.0.1@3306@malang_db
 -- 1. USER_GRADE (회원 등급)
 drop database malang_db;
 
