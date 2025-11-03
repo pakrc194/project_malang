@@ -125,8 +125,8 @@ CREATE TABLE perf_th_price(
 DROP TABLE user_coupon;
 
 CREATE TABLE user_coupon (
-    uid VARCHAR(20),
-    cid VARCHAR(100),
+    user_email VARCHAR(30),
+    coupon_id VARCHAR(100),
     coupon_issuance_date date,
     expiration_date date,
     coupon_use_date date,
