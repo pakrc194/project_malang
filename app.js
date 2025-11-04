@@ -21,9 +21,12 @@ app.use('/perf', perfRouter)
 app.use('/main', mainRouter)
 
 app.get('/', (req, res)=>{
+    console.log('/---------')
     res.redirect('/main')
 })
 
 app.listen(80, ()=>{
-    console.log('app 80 서버 확인')
+    console.log('app 80 서버 확인---')
 })
+
+//nodemon --config .nodemon.json

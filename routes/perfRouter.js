@@ -32,3 +32,5 @@ router.post('/upload', multer.single('fname'), (req, res)=>{
 
 
 module.exports = router 
+
+

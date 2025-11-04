@@ -62,7 +62,7 @@
 
 	/* 남색 박스 */
 	.main_banner > .nbox {
-      width: 220px;
+      width: 300px;
       height: 500px;
       background-color: navy;
       float: left;
@@ -121,18 +121,23 @@
 	<div id="wrapper">
         <!-- 하늘색 베너 -->
     	<section class="main_banner">
-          {%for 미노 in res %}
-            <div class="nbox">
-              <img src="../img/{{미노.poster_url}}" alt="">
-            </div>
-          {%endfor%}
+          <div class="nbox">
+            <img src="../img/{{미노.poster_url}}" alt="">
+          </div>
+          <div class="lbox">
+            <img src="../img/{{미노.poster_url}}" alt="">
+          </div>
+          <div class="rbox">
+            <img src="../img/{{미노.poster_url}}" alt="">
+          </div>
     	</section>
 
 		<!-- 초록색 메인 포스터 -->
 		<section class="main_poster">
       {% for 아무이름 in res %}
         <div class="box">
-            <div class="pbox"><img src="../img/{{아무이름.poster_url}}" alt=""></div>
+            <div class="pbox">
+            <img src="../img/{{아무이름.poster_url}}" alt=""></div>
             <div class="wbox">
               {{아무이름.name}}<br/>
               {{아무이름.start_date}} / {{아무이름.running_time}}
@@ -140,15 +145,13 @@
         </div>
       {% endfor %}
 			<!-- <div class="box">
-			    <div class="pbox"><img src="../img/kim.jpg" alt=""></div>
-          <div class="wbox">
-            <a href="/main/search">search</a>
-          </div>
+			    <div class="pbox"><img src="../img/kim.jpg" alt=""> </div>
+          <div class="wbox"><a href="/main/search">search</a> </div>
 			</div>
 			<div class="box">
 			    <div class="pbox"><img src="../img/mi.gif" alt=""></div>
 			    <div class="wbox"></div>
-			</div>
+      </div>
 			<div class="box">
 				<div class="pbox"><img src="../img/cabin.jpg" alt=""></div>
 				<div class="wbox"></div>
@@ -162,6 +165,8 @@
 				<div class="wbox"></div>
 			</div> -->
 		</section>
+    <a href="/main/grade">grade</a>
+    <a href="/main/venue">venue</a>
   </div>
 </body>
 </html>
