@@ -7,12 +7,28 @@
 </head>
 <body>
     <h1>detail</h1>
-    {{res.name}}<br/>
-    {{res.poster_url}}<br/>
-    {{res.synopsis_url}}<br/>
-    {{res.start_date}}<br/>
-    {{res.end_date}}<br/>
-    {{res.genre}}<br/>
-    {{res.reg_date}}<br/>
+    {{perfInfo.name}}<br/>
+    {{perfInfo.poster_url}}<br/>
+    {{perfInfo.synopsis_url}}<br/>
+    {{perfInfo.start_date}}<br/>
+    {{perfInfo.end_date}}<br/>
+    {{perfInfo.genre}}<br/>
+    {{perfInfo.reg_date}}<br/>
+    {{perfInfo.is_hidden}}<br/>
+    {{perfInfo.resv_status}}<hr/>
+    {{venueInfo.venue_name}}<br/>
+    {{venueInfo.region}}<hr/>
+    {% for cast in perfCast%}
+        {{cast.actor_name}}<br/>
+        {{cast.profile_image_url}}<br/>
+        {{cast.cast_name}}<hr/>
+    {% endfor %}
+    {% for schedule in perfScedule %}
+        {{schedule.schedule_date}}
+    {% endfor %}
+    <a href="/admin/perf/list">뒤로</a>
+    <a href="/admin/perf/modify/{{perfInfo.perf_id}}">수정</a>
+    <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
+    <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a>
 </body>
 </html>

@@ -1,4 +1,4 @@
--- Active: 1761919734604@@127.0.0.1@3306@malang_db
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 insert into venue_info (venue_name, region, venue_type) VALUES 
     ("샤롯데씨어터", "서울", "대극장"),
     ("드림씨어터", "부산", "대극장"),

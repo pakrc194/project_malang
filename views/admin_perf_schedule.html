@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    window.onload = function() {
+
+    }
+</script>
+<body>
+    <h1>Schedule</h1>
+    {% set castIdx = 0 %}
+    <table border="">
+        <tr>
+            <td colspan="3">스케줄</td>
+            {% for cast in castInfo %}
+                {% set castIdx = castIdx+1 %}
+                <td>{{cast.cast_name}}</td>
+            {% endfor %}
+        </tr>
+        {% for schedule in perfScedule %}
+            <tr>
+                <td>{{schedule.schedule_date}}</td>
+                <td>{{schedule.schedule_time}}</td>
+                <td>{{schedule.round}}</td>
+                {% for i in range(0, castIdx) %}
+                <td>
+                    <select id="schedule{{schedule.schedule_id}}">
+                        {% for actor in perfCast %}
+                            <option value="actor{{actor.actor_id}}">{{actor.actor_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <input type="button" id="upload_schedule" value="저장">
+</body>
+</html>

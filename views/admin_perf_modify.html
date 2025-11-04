@@ -188,23 +188,23 @@
             }
         })
 
-        let btn_upload = document.querySelector('#btn_upload')
+        let btn_modify = document.querySelector('#btn_modify')
 
-        btn_upload.addEventListener('click', (e)=>{
-            const uploadData = new FormData(document.uploadFrm)
+        btn_modify.addEventListener('click', (e)=>{
+            const modifyData = new FormData(document.modifyFrm)
             
-            uploadData.append('castData', JSON.stringify(castArr))
-            uploadData.append('prefCastData', JSON.stringify(perfCastArr))
+            modifyData.append('castData', JSON.stringify(castArr))
+            modifyData.append('prefCastData', JSON.stringify(perfCastArr))
             
             //내용확인
-            for(const [kk,vv] of uploadData.entries()){
+            for(const [kk,vv] of modifyData.entries()){
                 console.log(`${kk} , ${vv}`)
             }
 
-            fetch(`/admin/perf/upload`,{
+            fetch(`/admin/perf/modify`,{
                     method:'POST',
                     // header 불필요 FormData 가 자동 생성
-                    body:uploadData
+                    body:modifyData
                 })     
                .then(answer=> answer.text())
                .then(data=> {
@@ -220,8 +220,8 @@
     }
 </script>
 <body>
-    <h1>insert</h1>
-    <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data" name="uploadFrm">
+    <h1>modify</h1>
+    <form action="/admin/perf/modify" method="POST" enctype="multipart/form-data" name="modifyFrm">
         공연이름 <input type="text" name="fname"><br/>
         포스터 <input type="file" name="fposter" id="fposter"><br/>
         시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
