@@ -13,10 +13,10 @@ router.use(express.urlencoded({ extended: true }));
 
 // 화면 띄우기
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/idpwsearch.html'));
+    res.sendFile(path.join(__dirname, '../views/mypage/idpwsearch.html'));
 });
 
-// 아이디 찾기(idpwsearch.html fetch, /findid)
+// 아이디 찾기(idpwsearch.html fetch, /findid) 이름, 질문, 답변이 일치해야함.
 router.post('/findid', (req, res) => {
     const { name, question, answer } = req.body;
 
@@ -27,7 +27,7 @@ router.post('/findid', (req, res) => {
             return res.status(500).json({ success: false, message: 'DB 오류' });
         }
 
-        if (rows.length > 0) {
+        if (rows.length > 0) {  // 행 길이가 0보다 크면 일치
             const emails = rows.map(r => r.email);
             res.json({ success: true, emails });
         } else {
@@ -42,7 +42,7 @@ router.post('/checkmail', (req, res) => {
     const sql = "SELECT * FROM user_info WHERE email = ?";
     conn.query(sql, [email], (err, results) => {
         if (err) {
-            console.error("이메일 확인 오류:", err);
+            console.error("이메일 확인 오류:", err.message);
             return res.status(500).json({ exists: false });
         }
         res.json({ exists: results.length > 0 });
@@ -50,7 +50,7 @@ router.post('/checkmail', (req, res) => {
 });
 
 
-// 비밀번호 변경(idpwsearch.html fetch, /changepw)
+// 비밀번호 변경(idpwsearch.html fetch, /changepw) 이메일 확인한 후 비밀번호 변경 update set
 router.post('/changepw', (req, res) => {
     const { email, newchangepw } = req.body; // email, newchagepw 만 받을 것임.
     if (!email || !newchangepw) { // 입력 안할 경우
@@ -65,7 +65,7 @@ router.post('/changepw', (req, res) => {
             return res.status(500).json({ success: false, message: "DB 오류" });
         }
 
-        if (result.affectedRows > 0) {
+        if (result.affectedRows > 0) { // 행 개수가 0보다 크면 변경
             res.json({ success: true, message: "비밀번호가 성공적으로 변경되었습니다." });
         } else {
             res.json({ success: false, message: "존재하지 않는 이메일입니다." });

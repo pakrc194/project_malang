@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    header,
+    footer {
+      width: 100%;
+      height: 100px;
+      background-color: #ff0;
+      border: 1px solid #000;
+    }
+
+    wrapper {
+      width: 1200px;
+      background-color: rgb(211, 197, 171);
+      border: 1px solid #000;
+      margin: auto;
+      display: block;
+    }
+
+    aside {
+      width: 400px;
+      border: 1px solid #000;
+      background-color: #faa;
+    }
+
+    section {
+      width: 800px;
+      border: 1px solid #000;
+      background-color: #fa4;
+    }
+  </style>
+  <script>
+  </script>
+</head>
+
+<body>
+  <header>헤더</header>
+
+  <wrapper>
+
+    <aside>
+      사이드바 <br>
+      {{aside | safe}}
+    </aside>
+
+    <section id="content">
+      {% include '../mypage/'+mainUrl+'.html' %}
+      
+    </section>
+
+  </wrapper>
+
+  <footer>푸터</footer>
+
+</body>
+</html>
+

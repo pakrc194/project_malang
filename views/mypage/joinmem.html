@@ -121,6 +121,7 @@
                     .then(data => {
                     console.log(data)
                     if (data.success && data.redirect){
+                        alert(data.message)
                         location.href = data.redirect
                     }
             })

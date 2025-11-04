@@ -13,7 +13,7 @@ CREATE TABLE USER_GRADE (
     discount_rate DECIMAL(5, 2) NOT NULL COMMENT '등급 할인율 (예: 0.10)',
     grade_image_url VARCHAR(255) COMMENT '등급 이미지 URL'
 );
-drop table USER_INFO;
+
 
 -- 2. USER_INFO (회원 정보)
 CREATE TABLE USER_INFO (

@@ -7,8 +7,14 @@ const conn = require('../db/db')
 //     res.render('../views/main.html')
 // })
 
-router.get('/', (req, res)=>{
-     res.sendFile(path.join(__dirname, '../views/main.html'))
- })
+
+router.get('/', (req, res) => {
+
+    const loginout = req.session.email || req.session.kakao_email
+
+    res.render('../views/main.html', { loginout: loginout })
+
+})
+
 
 module.exports = router

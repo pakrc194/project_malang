@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>main</title>
 </head>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    header,
+    footer {
+      width: 100%;
+      height: 100px;
+      background-color: #ff0;
+      border: 1px solid #000;
+    }
+
+    wrapper {
+      width: 1200px;
+      background-color: #fa0;
+      border: 1px solid #000;
+      margin: auto;
+      display: block;
+    }
+</style>
+
 <body>
-    <h1>main</h1>
-    <a href="/admin">admin</a>
-    <a href="/perf">perflist</a>
-    <a href="/login">login</a>
+    <header>
+        <a href="/admin">admin</a>
+        <a href="/perf">perflist</a>
+        {{loginout}}
+        {{kakaologinout}}
+        {% if loginout == null %}
+        <a href="/login">로그인</a>
+        {% else %}
+        <a href="/logout" id="logout">로그아웃</a>
+        {% endif %}
+        <a href="/mypage">마이페이지</a>
+    </header>
+    <wrapper>
+        <section>
+            섹션
+        </section>
+    </wrapper>
+    <footer>
+        푸터
+    </footer>
 </body>
+
 </html>
+

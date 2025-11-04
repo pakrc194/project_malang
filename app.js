@@ -28,6 +28,7 @@ const mainRouter = require('./routes/mainRouter')
 const loginRouter = require('./routes/loginRouter')
 const joinmemRouter = require('./routes/joinmemRouter')
 const idpwsearchRouter = require('./routes/idpwsearchRouter')
+const mypageRouter = require('./routes/mypageRouter')
 
 
 app.use('/perf', perfRouter)
@@ -35,11 +36,29 @@ app.use('/main', mainRouter)
 app.use('/login', loginRouter)
 app.use('/joinmem', joinmemRouter)
 app.use('/idpwsearch', idpwsearchRouter)
+app.use('/mypage', mypageRouter)
 
 
 app.get('/', (req, res)=>{
     res.redirect('/main')
 })
+
+app.get('/logout', (req, res) => {
+
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('세션 삭제 에러 :', err.message);
+      return res.status(500).send('로그아웃 실퍂');
+    }
+
+    // 쿠키 제거
+    res.clearCookie('connect.sid');
+
+    // 메인으로 이동
+    res.redirect('/main');
+  });
+});
+
 
 app.listen(80, ()=>{
     console.log('app 80 서버 확인')

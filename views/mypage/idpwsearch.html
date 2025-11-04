@@ -198,12 +198,12 @@
                         <option value="color">좋아하는 색깔은 무엇입니까?</option>
                     </select>
                     <br>
-                    <!-- 답변 입력란 -->
+                    <!-- 답변 입력 -->
                     <input type="text" name="answer" id="answer" placeholder="답변">
                     <br>
-                    <!-- 이메일 표시란 -->
+                    <!-- 이메일 표시 -->
                     <div class="cons">
-                        <!-- 여기에 아이디(이메일)가 표시됩니다. -->
+                        <!-- 아이디(이메일) 표시 -->
                     </div>
                     <br>
                     <!-- 제출 버튼 -->
@@ -275,64 +275,3 @@
 
 
 
-
-// const emailInput = document.querySelector("#email");
-// const submit2 = document.querySelector("#submit2");
-// const newPwInput = document.querySelector("#newpw");
-// const newPw2Input = document.querySelector("#newpw2");
-// const submit3 = document.querySelector("#submit3");
-
-// // 새 비밀번호 입력란 처음엔 숨기기
-// newPwInput.style.display = "none";
-// newPw2Input.style.display = "none";
-// submit3.style.display = "none";
-
-// // 비밀번호 찾기 버튼 클릭 (이메일 확인)
-// submit2.addEventListener("click", (e) => {
-// e.preventDefault();
-// const email = emailInput.value.trim();
-// if (!email) return alert("이메일을 입력하세요.");
-
-// fetch("/login/checkEmail", {
-// method: "POST",
-// headers: { "Content-Type": "application/json" },
-// body: JSON.stringify({ email })
-// })
-// .then(res => res.json())
-// .then(data => {
-// if (data.exists) {
-// alert("이메일 확인 완료. 새 비밀번호를 입력하세요.");
-// newPwInput.style.display = "block";
-// newPw2Input.style.display = "block";
-// submit3.style.display = "block";
-// } else {
-// alert("존재하지 않는 이메일입니다.");
-// }
-// })
-// .catch(err => alert("서버 오류 발생"));
-// });
-
-// // 비밀번호 변경 버튼 클릭
-// submit3.addEventListener("click", (e) => {
-// e.preventDefault();
-// const email = emailInput.value.trim();
-// const newPw = newPwInput.value.trim();
-// const confirmPw = newPw2Input.value.trim();
-
-// if (!newPw || !confirmPw) return alert("새 비밀번호를 모두 입력하세요.");
-// if (newPw !== confirmPw) return alert("비밀번호가 일치하지 않습니다.");
-
-// fetch("/login/changePw", {
-// method: "POST",
-// headers: { "Content-Type": "application/json" },
-// body: JSON.stringify({ email, newPw })
-// })
-// .then(res => res.json())
-// .then(data => {
-// alert(data.message);
-// if (data.success) {
-// window.location.href = "/login"; // 변경 후 로그인 페이지로 이동
-// }
-// })
-// .catch(err => alert("서버 오류 발생"));
-// });
