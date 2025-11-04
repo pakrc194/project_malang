@@ -10,16 +10,16 @@
     
 </head>
 <body>
-    <div class="big_poster" onclick="ck_big()"><img src="../img/mad_hatter.png"><div class="b_p_tx">클릭하여 창 나가기</div></div>
+    <div class="big_poster" onclick="ck_big()"><img src="../img/{{perf.poster_url}}"><div class="b_p_tx">클릭하여 창 나가기</div></div>
     <div class="Big">
         <div class="site_header">
             사이트 로고 - 메인화면 헤더 가져오기
         </div>
-        <div class="musical_name">뮤지컬 〈MAD HATTER〉</div>
+        <div class="musical_name">뮤지컬 〈{{perf.name}}〉</div>
         <div class="des_main">
             <div class="musical_info">
                 <!-- <a href="/main_poster" target="_blank"> -->
-                    <img class="main_poster" onclick="click_poster()" src="../img/mad_hatter.png">
+                    <img class="main_poster" onclick="click_poster()" src="../img/{{perf.poster_url}}">
                 <!-- </a> -->
                 <div class="musical_description">
                     <div>
@@ -32,10 +32,10 @@
                     </div>
                     <div>
                         {{musical[0].name}}<br/>
-                        2025.10.22 ~ 2026.01.18<br/>
-                        100분<br/>
+                        {{perf.start_date}} ~ {{perf.end_date}}<br/>
+                        {{perf.running_time}}분<br/>
                         14세 이상 관람가<br/>
-                        창작뮤지컬<br/>
+                        {{perf.genre}}뮤지컬<br/>
                         {% for info in musical %}
                         {{info.grade}}석 {{info.price}}원<br/>
                         {% endfor %}
@@ -67,13 +67,10 @@
         </div>
 
         <div class="story">
-            <img src="../img/story1.jpg" alt="">
+            <img src="../img/{{perf.synopsis_url}}" alt="">
         </div>
         <div class="seat">
             <img src="../img/seat.png" alt="">
-        </div>
-        <div class="casting">
-            <img src="../img/casting.jpg" alt="">
         </div>
         <div class="review">
             <img src="../img/review.png" alt="">

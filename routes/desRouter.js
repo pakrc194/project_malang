@@ -17,35 +17,21 @@ nunjucks.configure('views', {
 
 // 상세페이지
 router.get('/', (req, res)=>{
-    conn.query(`select * from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="1" `, (err, resP)=>{
-        res.render("description.html", {musical:resP})
+    conn.query(`select performance_info.*, theater_info.name as th_name from performance_info join theater_info where performance_info.venue_id = theater_info.id`, (err, resPerf)=>{
+        // res.render("description.html", {perf: resPerf})
+        conn.query(`select * from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="${resPerf[0].venue_id}" `, (err, resP)=>{
+            // console.log(resP)
+            // console.log(resPerf)
+            res.render("description.html", {perf: resPerf[0], musical: resP})
+
+        })
     })
+    // conn.query(`select * from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="1" `, (err, resP)=>{
+    //     console.log(resP)
+    //     res.render("description.html", {musical: resP})
+
+    // })
     // conn.query(`select * from actor_info`)
-    const venueId = 1
-    const areas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
-    const rowPerArea = 10
-    const seatsPerRow = 12
-
-    for (const area of areas){
-        for (let row = 1; row <= rowPerArea; row++){
-            for (let number = 1; number <= seatsPerRow; number++) {
-                let grade
-                if (area == 'A' || area == 'B' || area == 'C'){
-                    grade = "R"
-                }
-                else if (area == 'D' || area == 'E' || area == 'F'){
-                    grade = "S"
-                }
-                else {
-                    grade = "A"
-                }
-
-                conn.query(`INSERT INTO SEAT_LATOUT (venue_id, area, seat_row, seat_number, grade_code)
-                    VALUES (?, ?, ?, ?, ?)`, [venueId, area, row, number, grade])
-            }
-        }
-    }
-
 })
 
 let arr={}
