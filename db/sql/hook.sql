@@ -21,8 +21,8 @@ INSERT INTO PERFORMANCE_INFO (
 )
 VALUES (
     '후크',
-    'hook_poster176222137',
-    'hook_synopsis17622213',
+    'hook_poster176222137.jpg',
+    'hook_synopsis17622213.jpg',
     '2025-11-01',
     '2025-12-31',
     '창작',

@@ -133,14 +133,13 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
+        console.log('------', seatData)
         for (const gradeRow of gradeRet) {
             const grade = gradeRow.grade_code;
             const price = seatData[grade];
-            
-            if (price) {
-                const perfPriceData = [perf_id, venue_id, grade, price]
-                tasks.push(conn.query(iPerfPriceSql, perfPriceData))
-            }
+            console.log('price : ', perfPriceData)
+            const perfPriceData = [perf_id, venue_id, grade, price]
+            tasks.push(conn.query(iPerfPriceSql, perfPriceData))
         }
 
         for (const cast of JSON.parse(castDataArr)) {
@@ -188,7 +187,7 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
 
         const parsedCastArr = {};
         for (const cast_id in castArr) {
-            parsedCastArr[cast_id] = castArr[cast_id].split(',');
+            parsedCastArr[cast_id] = castArr[cast_id].toString().split(',');
         }
 
         let scheduleCount = 0; 
@@ -232,6 +231,7 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
 router.get('/test/:id', async(req, res)=>{
     console.log('-----',req.params.id)
     let perf_id = req.params.id
+        ///스케줄배정
     let afterTasks = []
     let castArr = {}
     let sScheduleQuery = await conn.query('select * from perf_schedule where perf_id = ?', [perf_id])
@@ -247,7 +247,7 @@ router.get('/test/:id', async(req, res)=>{
 
     const parsedCastArr = {};
     for (const cast_id in castArr) {
-        parsedCastArr[cast_id] = castArr[cast_id].split(',');
+        parsedCastArr[cast_id] = castArr[cast_id].toString().split(',');
     }
 
     let scheduleCount = 0; 
@@ -267,11 +267,11 @@ router.get('/test/:id', async(req, res)=>{
                 cast_id, 
                 currentActorId
             ];
-            console.log('----',iScheduleCastData)
             afterTasks.push(conn.query(iScheduleCastSql, iScheduleCastData));
         }
         scheduleCount++; 
     }
+    await Promise.all(afterTasks);
 
     console.log("test", perfCastQuery)
     res.send(`<a href="/admin/test/${perf_id}">테스트</a>`)
