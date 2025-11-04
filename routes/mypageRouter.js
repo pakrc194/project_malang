@@ -9,6 +9,8 @@ let titleArr = {
 
 let data = {}
 
+// ------------------------------------------------------------------------------------------
+
 //header 구성
 router.use((req, res, next) => {
     data.title = titleArr[path.basename(req.path)]
@@ -24,6 +26,8 @@ router.use((req, res, next) => {
     }
     next()
 })
+
+// ------------------------------------------------------------------------------------------
 
 router.get('/', (req, res) => {
     //res.render('../views/mypage.html')
@@ -51,6 +55,8 @@ router.get('/memberOut', (req, res) => {
 
     res.render("../views/mypage/mypage.html", data)
 })
+
+// ------------------------------------------------------------------------------------------
 
 // 비밀번호 변경해야함.
 
@@ -91,4 +97,38 @@ router.post("/changepw", (req, res) => {
     });
 });
 
+// ------------------------------------------------------------------------------------------ 회원 탈퇴
+
+router.post('/pwout', (req, res)=>{
+    const email = req.session?.email || req.session?.kakao_email;
+    const { pwout } = req.body
+    
+    if (!email) return res.json({ success: false, message: "로그인이 필요합니다." });
+    if (!pwout) return res.json({ success: false, message: "비밀번호 입력하세요." });
+
+    console.log(pwout)
+    console.log(email)
+
+    
+
+    const sql = 'SELECT password FROM user_info WHERE email = ?'
+    conn.query(sql, [email], (err, rows)=>{
+        if(err){return res.status(500).json({ success: false, message: "DB 오류" })}
+        if(!rows.length) return res.json({ success : false, message : '회원 정보 찾을 수 없음'})
+
+        if(rows[0].password !== pwout)
+        {return res.json({ success: false, message : '비밀번호 일치하지 않습니다.'})}
+    })
+
+    const updateSql = "UPDATE USER_INFO SET account_status = 'WITHDRAWAL' WHERE email = ?"
+    conn.query(updateSql, [email], (err2)=>{
+        if(err2){return res.status(500).json({ success: false, message : '탈퇴 오류'})}
+
+        req.session.destroy(()=>{
+            res.json({ success: true, message: "회원 탈퇴가 완료되었습니다." });
+        })
+    })
+
+})
+      
 module.exports = router

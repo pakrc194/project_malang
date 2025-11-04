@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비밀번호 변경</title>
+</head>
+<script>
+    window.onload = function () {
+
+        document.querySelector("#submit").addEventListener("click", (e) => {
+            e.preventDefault();
+
+           const pwout = document.querySelector('#pwout').value.trim()
+
+           console.log(pwout)
+            
+           if (!pwout) {
+                return alert('비밀번호 입력하세요')
+            }
+
+            let ttt = JSON.stringify({ pwout })
+
+            fetch(`/mypage/pwout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                },
+                body: ttt
+
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => console.log('에러 :', err.message))
+        })
+    }
+
+</script>
+
+<body>
+    <form id="pwoutForm">
+        <input type="password" name="pwout" id="pwout" placeholder="비밀번호 입력">
+        <br>
+        <input type="submit" value="탈퇴하기" id="submit">
+    </form>
+</body>
+
+</html>
