@@ -30,106 +30,14 @@ router.get('/grade', (req, res)=>{
             console.log('등급 조회 성공', resQuery)
             console.log('등급 조회 성공', resQuery[0])
             console.log('등급 조회 성공', resQuery[0].grade_score)
-            res.render('../views/grade.html', {minsu : resQuery})
-        }
-    })
-})
-
-router.get('/venue', (req, res)=>{
-    conn.query('select * from venue_info', (err, resQuery)=>{
-        if(err) {
-            console.log('공연장 실패', err.message)
-
-            res.render('../views/venue.html')
-        } else {
-            console.log('공연장 성공', resQuery[0])
-            console.log('공연장 성공', resQuery[0].venue_id)
-            console.log('공연장 성공', resQuery[0].venue_name)
-            console.log('공연장 성공', resQuery[0].venue_type)
-            console.log('공연장 성공', resQuery[0].region)
-
-            res.render('../views/venue.html', {mino : resQuery[0]})
-        }
-    })
-})
-
-router.get('/venue', (req, res)=>{
-    conn.query('select * from venue_info', (err, resQuery)=>{
-        if(err) {
-            console.log('공연장 실패', err.message)
-
-            res.render('../views/venue.html')
-        } else {
-            console.log('공연장 성공', resQuery[1])
-            console.log('공연장 성공', resQuery[1].venue_id)
-            console.log('공연장 성공', resQuery[1].venue_name)
-            console.log('공연장 성공', resQuery[1].venue_type)
-            console.log('공연장 성공', resQuery[1].region)
-
-            res.render('../views/venue.html', {mino : resQuery[1]})
-        }
-    })
-})
-
-
-router.get('/venue', (req, res)=>{
-    conn.query('select * from venue_info', (err, resQuery)=>{
-        if(err) {
-            console.log('공연장 실패', err.message)
-
-            res.render('../views/venue.html')
-        } else {
-            console.log('공연장 성공', resQuery[2])
-            console.log('공연장 성공', resQuery[2].venue_id)
-            console.log('공연장 성공', resQuery[2].venue_name)
-            console.log('공연장 성공', resQuery[2].venue_type)
-            console.log('공연장 성공', resQuery[2].region)
-
-            res.render('../views/venue.html', {mino : resQuery[2]})
-        }
-    })
-})
-
-
-router.get('/venue', (req, res)=>{
-    conn.query('select * from venue_info', (err, resQuery)=>{
-        if(err) {
-            console.log('공연장 실패', err.message)
-
-            res.render('../views/venue.html')
-        } else {
-            console.log('공연장 성공', resQuery[3])
-            console.log('공연장 성공', resQuery[3].venue_id)
-            console.log('공연장 성공', resQuery[3].venue_name)
-            console.log('공연장 성공', resQuery[3].venue_type)
-            console.log('공연장 성공', resQuery[3].region)
-
-            res.render('../views/venue.html', {mino : resQuery[3]})
-        }
-    })
-})
-
-
-router.get('/venue', (req, res)=>{
-    conn.query('select * from venue_info', (err, resQuery)=>{
-        if(err) {
-            console.log('공연장 실패', err.message)
-
-            res.render('../views/venue.html')
-        } else {
-            console.log('공연장 성공', resQuery[4])
-            console.log('공연장 성공', resQuery[4].venue_id)
-            console.log('공연장 성공', resQuery[4].venue_name)
-            console.log('공연장 성공', resQuery[4].venue_type)
-            console.log('공연장 성공', resQuery[4].region)
-
-            res.render('../views/venue.html', {mino : resQuery[4]})
+            res.render('../views/grade.html', {grade_list : resQuery})
         }
     })
 })
 
 
 //nodemon --config .nodemon.json
+
 
 
 module.exports = router

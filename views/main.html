@@ -101,7 +101,7 @@
     }
 
   /* 분홍색 박스 위에 포스터 */
-  	.pbox > img {
+  	.pbox >a> img {
       width: 200px;
       height: 300px;
       float: left;
@@ -122,51 +122,34 @@
         <!-- 하늘색 베너 -->
     	<section class="main_banner">
           <div class="nbox">
-            <img src="../img/{{미노.poster_url}}" alt="">
+            <img src="../img/{{visual.poster_url}}" alt="">
+           
           </div>
           <div class="lbox">
-            <img src="../img/{{미노.poster_url}}" alt="">
+            <img src="../img/{{visual.poster_url}}" alt="">
+            
           </div>
           <div class="rbox">
-            <img src="../img/{{미노.poster_url}}" alt="">
+            <img src="../img/{{visual.poster_url}}" alt="">
+          
           </div>
     	</section>
 
 		<!-- 초록색 메인 포스터 -->
 		<section class="main_poster">
-      {% for 아무이름 in res %}
+      {% for musical in res %}
         <div class="box">
             <div class="pbox">
-            <img src="../img/{{아무이름.poster_url}}" alt=""></div>
+            <a href="http://www.interpark.com">
+            <img src="../img/{{musical.poster_url}}" alt=""></a></div>
             <div class="wbox">
-              {{아무이름.name}}<br/>
-              {{아무이름.start_date}} / {{아무이름.running_time}}
+              {{musical.name}}<br/>
+              {{musical.start_date}} / {{musical.running_time}}
             </div>
         </div>
       {% endfor %}
-			<!-- <div class="box">
-			    <div class="pbox"><img src="../img/kim.jpg" alt=""> </div>
-          <div class="wbox"><a href="/main/search">search</a> </div>
-			</div>
-			<div class="box">
-			    <div class="pbox"><img src="../img/mi.gif" alt=""></div>
-			    <div class="wbox"></div>
-      </div>
-			<div class="box">
-				<div class="pbox"><img src="../img/cabin.jpg" alt=""></div>
-				<div class="wbox"></div>
-			</div>
-			<div class="box">
-				<div class="pbox"><img src="../img/wel.jpg" alt=""></div>
-				<div class="wbox"></div>
-			</div>
-			<div class="box">
-				<div class="pbox"><img src="../img/cheon.jpg" alt=""></div>
-				<div class="wbox"></div>
-			</div> -->
 		</section>
     <a href="/main/grade">grade</a>
-    <a href="/main/venue">venue</a>
   </div>
 </body>
 </html>
