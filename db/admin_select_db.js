@@ -41,4 +41,45 @@ ORDER BY
     S.schedule_date, S.schedule_time`
 
 
-module.exports = {sPrefCastWpid, sPrefScheduleWpid}
+let sPrefCastIdWpid = `SELECT       
+    *            
+FROM 
+    PERF_CAST AS P
+    
+INNER JOIN 
+    ACTOR_INFO AS A ON P.actor_id = A.actor_id
+    
+INNER JOIN 
+    CAST_INFO AS CINFO ON P.cast_id = CINFO.cast_id
+    
+INNER JOIN 
+    PERFORMANCE_INFO AS PINFO ON P.perf_id = PINFO.perf_id
+    
+WHERE 
+    P.perf_id = ?
+    
+ORDER BY
+    CINFO.cast_id;`
+
+let sScheduleCast = `SELECT
+    S.schedule_id,
+    S.schedule_date,
+    S.schedule_time,
+    S.round,
+    CI.cast_name,           
+    AI.actor_name,          -- 배우 이름
+    AI.profile_image_url    -- 배우 프로필 사진 URL
+FROM
+    SCHEDULE_CAST AS SC  -- 스케줄 캐스팅 연결 테이블
+INNER JOIN
+    PERF_SCHEDULE AS S ON SC.schedule_id = S.schedule_id
+INNER JOIN
+    CAST_INFO AS CI ON SC.cast_id = CI.cast_id
+INNER JOIN
+    ACTOR_INFO AS AI ON SC.actor_id = AI.actor_id
+WHERE
+    S.perf_id = ?
+ORDER BY
+    S.schedule_date, S.schedule_time, CI.cast_id;`
+
+module.exports = {sPrefCastWpid, sPrefScheduleWpid, sPrefCastIdWpid, sScheduleCast}

@@ -10,6 +10,7 @@ let iPerfPriceSql = `insert into perf_price (perf_id, venue_id, grade_code, pric
                     values(?, ?, ?, ?)`    
 let iPerfScheduleSql = `insert into perf_schedule (perf_id, venue_id, schedule_date, schedule_time, round)
                     values(?, ?, ?, ?, ?)`    
+let iScheduleCastSql = `insert into schedule_cast (schedule_id, cast_id, actor_id)
+                    values(?, ?, ?)`
 
-
-module.exports = {iPerfSql, iActorSql, iCastSql, iPerfCastSql, iPerfPriceSql, iPerfScheduleSql}
+module.exports = {iPerfSql, iActorSql, iCastSql, iPerfCastSql, iPerfPriceSql, iPerfScheduleSql, iScheduleCastSql}

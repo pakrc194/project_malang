@@ -60,3 +60,23 @@ ORDER BY
     S.schedule_date, S.schedule_time;
 
 select * from cast_info where perf_id = 1;
+
+
+
+SELECT
+    S.*,                    
+    CI.cast_name,
+    AI.actor_name,
+    AI.profile_image_url
+FROM
+    SCHEDULE_CAST AS SC
+INNER JOIN
+    PERF_SCHEDULE AS S ON SC.schedule_id = S.schedule_id
+INNER JOIN
+    CAST_INFO AS CI ON SC.cast_id = CI.cast_id
+INNER JOIN
+    ACTOR_INFO AS AI ON SC.actor_id = AI.actor_id
+WHERE
+    S.perf_id = 1
+ORDER BY
+    S.schedule_date, S.schedule_time, CI.cast_id;

@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const conn = require('../db/db')
-const {iPerfSql, iCastSql, iPerfCastSql, iPerfPriceSql, iActorSql, iPerfScheduleSql} = require('../db/admin_insert_db')
-const {sPrefCastWpid, sPrefScheduleWpid} = require('../db/admin_select_db')
+const {iPerfSql, iCastSql, iPerfCastSql, iPerfPriceSql, iActorSql, iPerfScheduleSql, iScheduleCastSql, sPrefCastIdWpid} = require('../db/admin_insert_db')
+const {sPrefCastWpid, sPrefScheduleWpid, sScheduleCast} = require('../db/admin_select_db')
 const {multer} = require('../func/multer')
 const {base_date_format} = require('../func/date')
 const util = require('util');
@@ -50,15 +50,15 @@ router.get('/perf/detail/:id', (req, res)=>{
 
             tasks.push(conn.query(sVenueInfo, [perfInfoQuery[0].venue_id]))
             tasks.push(conn.query(sPrefCastWpid, [req.params.id]))
-            tasks.push(conn.query(sPrefScheduleWpid, [req.params.id]))
+            tasks.push(conn.query(sScheduleCast, [req.params.id]))
             
-            const [venueQuery, perfCastQuery, perfSceduleQuery] = await Promise.all(tasks);
-            for(perfScedule of perfSceduleQuery) {
-                perfScedule.schedule_date = base_date_format(perfScedule.schedule_date)
+            const [venueQuery, perfCastQuery, sScheduleQuery] = await Promise.all(tasks);
+            for(schedule of sScheduleQuery) {
+                schedule.schedule_date = base_date_format(schedule.schedule_date)
             }
-            console.log(perfCastQuery)
+            //console.log(perfCastQuery)
 
-            res.render('../views/admin_perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, perfScedule : perfSceduleQuery, venueInfo: venueQuery[0]})
+            res.render('../views/admin_perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, perfScedule : sScheduleQuery, venueInfo: venueQuery[0]})
         }
     })
 })
@@ -104,9 +104,8 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
     console.log(`seat data :`, seatData)
     
     const tasks = []
-        
+    
     try {
-
         const gradeRet = await conn.query(sSeatGradeSql, [venue_id]);
 
         const perfRet = await conn.query(iPerfSql, perfData)
@@ -144,7 +143,6 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
             }
         }
 
-
         for (const cast of JSON.parse(castDataArr)) {
             const tempId = cast.id
             const castData = [perf_id, cast.castName, cast.castBg]
@@ -171,11 +169,52 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
             }
         }
 
-
-
-        
         // 3. 모든 병렬 작업 완료 대기
         await Promise.all(tasks);
+
+        ///스케줄배정
+        let afterTasks = []
+        let castArr = {}
+        let sScheduleQuery = await conn.query('select * from perf_schedule where perf_id = ?', [perf_id])
+        let perfCastQuery = await conn.query('select * from perf_cast where perf_id = ?', [perf_id])
+        for(perfCast of perfCastQuery) {
+            if(castArr[perfCast.cast_id])
+                castArr[perfCast.cast_id] += ','+perfCast.actor_id
+            else {
+                castArr[perfCast.cast_id] = perfCast.actor_id
+            }
+        }
+        console.log('castArr:' ,castArr)
+
+        const parsedCastArr = {};
+        for (const cast_id in castArr) {
+            parsedCastArr[cast_id] = castArr[cast_id].split(',');
+        }
+
+        let scheduleCount = 0; 
+
+        for (const schedule of sScheduleQuery) {
+            for (const cast_id in parsedCastArr) {
+                const actorList = parsedCastArr[cast_id];
+                const actorListLength = actorList.length;
+                
+                // 1. 해당 배역의 배우 목록 길이를 기준으로 로테이션 인덱스 계산
+                const currentRotationIndex = scheduleCount % actorListLength; 
+                const currentActorId = actorList[currentRotationIndex]; 
+                
+                // 2. DB에 삽입할 값 배열 생성: [스케줄 ID, 배역 ID, 배우 ID]
+                const iScheduleCastData = [
+                    schedule.schedule_id, 
+                    cast_id, 
+                    currentActorId
+                ];
+                console.log('----',iScheduleCastData)
+                afterTasks.push(conn.query(iScheduleCastSql, iScheduleCastData));
+            }
+            scheduleCount++; 
+        }
+        await Promise.all(afterTasks);
+
         
         // 4. 모든 DB 작업이 성공적으로 완료되면 응답 전송
         console.log('모든 DB 작업 성공적으로 완료.');
@@ -189,6 +228,55 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
         res.status(500).send('공연 등록 중 오류가 발생했습니다.');
     }
 })
+
+router.get('/test/:id', async(req, res)=>{
+    console.log('-----',req.params.id)
+    let perf_id = req.params.id
+    let afterTasks = []
+    let castArr = {}
+    let sScheduleQuery = await conn.query('select * from perf_schedule where perf_id = ?', [perf_id])
+    let perfCastQuery = await conn.query('select * from perf_cast where perf_id = ?', [perf_id])
+    for(perfCast of perfCastQuery) {
+        if(castArr[perfCast.cast_id])
+            castArr[perfCast.cast_id] += ','+perfCast.actor_id
+        else {
+            castArr[perfCast.cast_id] = perfCast.actor_id
+        }
+    }
+    console.log('castArr:' ,castArr)
+
+    const parsedCastArr = {};
+    for (const cast_id in castArr) {
+        parsedCastArr[cast_id] = castArr[cast_id].split(',');
+    }
+
+    let scheduleCount = 0; 
+
+    for (const schedule of sScheduleQuery) {
+        for (const cast_id in parsedCastArr) {
+            const actorList = parsedCastArr[cast_id];
+            const actorListLength = actorList.length;
+            
+            // 1. 해당 배역의 배우 목록 길이를 기준으로 로테이션 인덱스 계산
+            const currentRotationIndex = scheduleCount % actorListLength; 
+            const currentActorId = actorList[currentRotationIndex]; 
+            
+            // 2. DB에 삽입할 값 배열 생성: [스케줄 ID, 배역 ID, 배우 ID]
+            const iScheduleCastData = [
+                schedule.schedule_id, 
+                cast_id, 
+                currentActorId
+            ];
+            console.log('----',iScheduleCastData)
+            afterTasks.push(conn.query(iScheduleCastSql, iScheduleCastData));
+        }
+        scheduleCount++; 
+    }
+
+    console.log("test", perfCastQuery)
+    res.send(`<a href="/admin/test/${perf_id}">테스트</a>`)
+})
+
 
 router.get('/perf/modify/:id', (req, res)=> {
     conn.query('select * from performance_info where perf_id = ?', [req.params.id], (perfInfoErr, perfInfoQuery)=>{

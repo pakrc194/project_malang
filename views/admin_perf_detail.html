@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .schedule_list {
+            width: 1000px;
+            height: 500px;
+            overflow: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>detail</h1>
@@ -23,12 +30,25 @@
         {{cast.profile_image_url}}<br/>
         {{cast.cast_name}}<hr/>
     {% endfor %}
-    {% for schedule in perfScedule %}
-        {{schedule.schedule_date}}
-    {% endfor %}
+    <div class="schedule_list">
+        <table border="">
+            {% for schedule in perfScedule %}
+                <tr>
+                    <td>{{schedule.schedule_date}}</td>
+                    <td>{{schedule.schedule_time}}</td>
+                    <td>{{schedule.round}}</td>
+                    <td>{{schedule.cast_name}} : {{schedule.actor_name}}</td>
+                    <td>{{schedule.actor_profile_url}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    
     <a href="/admin/perf/list">뒤로</a>
     <a href="/admin/perf/modify/{{perfInfo.perf_id}}">수정</a>
     <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
     <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a>
+    <a href="/admin/test/{{perfInfo.perf_id}}">테스트</a>
 </body>
 </html>
