@@ -4,6 +4,8 @@ const conn = require('../db/db')
 const router = express.Router()
 const app = express()
 
+const socket = new WebSocket('ws://localhost:80')
+
 
 
 // template
@@ -19,13 +21,37 @@ router.get('/', (req, res)=>{
         res.render("description.html", {musical:resP})
     })
     // conn.query(`select * from actor_info`)
+    const venueId = 1
+    const areas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    const rowPerArea = 10
+    const seatsPerRow = 12
+
+    for (const area of areas){
+        for (let row = 1; row <= rowPerArea; row++){
+            for (let number = 1; number <= seatsPerRow; number++) {
+                let grade
+                if (area == 'A' || area == 'B' || area == 'C'){
+                    grade = "R"
+                }
+                else if (area == 'D' || area == 'E' || area == 'F'){
+                    grade = "S"
+                }
+                else {
+                    grade = "A"
+                }
+
+                conn.query(`INSERT INTO SEAT_LATOUT (venue_id, area, seat_row, seat_number, grade_code)
+                    VALUES (?, ?, ?, ?, ?)`, [venueId, area, row, number, grade])
+            }
+        }
+    }
 
 })
 
 let arr={}
 
 router.get('/reserve', (req, res)=>{
-    res.render("reserve.html", arr)
+    res.render("reserve.html", {arr, area:"C", row: 5, col: 11})
 })
 
 
@@ -59,9 +85,18 @@ router.get('/coupon', (req, res)=>{
     }
     let cnt = temp_data.length
 
-    conn.query('select * from coupon_info', (err, resQ)=>{
-        // 회원 등급 정보도 전달해야함
-        res.render('../views/coupon.html', {ptot: ptot, temp_data, coupon:resQ, cnt: cnt})
+    conn.query('select * from coupon_info', (err, resC)=>{
+        // 회원 등급 정보, 공연정보 보내야함
+        conn.query('select choice_date, choice_time from seat_temp', (err, resS)=>{
+            let arr = {
+                choice_time: resS[0].choice_time, 
+                year: resS[0].choice_date.getFullYear(), 
+                month: resS[0].choice_date.getMonth() +1,
+                day: resS[0].choice_date.getDate()
+            }
+
+            res.render('../views/coupon.html', {ptot: ptot, temp_data, coupon:resC, cnt: cnt, seat: arr})
+        })
     })
 
 })

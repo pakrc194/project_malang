@@ -13,7 +13,6 @@
 window.addEventListener('DOMContentLoaded', function(){
     let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
     let row = ["first", "second", "third"]
-    let color = ["red", "green", "blue"]
     let grade = ["R", "S", "A"]
 
     for(let aa = 0; aa < 3; aa++) {
@@ -46,6 +45,12 @@ window.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+    // forEach로 선택된 좌석이 있다면 비활성화(disabled=true)
+    // document.querySelectorAll(".indiseat").forEach(seats=>{
+    //     if (seats.value[1] == "{{area}}") {
+    //         seats.disabled = true
+    //     }
+    // })
     // document.querySelector(".indiseat").onclick = ()=>{
     //     console.log(`좌석클릭 : ${document.querySelector(".indiseat").value}`)
     // }

@@ -31,10 +31,10 @@ insert into cast_info (pr_id, name, background) VALUES
 
 
 -- 좌석 가격
-INSERT INTO seat_price (grade, price, color) VALUES
-    ("R", 160000, "yellowgreen"),
-    ("S", 130000, "violet"),
-    ("A", 90000, "skyblue");
+INSERT INTO seat_price (grade, price) VALUES
+    ("R", 160000),
+    ("S", 130000),
+    ("A", 90000);
 
     insert into actor_info (name, profile, birth, gender) VALUES 
     ('박규원', 'hook_pkw_841761909473010.png','1984','M'),
@@ -53,3 +53,20 @@ INSERT INTO seat_price (grade, price, color) VALUES
     (3, "세번째_쿠폰", 30000),
     (4, "네번째_쿠폰", 40000),
     (5, "다섯번째_쿠폰", 50000);
+
+    
+    INSERT INTO SEAT_LAYOUT (venue_id, area, seat_row, seat_number, grade_code)
+    SELECT
+    1 AS venue_id,
+    'A' AS area,
+    r.n AS seat_row,
+    s.n AS seat_number,
+    'R' AS grade_code
+    FROM (
+    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+    ) r,
+    (
+    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+    UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+    ) s
+    ORDER BY seat_row, seat_number;

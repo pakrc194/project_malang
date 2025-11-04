@@ -6,7 +6,7 @@ SET GLOBAL event_scheduler = ON;
 CREATE EVENT IF NOT EXISTS delete_expired_data
 ON SCHEDULE EVERY 1 MINUTE
 DO
-  DELETE FROM temp_data WHERE expires_at <= NOW();
+  DELETE FROM temp_data WHERE expires <= NOW();
 
   
 DROP EVENT IF EXIStS delete_expired_date;

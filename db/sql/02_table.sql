@@ -83,8 +83,7 @@ CREATE TABLE seat_temp (
 -- 좌석 가격 테이블
 CREATE TABLE seat_price (
     grade VARCHAR(10),
-    price int,
-    color VARCHAR(20)
+    price int
 )
 
 DROP TABLE seat_price;
@@ -142,5 +141,26 @@ DROP TABLE coupon_info;
 CREATE TABLE coupon_info(
     cid VARCHAR(100),
     coupon_name VARCHAR(100),
-    discount_price int
+    discount_price INT
+);
+
+DROP TABLE seat_layout;
+CREATE TABLE seat_layout(
+    seat_id INT PRIMARY KEY AUTO_INCREMENT,
+    venue_id INT,
+    area VARCHAR(10),
+    seat_row INT,
+    seat_number INT,
+    grade_code ENUM('R', 'S', 'A')
+);
+
+DROP TABLE seat_status;
+CREATE TABLE seat_status(
+    status_id INT,
+    schedule_id INT,
+    seat_id INT,
+    seat_status ENUM('Available', 'Reserved', 'Sold'),
+    user_id INT,
+    temp_resv_time DATETIME,
+    FOREIGN KEY (seat_id) REFERENCES seat_layout(seat_id)
 );

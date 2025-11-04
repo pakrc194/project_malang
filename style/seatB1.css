@@ -9,8 +9,8 @@
     background-clip: content-box;
     margin: 0;
     padding: 0;
-    width: 11px;
-    height: 11px;
+    width: 15px;
+    height: 15px;
     cursor: pointer;
     background-color: yellowgreen;
     border: 3px solid yellowgreen;
@@ -24,8 +24,8 @@
     appearance: none;
     box-sizing: border-box;
     background-clip: content-box;
-    width: 11px;
-    height: 11px;
+    width: 15px;
+    height: 15px;
     cursor: pointer;
     background-color: violet;
     border: 3px solid violet;
@@ -39,8 +39,8 @@
     appearance: none;
     box-sizing: border-box;
     background-clip: content-box;
-    width: 11px;
-    height: 11px;
+    width: 15px;
+    height: 15px;
     cursor: pointer;
     background-color: skyblue;
     border: 3px solid skyblue;
@@ -115,4 +115,10 @@
 
 .stair > div:first-of-type {
     margin-top: 10px;
+}
+
+.section > input:disabled {
+    border-color: #555;
+    background-color: #555;
+    cursor: default;
 }

@@ -73,6 +73,11 @@
         {% for i in temp_data %}
         좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
         {% endfor %}
+
+        {{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}회차
+        
+
+
     </div>
     <form action="/desc/payment">
     <input type="submit" class="total_price_btn">

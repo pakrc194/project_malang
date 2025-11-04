@@ -45,6 +45,7 @@ wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
+        
         // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
         if (arr[0] == "select_date"){
@@ -52,10 +53,18 @@ wss.on('connection', (ws, req)=>{
             time = arr[2]
         }
         else {
+            // let Sendarr = {
+            //     type: "seat_reserve",
+            //     area: arr[1],
+            //     s_row: arr[2],
+            //     s_col: arr[3],
+            //     date: arr[4],
+            //     time: arr[5]
+            // }
+            // ws.send(JSON.stringify(Sendarr))
             arr.push(date)
             arr.push(time)
             arr.push(new Date(Date.now() + 5*60*1000))
-            console.log(arr)
     
             let find_seat = `select * from seat_temp 
             where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"
@@ -90,7 +99,14 @@ wss.on('connection', (ws, req)=>{
     
             function send_data() {
                 conn.query(`select * from seat_temp INNER JOIN seat_price where seat_temp.grade = seat_price.grade`, (err, result)=>{
-                    ws.send(JSON.stringify({ type: 'temp', result }))
+                    // ws.send(JSON.stringify({ type: 'temp', result }))
+                    // new BroadcastChannel(JSON.stringify({ type: 'temp', result }))
+                    wss.clients.forEach((client) => {
+                        if (client.readyState == websocket.OPEN){
+                            client.send(JSON.stringify({ type: 'temp', result }));
+                        }
+                        
+                    });
                 })
             }
             

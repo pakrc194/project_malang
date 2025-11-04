@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="../style/minicalendar.css">
     <script>
         window.onload = function(){
-            console.log("{{date}} {{time}} {{flag}}")
             let date = new Date()
             let s_date = new Date("2025-10-22")
             let e_date = new Date("2026-01-18")
-            let selectDate = new Date("{{date}}")
+            let selectDate = new Date("{{arr.date}}")
 
             let startday = s_date.getDate()
             let startYear = s_date.getFullYear()
@@ -127,8 +126,8 @@
                 document.querySelector(".time").innerHTML = `${selectY}년 ${selectM+1}월 ${selectD}일`
                 document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${1})" class="btn1">1회차 14:00</label></li>`
                 document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${2})" class="btn2">2회차 19:00</label></li>`
-                document.querySelector(".btn{{time}}").checked = true;
-                document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
+                document.querySelector(".btn{{arr.time}}").checked = true;
+                document.querySelector(`.clickday:nth-of-type({{arr.flag}})`).classList.toggle("active")
                 // let init_arr = ["select_date", `${selectY}-${selectM+1}-${selectD}`, "{{time}}"]
                 // socket.send(`select_date ${selectY}-${selectM+1}-${selectD} {{time}}`)
             }
@@ -166,8 +165,8 @@
             }
         }
         
-        var dd="{{date}}"
-        var tt="{{time}}"
+        var dd="{{arr.date}}"
+        var tt="{{arr.time}}"
         let flag = 0
         function clickE(year, month, day, cnt){
             // console.log(`${year}년 ${month+1}월 ${day}일 ${cnt}`)
@@ -182,7 +181,7 @@
             }
             else {
 
-                document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
+                document.querySelector(`.clickday:nth-of-type({{arr.flag}})`).classList.toggle("active")
             }
 
             // if (on == 1) {
