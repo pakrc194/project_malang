@@ -21,7 +21,7 @@ router.get('/perf/list', (req, res)=>{
     conn.query('select * from performance_info', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
-            res.render('../views/admin_perf_list.html')
+            res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', resQuery)
             for(const perf of resQuery) {
@@ -29,7 +29,7 @@ router.get('/perf/list', (req, res)=>{
                 perf.end_date = base_date_format(perf.end_date)
                 perf.reg_date = base_date_format(perf.reg_date)
             }
-            res.render('../views/admin_perf_list.html', {res : resQuery})
+            res.render('../views/admin/perf_list.html', {res : resQuery})
         }
     })
 })
@@ -39,7 +39,7 @@ router.get('/perf/detail/:id', (req, res)=>{
     conn.query('select * from performance_info where perf_id = ?', [req.params.id], async (perfInfoErr, perfInfoQuery)=>{
         if(perfInfoErr) {
             console.log('sql 실패', perfInfoErr.message)
-            res.render('../views/admin_perf_list.html')
+            res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', perfInfoQuery)
             perfInfoQuery[0].start_date = base_date_format(perfInfoQuery[0].start_date)
@@ -58,7 +58,7 @@ router.get('/perf/detail/:id', (req, res)=>{
             }
             //console.log(perfCastQuery)
 
-            res.render('../views/admin_perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, perfScedule : sScheduleQuery, venueInfo: venueQuery[0]})
+            res.render('../views/admin/perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, perfScedule : sScheduleQuery, venueInfo: venueQuery[0]})
         }
     })
 })
@@ -67,10 +67,10 @@ router.get('/perf/upload', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
-            res.render('../views/admin_perf_upload.html')
+            res.render('../views/admin/perf_upload.html')
         } else {
             console.log('sql 성공', resQuery)
-            res.render('../views/admin_perf_upload.html', {res : resQuery})
+            res.render('../views/admin/perf_upload.html', {res : resQuery})
         }
     })
 })
@@ -282,7 +282,7 @@ router.get('/perf/modify/:id', (req, res)=> {
     conn.query('select * from performance_info where perf_id = ?', [req.params.id], (perfInfoErr, perfInfoQuery)=>{
         if(perfInfoErr) {
             console.log('sql 실패', perfInfoErr.message)
-            res.render('../views/admin_perf_list.html')
+            res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', perfInfoQuery)
             perfInfoQuery.start_date = base_date_format(perfInfoQuery.start_date)
@@ -293,10 +293,10 @@ router.get('/perf/modify/:id', (req, res)=> {
             conn.query(sPrefCastWpid, [req.params.id], (perfCastErr, perfCastQuery)=>{
                 if(perfCastErr) {
                     console.log('sql 실패', perfCastErr.message)
-                    res.render('../views/admin_perf_list.html')
+                    res.render('../views/admin/perf_list.html')
                 } else {
                     console.log('prefCast : ', perfCastQuery)
-                    res.render('../views/admin_perf_modify.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery})
+                    res.render('../views/admin/perf_modify.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery})
                 }
             })
         }
@@ -322,7 +322,7 @@ router.get('/perf/schedule/:id', async(req, res)=>{
     console.log(perfCastQuery)
     console.log(castQuery)
 
-    res.render('../views/admin_perf_schedule.html', {perfCast : perfCastQuery, perfScedule : perfSceduleQuery, castInfo : castInfoQuery, castActor: castQuery})
+    res.render('../views/admin/perf_schedule.html', {perfCast : perfCastQuery, perfScedule : perfSceduleQuery, castInfo : castInfoQuery, castActor: castQuery})
 })
 
 router.post('/perf/casting', (req, res)=>{
@@ -334,16 +334,16 @@ router.get('/actor/list', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
-            res.render('../views/admin_actor_list.html')
+            res.render('../views/admin/actor_list.html')
         } else {
             console.log('sql 성공', resQuery)
-            res.render('../views/admin_actor_list.html', {res : resQuery})
+            res.render('../views/admin/actor_list.html', {res : resQuery})
         }
     })
 })
 
 router.get('/actor/upload', (req, res)=>{
-    res.render('../views/admin_actor_upload.html')
+    res.render('../views/admin/actor_upload.html')
 })
 
 router.post('/actor/upload', multer.single('fprofile'), (req, res)=>{

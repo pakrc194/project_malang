@@ -2,7 +2,6 @@ const express = require('express')
 const path = require('path')
 const nunjucks = require('nunjucks')
 const session = require('express-session')
-const path = require('path')
 const app = express()
 
 app.use(express.urlencoded({extended:true}))
@@ -19,13 +18,13 @@ app.use(session({
 app.use('/style', express.static(path.join(__dirname, 'style')))
 app.use('/img', express.static(path.join(__dirname, 'img')))
 app.use('/js', express.static(path.join(__dirname, 'js')))
+app.use(express.static(path.join(__dirname, 'views')));
 
 nunjucks.configure('views', {
     autoescape: true,
     express: app
 })
 
-app.use(express.static(path.join(__dirname, 'views')));
 
 
 const perfRouter = require('./routes/perfRouter')
@@ -34,7 +33,6 @@ const loginRouter = require('./routes/loginRouter')
 const joinmemRouter = require('./routes/joinmemRouter')
 const idpwsearchRouter = require('./routes/idpwsearchRouter')
 const mypageRouter = require('./routes/mypageRouter')
-
 const adminRouter = require('./routes/adminRouter')
 
 
