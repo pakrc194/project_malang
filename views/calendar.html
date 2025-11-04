@@ -142,7 +142,7 @@
                 let arr = [dd, tt, flag]
                 socket.send(`select_date ${dd} ${tt}`)
 
-                fetch(`/desc/temp`, {
+                fetch(`/desc/temp/{{perf.id}}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(cc())
@@ -209,7 +209,7 @@
             <div class="time"></div>
         </div>
         <div>
-            <form action="/desc/reserve" target="_blank">
+            <form action="/desc/reserve/{{perf.id}}" target="_blank">
                 <input type="submit" value="예매하기" class="reserve">
             </form>
         </div>

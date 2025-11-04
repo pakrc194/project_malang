@@ -4,7 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>좌석선택하기</title>
-    <link rel="stylesheet" href="../style/reserve.css">
+    <!-- <link rel="stylesheet" href="../style/reserve.css"> -->
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .Big {
+            width: 1200px;
+            margin: auto;
+        }
+        .musical_name {
+            height: 70px;
+            /* text-align: center; */
+            font-size: 40px;
+            line-height: 70px;
+        }
+        .des_main {
+            border: 1px solid #f00;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .musical_info {
+            border: 1px solid #000;
+            display: flex;
+            width: 1200px;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .musical_seat {
+            width: 800px;
+        }
+
+        .musical_info > img{
+            width: 250px;
+            height: 350px;
+        }
+
+        .actor {
+            /* height: 200px; */
+            background-color: #faa;
+        }
+
+        .actor > img {
+            /* height: 200px; */
+            width: 1200px;
+        }
+
+        .story {
+            /* height: 200px; */
+            background-color: #afa;
+            align-items: center;
+            text-align: center;
+        }
+        .story > img {
+            width: 1200px;
+        }
+
+        .seat {
+            /* height: 200px; */
+            background-color: #dbf;
+        }
+        .seat > img {
+            width: 1200px;
+        }
+
+        .casting {
+            /* height: 200px; */
+            background-color: #aaf;
+        }
+        .casting > img {
+            width: 1200px;
+        }
+
+        .review {
+            /* height: 200px; */
+            background-color: #3cf;
+        }
+        .review > img {
+            width: 1200px;
+        }
+
+        .footer {
+            /* height: 200px; */
+            background-color: #f77;
+        }
+        .footer > img {
+            width: 1200px;
+        }
+
+        .seat_aside {
+            position: relative;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #000;
+            width: 400px;
+            height: 800px;
+        }
+
+        .seat_aside > .m_title > div:first-of-type {
+            font-size: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            height: 70px;
+            line-height: 30px;
+        }
+
+        .show_th {
+            height: 30px;
+        }
+
+        .m_title {
+            height: 100px;
+            background-color: #dbf;
+        }
+
+        .seatG {
+            height: 80px;
+            /* line-height: 100px; */
+            background-color: #3cf;
+        }
+
+        .seatC {
+            height: 120px;
+            /* line-height: 100px; */
+            /* background-color: #aaf; */
+        }
+
+        .doneBtn {
+            height: 100px;
+            /* line-height: 100px; */
+            background-color: #afa;
+            bottom: 0;
+        }
+
+        .doneBtn > .seat_tot_price {
+            line-height: 30px;
+            height: 30px;
+        }
+
+        .select_done {
+            height: 50px;
+            width: 300px;
+        }
+
+    </style>
 
     <script>
         let ddd = ""
@@ -25,12 +171,16 @@
             console.log(`reserve에서 수신: `, e.data)
             const data = JSON.parse(e.data);
             returndata(data.result)
+            
+
             if (data.type == 'temp') {
                 if (data.error) {
                     console.log('데이터 받아오기 실패: ', data.error)
                 }
                 else {
                     document.querySelector(".seatC").innerHTML = `선택한 좌석<br/>`
+                    let arr = []
+                    
                     let totprice = 0
                     for (let i = 0; i < data.result.length; i++) {
                         let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
@@ -40,28 +190,29 @@
                         let price = JSON.stringify(data.result[i].price).replace(/\"/g, '')
                         document.querySelector(".seatC").innerHTML += `좌석등급 ${grade} ${area}구역 ${s_row}열 ${s_col} ${price}원<br/>`
                         totprice += eval(price)
+                        
+                        arr.push(`${grade} ${area} ${s_row} ${s_col} ${price}`)
+                        
                     }
                     document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                    document.querySelector(".itemsInput").value = JSON.stringify(arr)
+                    document.querySelector(".Total").value = totprice
                 }
             }
         }
 
         window.addEventListener('DOMContentLoaded', function(){
+             let frm = document.forms.frm
             document.querySelector(".select_done").onclick = function() {
-                    fetch(`/desc/coupon`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(ddd)
-                        // body: ddd
-                    })
-                    .then(answer=>answer.json())
-                }
+               frm.submit()
+            }
         })
 
     </script>
 
 </head>
 <body>
+     <form action="/desc/coupon" name="frm"  method="POST">
     <!-- <h1>좌석선택하기</h1> -->
     <div class="Big">
         <!-- <div class="musical_name">뮤지컬 〈MAD HATTER〉</div> -->
@@ -73,27 +224,32 @@
             </div>
             <div class="seat_aside">
                 <div class="m_title">
-                    <div>뮤지컬 〈MAD HATTER〉긴 이름의 뮤지컬 테스트 긴 이름의</div>
-                    <div class="show_th">{{res[0].name}}</div>
+                    <div>뮤지컬 〈{{perf.name}}〉</div>
+                    <div>{{resQuery}}</div>
                 </div>
                 
                 <div  class="choiceDate">
                     {% include 'minicalendar.html' %}
                 </div>
                 <div class="seatG">
-                    [yellowgreen] R석 160,000원<br/>
+                    {% for i in seat %}
+                    {{i.grade}}석 {{i.price}}원<br/>
+                    {% endfor %}
+                    <!-- [yellowgreen] R석 160,000원<br/>
                     [violet] S석 130,000원<br/>
-                    [skyblue] A석 90,000원<br/>
+                    [skyblue] A석 90,000원<br/> -->
                 </div>
                 <div class="seatC">선택한 좌석</div>
                 <div class="doneBtn">
-                    <div class="seat_tot_price">좌석의 가격 합산 정보</div>
-                    <form action="/desc/coupon">
-                        <input type="submit" class="select_done" value="좌석 선택 완료">
-                    </form>
+                    <!-- <div class="seat_tot_price">좌석의 가격 합산 정보</div> -->
+                        <input type="hidden" name="items" class="itemsInput">
+                        <input type="hidden" name="items" class="Total">
+                        <input type="submit" class="select_done" name="seat_select" value="좌석 선택 완료">
+                   
                 </div>
             </div>
         </div>
     </div>
+    </form>
 </body>
 </html>

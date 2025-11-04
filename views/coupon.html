@@ -10,12 +10,11 @@
             let totprice = "{{ptot}}"
             let use = 0
             let arr = []
-
+            let hidden = document.querySelector(".hidden")
             document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
             document.querySelectorAll(".coupon_ck").forEach(cck =>{
+                console.log(hidden.value)
                 cck.addEventListener('click', ()=>{
-                    console.log(cck.classList)
-                    console.log('쿠폰 클릭')
                     if (cck.checked == true){
                         use++
                         totprice -= eval(cck.classList[2])
@@ -24,13 +23,19 @@
                                 coupon_name: cck.classList[1],
                                 discount_price: cck.classList[2]
                             }
+                            
                         )
+                        hidden.value = JSON.stringify(arr)
+
                         if (use > cnt){
                             alert('쿠폰 선택 안됨')
                             cck.checked = false
                             use--
                             totprice += eval(cck.classList[2])
                             arr.pop()
+                            hidden.value = JSON.stringify(arr)
+
+
                         }
                         document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
                     }
@@ -38,19 +43,16 @@
                         use--
                         totprice += eval(cck.classList[2])
                         arr.pop()
+                        hidden.value = JSON.stringify(arr)
+
                         document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
                     }
                 })
             })
 
+            let frm = document.forms.frm
             document.querySelector(".total_price_btn").onclick = function() {
-                fetch(`/desc/payment`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(arr)
-                    // body: ddd
-                })
-                .then(answer=>answer.json())
+                frm.submit()
             }
             
         })
@@ -79,7 +81,8 @@
 
 
     </div>
-    <form action="/desc/payment">
+    <form action="/desc/payment" name="frm" method="POST">
+        <input type="hidden" name="items" class="hidden">
     <input type="submit" class="total_price_btn">
     </form>
 </body>

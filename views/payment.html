@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script>
-        console.log("{{ticket}}[0].choice_date")
-    </script>
 </head>
 <body>
     <h1>결제화면</h1>
+    {% set total = 0 %}
     {% for i in payment_info %}
     {{i.coupon_name}} {{i.discount_price}}<br/>
+    {% set total = total - i.discount_price %}
     {% endfor %}
 
     {% for j in ticket %}
     좌석등급 {{j.grade}} {{j.area}}구역 {{j.s_row}}열 {{j.s_col}} {{j.choice_date}} {{j.choice_time}} {{j.price}}<br/>
+    {% set total = total + j.price %}
     {% endfor %}
+    {{total}}
+    <div class="total"></div>
 </body>
 </html>
