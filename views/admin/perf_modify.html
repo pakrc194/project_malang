@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>공연 등록</title>
+    <title>공연 수정</title>
 </head>
 <style>
     * {
@@ -222,7 +222,7 @@
 <body>
     <h1>modify</h1>
     <form action="/admin/perf/modify" method="POST" enctype="multipart/form-data" name="modifyFrm">
-        공연이름 <input type="text" name="fname"><br/>
+        공연이름 <input type="text" name="fname" value="{{perfInfo.name}}" readonly><br/>
         포스터 <input type="file" name="fposter" id="fposter"><br/>
         시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
         공연장르 <select name="fgenre" id="fgenre">
@@ -231,7 +231,7 @@
             <option value="라이선스">라이선스</option>
             <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
         </select><br/>
-        러닝타임 <input type="text" name="frunning"><br/>
+        러닝타임 <input type="text" name="frunning" value="{{perfInfo.running_time}}"><br/>
         공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
         공연장 <select name="ftheator" id="ftheator">
             <option value="1">샤롯데씨어터</option>

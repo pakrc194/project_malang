@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원목록</title>
+</head>
+<body>
+    <h1>회원 목록</h1>
+    {% include './list_nav.html' %}
+    {% for user in userlist %}
+        <a href="/admin/user/detail/{{user.user_id}}">{{user.email}}</a><br/>
+        {{user.sign_method}}<br/>
+        {{user.account_status}}<br/>
+        {{user.score}}<br/>
+        {{user.grade_id}}<hr/>
+    {% endfor %}
+</body>
+</html>

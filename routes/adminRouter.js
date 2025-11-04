@@ -365,7 +365,23 @@ router.post('/actor/upload', multer.single('fprofile'), (req, res)=>{
     })
 })
 
-
+router.get('/user', (req, res)=> {
+    res.redirect('/admin/user/list')
+})
+router.get('/user/list', (req, res)=> {
+    let userQuery = 'select * from user_info'
+    conn.query(userQuery, (req, ret)=> {
+        console.log(ret)
+        res.render('../views/admin/user_list.html', {userlist : ret})
+    })
+})
+router.get('/user/detail/:id', (req, res)=> {
+    let userQuery = 'select * from user_info where user_id = ?'
+    conn.query(userQuery, [req.params.id], (req, ret)=> {
+        console.log(ret[0])
+        res.render('../views/admin/user_detail.html', {userInfo : ret[0]})
+    })
+})
 
 
 module.exports = router 
