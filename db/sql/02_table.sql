@@ -12,10 +12,13 @@ drop table perf_schedule;
 
 CREATE TABLE perf_schedule(  
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    th_id int,
-    date VARCHAR(20),
+    perf_id int,
+    venue_id int,
+    schedule_date VARCHAR(20),
     round varchar(5),
-    time varchar(20)
+    schedule_time varchar(20),
+    FOREIGN KEY (perf_id) REFERENCES performance_info(id),
+    FOREIGN KEY (venue_id) REFERENCES venue_info(id)
 );
 
 drop table user_info;
@@ -93,10 +96,10 @@ drop table actor_info;
 
 CREATE TABLE actor_info(  
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    name VARCHAR(20),
-    birth int,
+    actor_name VARCHAR(20),
+    birth_year int,
     gender varchar(5),
-    profile varchar(50)
+    profile_image_url varchar(50)
 );
 
 
