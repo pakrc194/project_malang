@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배우 등록</title>
+</head>
+<body>
+    <h1>배우 등록</h1>
+    <form action="/admin/actor/upload" method="POST" enctype="multipart/form-data">
+        이름 <input type="text" name="fname"><br/>
+        사진 <input type="file" name="fprofile"><br/>
+        나이 <input type="text" name="fbirth"><br/>
+        성별 남<input type="radio" name="fgender" value="m" checked>
+            여<input type="radio" name="fgender" value="f"><br/>
+        <input type="submit" value="업로드">
+        <a href="/admin/actor">뒤로</a>
+        <hr/>
+    </form>
+</body>
+</html>
