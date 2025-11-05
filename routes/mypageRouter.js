@@ -1,11 +1,12 @@
 const express = require('express')
+const util = require('util')
 const router = express.Router()
 const path = require('path')
 const conn = require('../db/db')
 
 
 let titleArr = {
-    reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
+    grade: '내등급',reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
 }
 
 let data = {}
@@ -33,7 +34,34 @@ router.use((req, res, next) => {
 router.get('/', (req, res) => {
     //res.render('../views/mypage.html')
     //res.sendFile(path.join(__dirname, '../views/mypage.html'))
-    res.redirect('/mypage/pwChange')     //  리다이렉트 '/info/hello' 로 URL 이동
+    res.redirect('/mypage/myInfo')     //  리다이렉트 '/info/hello' 로 URL 이동
+})
+
+router.get('/myInfo', (req, res) => {
+    console.log('email', req.session.email)
+    let email = 'abc111@gmail.com'
+    let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
+    let reservSQL = 'select count(*) from reservation_info where user_id = ?'
+    let couponSQL = 'select count(*) from user_coupon where user_id = ?'
+    let tasks = []
+
+
+    conn.query(selectSQL, [email], async (userInfoErr, userInfoQuery)=> {
+        console.log(userInfoQuery)
+        let userId = userInfoQuery[0].user_id
+        tasks.push(conn.query(reservSQL, [userId]))
+        tasks.push(conn.query(couponSQL, [userId]))
+
+        let[reservQuery, couponQuery]= await Promise.all(tasks)
+        console.log('reserv----', reservQuery)
+        console.log(reservQuery[0]['count(*)'])
+        console.log('coupon----', couponQuery)
+        console.log(couponQuery[0]['count(*)'])
+        
+
+        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], couponCnt :couponQuery[0]['count(*)'],  reservCnt :reservQuery[0]['count(*)']})
+    })
+    //res.render("../views/list.html")
 })
 
  router.get('/reserveSelect', (req, res) => {

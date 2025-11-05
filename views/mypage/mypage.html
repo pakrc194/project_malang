@@ -34,7 +34,7 @@
     }
 
     section {
-      width: 800px;
+      width: 100%;
       border: 1px solid #000;
       background-color: #fa4;
     }
@@ -50,6 +50,10 @@
 
     <aside>
       {{aside | safe}}
+    </aside>
+    <aside>
+      사이드바 <br>
+      {% include '../mypage/aside.html' %}
     </aside>
 
     <section id="content">

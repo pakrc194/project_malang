@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>예매관리</h1>
+    {% include './list_nav.html' %}
+    {% for reserv in reservList %}
+        <a href="/admin/reserv/detail?resvId={{reserv.resv_id}}&userId={{reserv.user_id}}">{{reserv.resv_number}}</a><br/>
+        {{reserv.email}}<br/>
+        {{reserv.name}}<br/>
+        {{reserv.poster_url}}<br/>
+        {{reserv.schedule_date}}<br/>
+        {{reserv.schedule_time}}<br/>
+        {{reserv.round}}<br/>
+        {{reserv.total_amount}}<br/>
+        {{reserv.grade_discount_rate_at_resv}}<br/>
+        {{reserv.final_amount}}<br/>
+        {{reserv.resv_date}}<br/>
+        {{reserv.resv_status}}<hr/>
+    {% endfor %}
+</body>
+</html>

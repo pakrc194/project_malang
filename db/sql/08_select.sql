@@ -3,6 +3,8 @@ select * from perf_cast;
 select * from perf_cast where perf_id = 1;
 select * from performance_info as perf join perf_cast where perf.perf_id = 1;
 
+select * from performance_info join venue_info where performance_info.perf_id = venue_info.venue_id
+
 
 SELECT
     PINFO.name,       

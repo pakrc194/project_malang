@@ -39,6 +39,9 @@ const idpwsearchRouter = require('./routes/idpwsearchRouter')
 const mypageRouter = require('./routes/mypageRouter')
 const adminRouter = require('./routes/adminRouter')
 const searchRouter = require('./routes/searchRouter')
+const listRouter = require('./routes/listRouter')
+const myGradeRouter = require('./routes/gradeRouter')
+const interestRouter = require('./routes/interestRouter')
 
 
 app.use('/perf', perfRouter)
@@ -49,6 +52,9 @@ app.use('/idpwsearch', idpwsearchRouter)
 app.use('/mypage', mypageRouter)
 app.use('/admin', adminRouter)
 app.use('/search', searchRouter)
+app.use('/list', listRouter)
+app.use('/mypage/grade', myGradeRouter)
+app.use('/mypage/interest', interestRouter)
 app.use('/desc', desRouter)
 
 app.get('/', (req, res)=>{
