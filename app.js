@@ -34,6 +34,7 @@ const joinmemRouter = require('./routes/joinmemRouter')
 const idpwsearchRouter = require('./routes/idpwsearchRouter')
 const mypageRouter = require('./routes/mypageRouter')
 const adminRouter = require('./routes/adminRouter')
+const searchRouter = require('./routes/searchRouter')
 
 
 app.use('/perf', perfRouter)
@@ -42,8 +43,8 @@ app.use('/login', loginRouter)
 app.use('/joinmem', joinmemRouter)
 app.use('/idpwsearch', idpwsearchRouter)
 app.use('/mypage', mypageRouter)
-
 app.use('/admin', adminRouter)
+app.use('/search', searchRouter)
 
 app.get('/', (req, res)=>{
     res.redirect('/main')
