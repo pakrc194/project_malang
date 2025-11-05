@@ -94,7 +94,7 @@ router.post('/reserve/:id', (req, res)=>{
             }
             
             if (resPf && resPf.length > 0){
-                res.render("reserve.html", {perf: resPf[0], arr, seat: resP})
+                res.render("reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
             }
         })
     })
@@ -102,7 +102,7 @@ router.post('/reserve/:id', (req, res)=>{
 })
 
 
-router.post('/coupon', (req, res)=>{
+router.post('/coupon/:id', (req, res)=>{
     let temp_data = [] // grade, area, s_row, s_col, price
     for (let i of JSON.parse(req.body.items[0])){
         // console.log(i.split(' '))
@@ -130,8 +130,11 @@ router.post('/coupon', (req, res)=>{
                 month: resS[0].choice_date.getMonth() +1,
                 day: resS[0].choice_date.getDate()
             }
+            conn.query(`select * from performance_info where id = ${req.params.id}`, (err, resCP)=>{
+                console.log(resCP)
+                res.render('coupon.html', {ptot: ptot, temp_data, coupon:resC, cnt: cnt, seat: arr1, perf: resCP[0]})
+            })
 
-            res.render('coupon.html', {ptot: ptot, temp_data, coupon:resC, cnt: cnt, seat: arr1})
         })
     })
 
