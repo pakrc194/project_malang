@@ -1,0 +1,13 @@
+<style>
+    #imgGrade {
+        width: 100px;
+    }
+</style>
+<div class="myInfo">
+    {{myInfo.email}}<br/>
+    {{myInfo.name}}<br/>
+    {{myInfo.grade_name}}<br/>
+    <img id="imgGrade" src="../../img/{{myInfo.grade_image_url}}" alt="{{myInfo.grade_image_url}}"><hr/>
+    예매내역 {{reservCnt}} <hr/>
+    쿠폰갯수 {{couponCnt}} <hr/>
+</div>

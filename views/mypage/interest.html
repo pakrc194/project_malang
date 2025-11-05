@@ -1,0 +1,26 @@
+<style>
+    #imgInterest {
+        width: 100px;
+    }
+    .myInterest {
+        width: 1200px;
+        height: 200px;
+        overflow: auto;
+    }
+    .myInterest > div {
+        width: 150px;
+        height: 200px;
+        float: left;
+    }
+</style>
+<div class="myInterest">
+    {% for actor in actorList %}
+        <div>
+            {{actor.actor_name}}<br/>
+            <a href="/actor/{{actor.actor_id}}">
+                <img id="imgInterest" src="../../img/{{actor.profile_image_url}}" alt="{{actor.profile_image_url}}"><hr/>
+            </a>
+        </div>
+    {% endfor %}
+    <hr>
+</div>
