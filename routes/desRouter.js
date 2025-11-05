@@ -14,15 +14,64 @@ let venue_id = 0
 
 // 상세페이지
 router.get('/:id', (req, res)=>{
-    conn.query(`select performance_info.*, theater_info.name as th_name from performance_info join theater_info where performance_info.venue_id = theater_info.id and performance_info.id = ${req.params.id}`, (err, resPerf)=>{
-        // res.render("description.html", {perf: resPerf})
+    let query = `SELECT 
+    p.id AS performance_id,
+    p.name AS performance_name,
+    p.poster_url,
+    p.synopsis_url,
+    p.start_date,
+    p.end_date,
+    p.genre,
+    p.running_time,
+
+    v.venue_id,
+    v.venue_name,
+    v.region,
+    v.venue_type,
+    v.seat_class,
+
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'actor_id', a.id,
+            'actor_name', a.actor_name,
+            'profile_image_url', a.profile_image_url,
+            'cast_name', c.cast_name,
+            'cast_story', c.cast_story
+        )
+    ) AS cast_list
+
+    FROM performance_info p
+    JOIN venue_info v 
+        ON p.venue_id = v.venue_id
+    JOIN perf_cast pc 
+        ON p.id = pc.perf_id
+    JOIN actor_info a 
+        ON pc.actor_id = a.id
+    JOIN cast_info c 
+        ON pc.cast_id = c.cast_id
+
+    WHERE p.id = ${req.params.id}
+    GROUP BY 
+        p.id, p.name, p.poster_url, p.synopsis_url, 
+        p.start_date, p.end_date, p.genre, p.running_time,
+        v.venue_id, v.venue_name, v.region, v.venue_type, v.seat_class;
+    `
+
+    // conn.query(query, (err, rrr)=>{
+    //     console.log(rrr)
+    //     console.log(rrr[0].cast_list)
+    // })
+    let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
+    conn.query(query, (err, resPerf)=>{
         if (resPerf && resPerf.length > 0){
             venue_id = resPerf[0].venue_id
         }
-        conn.query(`select * from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="${venue_id}" `, (err, resP)=>{
-            // console.log(resP)
-            // console.log(resPerf)
-            if (resPerf && resPerf.length > 0){
+        // 공연장에 해당하는 좌석 가격 가져오기
+        conn.query(`select * from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+            if (!resPerf || resPerf.length === 0) {
+                return res.status(404).send("해당 공연을 찾을 수 없습니다.");
+            }
+            else if (resPerf && resPerf.length > 0){
                 res.render("description.html", {perf: resPerf[0], musical: resP})
             }
 

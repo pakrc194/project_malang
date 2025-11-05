@@ -6,7 +6,29 @@
     <title>뮤지컬 상세페이지</title>
     <link rel="stylesheet" href="../style/description.css">
 
-    <script src="../js/description.js"></script>
+    <!-- <script src="../js/description.js"></script> -->
+     <script>
+        function click_poster(){
+            console.log('포스터 클릭')
+            document.querySelector(".big_poster").style.display = "block"
+            document.querySelector("body").style.overflow="hidden"
+        }
+
+        function ck_big(){
+            console.log('큰 포스터 클릭')
+            document.querySelector(".big_poster").style.display = "none"
+            document.querySelector("body").style.overflow = "visible"
+        }
+
+        window.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll(".ind_actor").forEach(act_box =>{
+                act_box.addEventListener("click", ()=>{
+                    console.log(act_box.classList[1])            
+                })
+            })
+        })
+
+     </script>
     
 </head>
 <body>
@@ -15,7 +37,7 @@
         <div class="site_header">
             사이트 로고 - 메인화면 헤더 가져오기
         </div>
-        <div class="musical_name">뮤지컬 〈{{perf.name}}〉</div>
+        <div class="musical_name">뮤지컬 〈{{perf.performance_name}}〉</div>
         <div class="des_main">
             <div class="musical_info">
                 <!-- <a href="/main_poster" target="_blank"> -->
@@ -26,15 +48,13 @@
                         장소<br/>
                         공연기간<br/>
                         공연시간<br/>
-                        관람연령<br/>
                         장르<br/>
                         가격
                     </div>
                     <div>
-                        {{musical[0].name}}<br/>
+                        {{perf.venue_name}}<br/>
                         {{perf.start_date}} ~ {{perf.end_date}}<br/>
                         {{perf.running_time}}분<br/>
-                        14세 이상 관람가<br/>
                         {{perf.genre}}뮤지컬<br/>
                         {% for info in musical %}
                         {{info.grade}}석 {{info.price}}원<br/>
@@ -55,12 +75,18 @@
              <div class="act_wrapper">
                 <div class="view_casting">
                     <div class="letter_casting">캐스팅</div>
-                    <form action="/" target="_blank">
+                    <form action="/{{perf.id}}" target="_blank">
                         <input type="submit" value="캐스팅 일정조회" class="casting_schedule">
                     </form>
                 </div>
                 <div class="actor_box">
-
+                    {% for i in perf.cast_list %}
+                        <div class="ind_actor {{i.actor_id}}">
+                            <img src="../img/{{i.profile_image_url}}" alt="">
+                            <div class="actor_name">{{i.actor_name}}</div>
+                            <div calss="cast_name">{{i.cast_name}}</div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
              
