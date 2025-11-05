@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세페이지 배우 캐스팅</title>
+    <link rel="stylesheet" href="../style/desc_actor.css">
+
+    <!-- <script src="../js/desc_actor.js"></script> -->
+     <script>
+        window.addEventListener('DOMContentLoaded', function(){
+            for (let i=0 ; i<10; i++) {
+                document.querySelector(".actor_box").innerHTML += 
+                `<div class="ind_actor">
+                    <img src="../img/cat3_cut.jpg" alt="">
+                    <div class="actor_name">배우${i}</div>
+                    <div calss="cast_name">배역${i}</div>
+                </div>`
+            }
+            document.querySelectorAll(".ind_actor").forEach(act_box =>{
+                act_box.addEventListener("click", ()=>{
+                    fetch(`/desc/actor`, {
+                                method: 'GET',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify(ddd)
+                                // body: ddd
+                            })
+                            .then(answer=>answer.json())
+                    // console.log(`배우 상세 페이지로 이동`)
+                    // window.location.href="/desc/actor"
+                    // window.open("/")
+                    
+                })
+            })
+        })
+     </script>
+</head>
+<body>
+    <div class="act_wrapper">
+        <div class="casting">
+            <div class="letter_casting">캐스팅</div>
+            <form action="/" target="_blank">
+                <input type="submit" value="캐스팅 일정조회" class="casting_schedule">
+            </form>
+        </div>
+        <div class="actor_box">
+
+        </div>
+    </div>
+</body>
+</html>

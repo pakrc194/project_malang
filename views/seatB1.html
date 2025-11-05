@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seat</title>
+    <!-- <link rel="stylesheet" href="../style/seatB1.css"> -->
+    <!-- <script src="../js/seatB1.js"></script> -->
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        .first > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            margin: 0;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: yellowgreen;
+            border: 3px solid yellowgreen;
+        }
+        .first > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .second > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: violet;
+            border: 3px solid violet;
+        }
+        .second > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .third > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: skyblue;
+            border: 3px solid skyblue;
+        }
+        .third > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .seat_wrapper {
+            /* display: flex; */
+
+            width: 800px;
+            height: 800px;
+            border: 1px solid #ccc;
+            /* box-sizing: border-box; */
+        }
+        .first {
+            width: 800px;
+            height: 260px;
+            display: flex;
+        }
+        .second {
+            width: 800px;
+            height: 260px;
+            display: flex;
+        }
+        .third {
+            width: 800px;
+            height: 260px;
+            display: flex;
+        }
+
+        .stair {
+            width: 25px;
+            height: 260px;
+            text-align: center;
+            font-size: 13px;
+            /* background-color: #ff0; */
+        }
+
+        .section {
+            width: 250px;
+            height: 260px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+
+        .hallway {
+            width: 800px;
+            height: 10px;
+            /* background-color: #ff0; */
+        }
+
+        .seat_ {
+            width: 15px;
+            height: 15px;
+            margin: 2px;
+            background-color: #ccc;
+            border: 3px solid #000;
+            box-sizing: border-box;
+        }
+
+        /* .second > .section:nth-of-type(1) {
+            display: flex;
+        } */
+
+        .stair > div {
+            margin-top: 5px;
+        }
+
+        .stair > div:first-of-type {
+            margin-top: 10px;
+        }
+
+        .section > input:disabled {
+            border-color: #555;
+            background-color: #555;
+            cursor: default;
+        }    
+    </style>
+
+    <script>
+        const socket1 = new WebSocket('ws://localhost:80')
+
+        // 3.2 클라이언트가 수신
+        socket1.onmessage = (e)=>{
+            console.log('seatB1에서 수신: ', e.data)
+        }
+        window.addEventListener('DOMContentLoaded', function(){
+
+            let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+            let row = ["first", "second", "third"]
+            let grade = ["R", "S", "A"]
+
+            for(let aa = 0; aa < 3; aa++) {
+
+                for (let i = 0; i < 5; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 5*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 5*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 5*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+            }
+
+
+            console.log("{{area}}")
+            // forEach로 선택된 좌석이 있다면 비활성화(disabled=true)
+            document.querySelectorAll(".indiseat").forEach(seats=>{
+                if (seats.value.split(' ')[1] == "{{area}}" && seats.value.split(' ')[2] == eval("{{row}}") && seats.value.split(' ')[3] == eval("{{col}}")) {
+                    seats.disabled = true
+                    console.log(seats.value.split(' ')[1], seats.value.split(' ')[2], seats.value.split(' ')[3])
+                }
+            })
+        })
+
+        let cnt = 0
+        // 예매 개수 4개로 제한
+        function ck_cnt(obj) {
+            socket1.send(obj.value)
+
+            if (obj.checked == true){
+                cnt++
+            }
+            else {
+                cnt--
+            }
+
+            if (cnt > 4) {
+                alert('선택 안됨')
+                obj.checked = false
+                cnt--
+                socket1.send(obj.value)
+            }
+            
+            console.log(obj.value, cnt)
+            
+        }
+    </script>
+    
+</head>
+<body>
+    <!-- <h1>대공연장1 좌석표</h1> -->
+    <div class="seat_wrapper">
+        <div class="first">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <div class="hallway"></div>
+
+        <div class="second">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <div class="hallway"></div>
+        <div class="third">
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+            </div>
+            <div class="section"></div>
+
+        </div>
+        <!-- <input type="checkbox"> -->
+    </div>
+</body>
+</html>

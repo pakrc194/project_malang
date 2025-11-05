@@ -1,8 +1,4 @@
-<<<<<<< HEAD
--- Active: 1761830851051@@127.0.0.1@3306@malang_db
-=======
--- Active: 1761919734604@@127.0.0.1@3306@malang_db
->>>>>>> psj
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 drop table theater_info;
 
 CREATE TABLE theater_info(  
@@ -16,10 +12,13 @@ drop table perf_schedule;
 
 CREATE TABLE perf_schedule(  
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    th_id int,
-    date VARCHAR(20),
+    perf_id int,
+    venue_id int,
+    schedule_date VARCHAR(20),
     round varchar(5),
-    time varchar(20)
+    schedule_time varchar(20),
+    FOREIGN KEY (perf_id) REFERENCES performance_info(id),
+    FOREIGN KEY (venue_id) REFERENCES venue_info(id)
 );
 
 drop table user_info;
@@ -78,6 +77,38 @@ CREATE TABLE actor_schedule_info(
     ac_id int
 );
 
+DROP TABLE seat_temp;
+-- 좌석정보 임시 저장할 테이블
+CREATE TABLE seat_temp (
+    grade VARCHAR(10),
+    area VARCHAR(10),
+    s_row int,
+    s_col int,
+    choice_date DATE,
+    choice_time int,
+    expires DATETIME
+);
+
+-- 좌석 가격 테이블
+CREATE TABLE seat_price (
+    grade VARCHAR(10),
+    price int
+)
+
+DROP TABLE seat_price;
+
+
+drop table actor_info;
+
+CREATE TABLE actor_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    actor_name VARCHAR(20),
+    birth_year int,
+    gender varchar(5),
+    profile_image_url varchar(50)
+);
+
+
 drop table perf_info;
 
 CREATE TABLE perf_info(  
@@ -101,4 +132,36 @@ CREATE TABLE perf_th_price(
     th_id int,
     grade varchar(2),
     price int
+);
+
+DROP TABLE user_coupon;
+
+CREATE TABLE user_coupon (
+    user_email VARCHAR(30),
+    coupon_id VARCHAR(100),
+    coupon_issuance_date date,
+    expiration_date date,
+    coupon_use_date date,
+    coupon_state VARCHAR(20)
+);
+
+DROP TABLE coupon_info;
+
+CREATE TABLE coupon_info(
+    cid VARCHAR(100),
+    coupon_name VARCHAR(100),
+    discount_price INT
+);
+
+
+
+DROP TABLE seat_status;
+CREATE TABLE seat_status(
+    status_id INT,
+    schedule_id INT,
+    seat_id INT,
+    seat_status ENUM('Available', 'Reserved', 'Sold'),
+    user_id INT,
+    temp_resv_time DATETIME,
+    FOREIGN KEY (seat_id) REFERENCES seat_layout(seat_id)
 );

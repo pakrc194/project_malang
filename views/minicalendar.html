@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calendar</title>
+    <!-- <link rel="stylesheet" href="../style/minicalendar.css"> -->
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .big {
+            width: 200px;
+            height: 400px;
+            /* border: 1px solid #ff0; */
+            margin: auto;
+        }
+
+        .wrapper {
+            width: 200px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #000;
+        }
+
+        .wrapper > header > .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .wrapper > header > .nav > .current_date {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .wrapper > header > .nav > button {
+            width: 30px;
+            height: 30px;
+            font-size: 15px;
+            color: #878787;
+            cursor: pointer;
+        }
+
+        .calendar > ul {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .calendar > .weeks > li {
+            font-weight: 500;
+        }
+
+        .calendar > .days {
+            margin-bottom: 20px;
+        }
+
+        .calendar > ul > li {
+            width: calc(100%/7);
+            position: relative;
+        }
+
+        .calendar > .days > li {
+            z-index: 1;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .calendar > .days > .inactive {
+            color: #aaa;
+            cursor: default;
+        }
+
+        .calendar > .days > .active {
+            color: #fff;
+        }
+
+        .calendar > .days > li::before {
+            position: absolute;
+            content: '';
+            height: 20px;
+            width: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .days > li:hover::before {
+            background: #f2f2f2;
+        }
+
+        .days > .inactive:hover::before {
+            background: none;
+        }
+
+        .days > .active::before {
+            background: #f00;
+        }
+
+        .s_time {
+            display: flex;
+            list-style: none;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        #set {
+            margin-top: 0px;
+        }
+
+
+        .select {
+            border: 1px solid #f00;
+        }
+
+        label {
+            cursor: pointer;
+        }
+
+        .reserve {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+            height: 30px;
+        }
+     </style>
+    <script>
+        window.onload = function(){
+            let date = new Date()
+            let s_date = new Date("2025-10-22")
+            let e_date = new Date("2026-01-18")
+            let selectDate = new Date("{{arr.date}}")
+
+            let startday = s_date.getDate()
+            let startYear = s_date.getFullYear()
+            let startMonth = s_date.getMonth()
+            // console.log(e_date)
+
+            let lastday = e_date.getDate()
+            let lastMonth = e_date.getMonth()
+            let lastYear = e_date.getFullYear()
+
+            // 상세페이지에서 선택한 날짜
+            let selectD = selectDate.getDate()
+            let selectM = selectDate.getMonth()
+            let selectY = selectDate.getFullYear()
+
+            
+
+            /*
+                공연이 시작 안 했을 경우
+                1. 같은 년도, 같은 달
+                2. 같은 년도
+                3. 다른 년도
+            */
+            if ((startYear == date.getFullYear() && startMonth == date.getMonth() && startday > date.getDate()) ||
+                (startYear == date.getFullYear() && startMonth > date.getMonth())||
+                startYear > date.getFullYear()){
+
+                startday = s_date.getDate()
+                startYear = s_date.getFullYear()
+                startMonth = s_date.getMonth()
+            }
+            else {
+                startday = date.getDate()
+                startYear = date.getFullYear()
+                startMonth = date.getMonth()
+            }
+            
+            
+            let currYear = date.getFullYear();
+            let currMonth = date.getMonth();
+    
+            const currentDate = document.querySelector('.current_date')
+            
+            const daysTag = document.querySelector('.days');
+            
+            
+            const renderCalendar = () => {
+                let cnt = 1
+                currentDate.innerHTML = `${selectY}. ${selectM+1}`
+                let lastDateofMonth = new Date(selectY, selectM + 1, 0).getDate();
+                let firstDayofMonth = new Date(selectY, selectM, 1).getDay();
+                let lastDayofMonth = new Date(selectY, selectM, lastDateofMonth).getDay(); 
+                let lastDateofLastMonth = new Date(selectY, selectM, 0).getDate();
+
+                let liTag = '';
+                
+                for (let i = firstDayofMonth; i > 0; i--) {
+                    // liTag += `<li class = "inactive">${lastDateofLastMonth - i + 1}</li>`;
+                    liTag += `<li class="inactive"></li>`
+                    cnt++
+                }
+                
+                for (let i = 1; i <= lastDateofMonth; i++) {
+                    if (selectY == startYear && selectM == startMonth && i < startday){
+                        // 공연 시작일 혹은 오늘보다 이전 날짜 비활성화
+                        liTag += `<li class='inactive' id="set">${i}</li>`;
+                        cnt++
+                    }
+                    else if (selectY == lastYear && selectM == lastMonth && i > lastday){
+                        // 공연 마지막날보다 이후 날짜 비활성화
+                        liTag += `<li class='inactive' id="set">${i}</li>`;
+                        cnt++
+                    }
+                    else {
+                        liTag += `<li class='clickday' id="set" onclick='clickE(${selectY}, ${selectM}, ${i}, ${cnt++});'>${i}</li>`;
+                    }
+                }
+
+                for (let i = lastDayofMonth; i < 6; i++) {
+                    // liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+                    liTag += `<li class="inactive"></li>`
+
+                    cnt++
+                }
+                
+                daysTag.innerHTML = liTag;
+
+                
+                // 공연 마지막날 이후로 이동 못함
+                if (selectY >= lastYear && selectM >= lastMonth){
+                    document.querySelector('#next').disabled = true
+                }
+                else {
+                    document.querySelector('#next').disabled = false
+                }
+
+                // 오늘 이전으로 이동 못함
+                if (selectY == startYear && selectM == startMonth){
+                    document.querySelector('#prev').disabled = true
+                }
+                else {
+                    document.querySelector('#prev').disabled = false
+                }
+
+                
+                
+                
+            }
+            renderCalendar()
+
+            
+            const selDate = ()=>{
+                document.querySelector(".time").innerHTML = `${selectY}년 ${selectM+1}월 ${selectD}일`
+                document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${1})" class="btn1">1회차 14:00</label></li>`
+                document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${2})" class="btn2">2회차 19:00</label></li>`
+                document.querySelector(".btn{{arr.time}}").checked = true;
+                document.querySelector(`.clickday:nth-of-type({{arr.flag}})`).classList.toggle("active")
+                // let init_arr = ["select_date", `${selectY}-${selectM+1}-${selectD}`, "{{time}}"]
+                // socket.send(`select_date ${selectY}-${selectM+1}-${selectD} {{time}}`)
+            }
+
+            selDate()
+
+            document.querySelector('#prev').addEventListener('click', ()=>{
+                selectM -= 1
+                if (selectM == -1){
+                    selectM = 11
+                    selectY -= 1
+                }
+                flag = 0
+                renderCalendar()
+                // "{{flag}}" = 0
+            })
+
+            document.querySelector('#next').addEventListener('click', ()=>{
+                selectM += 1
+                if (selectM == 12){
+                    selectM = 0
+                    selectY += 1
+                }
+                flag = 0
+                renderCalendar()
+                // "{{flag}}" = 0
+            })    
+            
+
+            document.querySelector(".selectBtn").onclick = function() {
+                let {dd, tt} = cc()
+                let arr = ["select_date", dd, tt]
+                // socket.send(`${arr}`)
+                socket.send(`select_date ${dd} ${tt}`)                
+            }
+        }
+        
+        var dd="{{arr.date}}"
+        var tt="{{arr.time}}"
+        let flag = 0
+        function clickE(year, month, day, cnt){
+            // console.log(`${year}년 ${month+1}월 ${day}일 ${cnt}`)
+            document.querySelector(".time").innerHTML = `${year}년 ${month+1}월 ${day}일<br/>`
+            // document.querySelector(".time").innerHTML += `<li class="s_time select" onclick="clickT(${1})">1회차 14:00</li>`
+            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${1})" class="btn">1회차 14:00</label></li>`
+            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${2})" class="btn">2회차 19:00</label></li>`
+            document.querySelector(`.clickday:nth-of-type(${cnt})`).classList.toggle("active")
+            if (flag != 0){
+
+                document.querySelector(`.clickday:nth-of-type(${flag})`).classList.toggle("active")
+            }
+            else {
+
+                document.querySelector(`.clickday:nth-of-type({{arr.flag}})`).classList.toggle("active")
+            }
+
+            // if (on == 1) {
+            //     document.querySelector(`.clickday:nth-of-type({{flag}})`).classList.toggle("active")
+            //     on = 0
+            // }
+            flag = cnt
+            dd = `${year}-${month+1}-${day}`
+        }
+
+        function ttt(num){
+            tt = num
+        }
+
+        function cc() {
+            
+            return {dd, tt}
+            // module.exports = {dd, tt}
+        }
+
+    </script>
+</head>
+<body>
+
+    <div class="big">
+
+        <div class="wrapper">
+            <header>
+                <div class="nav">
+                    <button class="material_icons" id="prev"> 〈 </button>
+                    <p class="current_date">
+                        
+                    </p>
+                    <button class="material_icons" id="next"> 〉 </button>
+                </div>
+            </header>
+            <div class="calendar">
+                <ul class="weeks">
+                    <li>일</li>
+                    <li>월</li>
+                    <li>화</li>
+                    <li>수</li>
+                    <li>목</li>
+                    <li>금</li>
+                    <li>토</li>
+                </ul>
+                <ul class="days">
+                </ul>
+            </div>
+            <div class="time"></div>
+        </div>
+        <div>
+            <!-- <form action="/reserve" target="_blank"> -->
+                <input type="submit" value="선택하기" class="selectBtn">
+            <!-- </form> -->
+        </div>
+        <div class="seatDa"></div>
+    </div>
+
+</body>
+</html>

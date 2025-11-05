@@ -1,8 +1,26 @@
+<<<<<<< HEAD
 insert into venue_info (venue_name, region, venue_type) VALUES 
     ("샤롯데씨어터", "서울", "대극장"),
     ("드림씨어터", "부산", "대극장"),
     ("대학로예술극장", "서울", "소극장"),
     ("창원성산아트홀", "창원", "소극장");
+=======
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
+insert into venue_info (venue_name, region, venue_type, seat_class) VALUES 
+    ("샤롯데씨어터", "서울", "대극장", "R,S,A"),
+    ("드림씨어터", "부산", "대극장", "R,S,A"),
+    ("대학로예술극장", "서울", "소극장", "S,A"),
+    ("창원성산아트홀", "창원", "소극장", "S,A");
+
+DROP TABLE venue_info;
+CREATE TABLE venue_info (
+    venue_id INT PRIMARY KEY AUTO_INCREMENT,
+    venue_name VARCHAR(50),
+    region VARCHAR(10),
+    venue_type VARCHAR(50),
+    seat_class VARCHAR(10)
+);
+>>>>>>> KHJ
 
 insert into actor_info (actor_name, profile_image_url, birth_year, gender) VALUES 
     ('박규원', 'hook_pkw_841761909473010.png','1984','M'),
@@ -15,14 +33,36 @@ insert into actor_info (actor_name, profile_image_url, birth_year, gender) VALUE
     ('김주연', 'wendy_kjy_931761909650953.png','1993','F'),
     ('박새힘', 'wendy_psh_941761909667609.png','1994','F');
 
+<<<<<<< HEAD
+=======
+CREATE TABLE performance_info(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(20),
+    poster_url varchar(50),
+    synopsis_url varchar(50),
+    start_date varchar(20),
+    end_date varchar(20),
+    genre varchar(20),
+    running_time int,
+    venue_id int,
+    reg_date varchar(50),
+    is_hidden BOOLEAN,
+    resv_status ENUM('OPEN', 'CLOSED', 'PREPARING')
+);
+>>>>>>> KHJ
 INSERT INTO PERFORMANCE_INFO (
     name, poster_url, synopsis_url, start_date, end_date, genre, 
     running_time, venue_id, reg_date, is_hidden, resv_status
 )
 VALUES (
     '후크',
+<<<<<<< HEAD
     'hook_poster176222137.jpg',
     'hook_synopsis17622213.jpg',
+=======
+    'hook_poster176222137',
+    'hook_synopsis17622213',
+>>>>>>> KHJ
     '2025-11-01',
     '2025-12-31',
     '창작',
@@ -33,6 +73,17 @@ VALUES (
     'PREPARING'
 );
 
+<<<<<<< HEAD
+=======
+DROP TABLE cast_info;
+CREATE TABLE cast_info(
+    cast_id INT PRIMARY KEY,
+    perf_id INT,
+    cast_name VARCHAR(50),
+    cast_story TEXT,
+    FOREIGN KEY (perf_id) REFERENCES performance_info(id)
+);
+>>>>>>> KHJ
 INSERT INTO CAST_INFO (cast_id, perf_id, cast_name, cast_story)
 VALUES
     (1, 1, '후크', '난 니들이 알던 후크랑은 달라'),
@@ -40,7 +91,19 @@ VALUES
     (3, 1, '웬디', '여긴 너와 내가 만든 세상, 모든게 가능해');
 
 
+<<<<<<< HEAD
 
+=======
+CREATE TABLE perf_cast(
+    perf_cast_id INT PRIMARY KEY AUTO_INCREMENT,
+    perf_id INT,
+    cast_id INT,
+    actor_id INT,
+    FOREIGN KEY (perf_id) REFERENCES performance_info(id),
+    FOREIGN KEY (cast_id) REFERENCES cast_info(cast_id),
+    FOREIGN KEY (actor_id) REFERENCES actor_info(id)
+);
+>>>>>>> KHJ
 INSERT INTO PERF_CAST (perf_id, cast_id, actor_id)
 VALUES
     (1, 1, 1),
@@ -53,6 +116,18 @@ VALUES
     (1, 3, 8),
     (1, 3, 9);
 
+<<<<<<< HEAD
+=======
+DROP TABLE perf_price;
+CREATE TABLE perf_price (
+    perf_price_id INT PRIMARY KEY AUTO_INCREMENT,
+    perf_id INT,
+    venue_id INT,
+    grade_code ENUM('R', 'S', 'A'),
+    price DECIMAL(10, 0),
+    FOREIGN KEY (perf_id) REFERENCES performance_info(id)
+);
+>>>>>>> KHJ
 INSERT INTO PERF_PRICE (perf_id, venue_id, grade_code, price)
 VALUES
     (1, 1, 'R', 100000),
