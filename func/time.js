@@ -1,4 +1,4 @@
-let base_date_format = (date) => {
+let base_time_format = (date) => {
     let inputDate = new Date(date)
     
     const year = inputDate.getFullYear();
@@ -7,5 +7,5 @@ let base_date_format = (date) => {
     return  `${year}-${month}-${day}`
 }
 
-module.exports = { base_date_format }
+module.exports = { base_time_format }
 

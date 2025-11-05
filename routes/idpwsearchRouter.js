@@ -27,8 +27,11 @@ router.post('/findid', (req, res) => {
             return res.status(500).json({ success: false, message: 'DB 오류' });
         }
 
-        if (rows.length > 0) {  // 행 길이가 0보다 크면 일치
-            const emails = rows.map(r => r.email);
+        if (rows.length > 0) {
+            const emails = [];
+            for (const row of rows) {
+                emails.push(row.email);
+            }
             res.json({ success: true, emails });
         } else {
             res.json({ success: false, message: '일치하는 정보 없음' });
