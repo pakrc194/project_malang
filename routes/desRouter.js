@@ -152,7 +152,7 @@ router.get('/actor', (req, res)=>{
 
 let payment_info = {}
 router.post('/payment', (req, res)=>{
-    // console.log('쿠폰정보: ', req.body.items)
+    console.log('쿠폰정보: ', req.body.items)
     payment_info = JSON.parse(req.body.items)
     console.log(JSON.parse(req.body.items)[1])
 
