@@ -383,5 +383,59 @@ router.get('/user/detail/:id', (req, res)=> {
     })
 })
 
+router.get('/reserv', (req, res)=>{
+    res.redirect('/admin/reserv/list')
+})
+router.get('/reserv/list', (req, res)=>{
+    let reservSQL = 'select * from reservation_info'
+    reservSQL = `
+        select 
+        R.resv_id, R.resv_number, R.total_amount, R.grade_discount_rate_at_resv, R.final_amount,
+        R.resv_date, R.resv_status,
+        user_info.user_id, user_info.email, P.name, P.poster_url,
+        PS.schedule_date, PS.schedule_time, PS.round
+        from reservation_info as R
+        join user_info on user_info.user_id = R.user_id
+        join perf_schedule as PS on PS.schedule_id = R.schedule_id
+        join performance_info as P on P.perf_id = PS.schedule_id
+    `
+
+    conn.query(reservSQL, (err, reservQuery)=>{
+        if(err)
+            console.log('err : ', err.message)
+        else 
+            console.log(reservQuery)
+        res.render('../views/admin/perf_reservation.html', {reservList : reservQuery})
+    })
+})
+router.get('/reserv/detail', (req, res)=>{
+    let userId = req.query.userId
+    let resvId = req.query.resvId
+    console.log(userId)
+    console.log(resvId)
+    
+    let reservSQL = `
+        select 
+        R.resv_id, R.resv_number, R.total_amount, R.grade_discount_rate_at_resv, R.final_amount,
+        R.resv_date, R.resv_status,
+        user_info.*, P.name, P.poster_url,
+        PS.schedule_date, PS.schedule_time, PS.round
+        from reservation_info as R
+        join user_info on user_info.user_id = R.user_id
+        join perf_schedule as PS on PS.schedule_id = R.schedule_id
+        join performance_info as P on P.perf_id = PS.schedule_id
+        where user_info.user_id = ? and R.resv_id = ?
+    `
+
+    conn.query(reservSQL, [userId, resvId], (err, reservQuery)=>{
+        if(err)
+            console.log('err : ', err.message)
+        else 
+            console.log(reservQuery)
+        res.render('../views/admin/reserv_detail.html', {reserv : reservQuery[0]})
+    })
+})
+
+
 
 module.exports = router 
