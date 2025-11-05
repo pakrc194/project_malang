@@ -1,6 +1,3 @@
-<<<<<<< HEAD
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
-=======
 -- Active: 1761802030139@@127.0.0.1@3306@malang_db
 
     -- WITH RECURSIVE DateSeries (schedule_date) AS (
@@ -25,7 +22,6 @@
         
 
 -- 1️⃣ 먼저 재귀 CTE 결과를 임시 테이블로 생성
->>>>>>> KHJ
 CREATE TEMPORARY TABLE tmp_dates AS
 WITH RECURSIVE DateSeries (schedule_date) AS (
     SELECT DATE('2025-11-01')
@@ -59,8 +55,6 @@ DROP TEMPORARY TABLE IF EXISTS tmp_dates;
 
 
 
-<<<<<<< HEAD
-=======
 -- -- 1. 모든 스케줄 ID (1번부터 122번까지)를 생성하는 CTE
 -- WITH RECURSIVE ScheduleSeries (schedule_id, schedule_index) AS (
 --     -- 시작점 (첫 스케줄 ID와 인덱스 0)
@@ -106,7 +100,6 @@ DROP TEMPORARY TABLE IF EXISTS tmp_dates;
 -- );
 
 
->>>>>>> KHJ
     -- Step 1: CTE 결과 미리 확인
 -- (기존 테이블이 있으면 삭제)
 DROP TEMPORARY TABLE IF EXISTS tmp_schedule_cast;
@@ -143,8 +136,6 @@ ORDER BY
 INSERT INTO SCHEDULE_CAST (schedule_id, cast_id, actor_id)
 SELECT schedule_id, cast_id, actor_id
 FROM tmp_schedule_cast;
-<<<<<<< HEAD
-=======
 
 
 -- Step 2: 결과 확인 후 INSERT INTO SCHEDULE_CAST (...) SELECT ... 붙이기
@@ -163,4 +154,3 @@ FROM tmp_schedule_cast;
 --     CastRotation AS CR
 -- ORDER BY
 --     S.schedule_id, CR.cast_id;
->>>>>>> KHJ
