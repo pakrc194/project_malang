@@ -2,7 +2,20 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const conn = require('../db/db')
+const { base_date_format, base_time_format } = require('../func/date.js')
 
+function isLoggedIn(req, res, next) {
+    if (req.session?.email || req.session?.kakao_email) {
+        next();
+    } else {
+        res.send(`
+            <script>
+                alert('로그인 후 이용 가능합니다.');
+                window.location.href = '/login';
+            </script>
+        `);
+    }
+}
 
 let titleArr = {
     reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
@@ -36,15 +49,15 @@ router.get('/', (req, res) => {
     res.redirect('/mypage/pwChange')     //  리다이렉트 '/info/hello' 로 URL 이동
 })
 
- router.get('/reserveSelect', (req, res) => {
+router.get('/reserveSelect', isLoggedIn, (req, res) => {
 
     data.mainUrl = 'reserveSelect'
 
-     const email = req.session?.email || req.session?.kakao_email;
+    const email = req.session?.email || req.session?.kakao_email;
 
-     console.log(email)
+    console.log(email)
 
-     const sql = ` 
+    const sql = ` 
      select
      
      user_info.name AS user_name,
@@ -72,21 +85,44 @@ router.get('/', (req, res) => {
      where user_info.email = ?
      `
 
-      conn.query(sql, [email], (err, rows) => {
-         if (err) {
-             console.error('예매 내역 조회 에러:', err);
-             return res.status(500).send('서버 에러');
-         }
+    conn.query(sql, [email], (err, rows) => {
+        if (err) {
+            console.error('예매 내역 조회 에러:', err);
+            return res.status(500).send('서버 에러');
+        }
 
-         console.log(rows)
-         res.render('../views/mypage/mypage.html', { mainUrl : 'reserveSelect', resvList : rows });
+        const today = new Date();
 
- })
+        for (const row of rows) {
+            row.resv_date = base_date_format(row.resv_date);
+            row.schedule_date = base_date_format(row.schedule_date);
+            row.schedule_time = base_time_format(row.schedule_time);
+
+            const perfDate = new Date(row.schedule_date);
+            const diff = Math.ceil((perfDate - today) / (1000 * 60 * 60 * 24));
+
+            if (diff > 0) {
+                row.d_day = `D-${diff}`;
+            } else if (diff === 0) {
+                row.d_day = 'D-DAY';
+            } else {
+                row.d_day = '공연 종료';
+            }
+        }
+
+        console.log(rows)
+        res.render('../views/mypage/mypage.html', {
+            title: data.title,
+            aside: data.aside,
+            mainUrl: data.mainUrl, resvList: rows
+        });
+
+    })
 
 })
 
-    
-router.get('/pwChange', (req, res) => {
+
+router.get('/pwChange', isLoggedIn, (req, res) => {
     data.mainUrl = `pwChange`
 
     res.render("../views/mypage/mypage.html", data)
@@ -103,11 +139,11 @@ router.get('/memberOut', (req, res) => {
 
 // 비밀번호 변경해야함.
 
-router.post("/checkpw", (req, res) => {
+router.post("/checkpw", isLoggedIn, (req, res) => {
     const { oldpw } = req.body
     const sql = "SELECT * FROM user_info WHERE password = ?"
-    conn.query(sql, [oldpw], (err, results)=>{
-        if(err) {
+    conn.query(sql, [oldpw], (err, results) => {
+        if (err) {
             console.error('이메일 확인 오류:', err.message)
             return res.status(500).json({ exists: false })
         }
@@ -116,7 +152,7 @@ router.post("/checkpw", (req, res) => {
 });
 
 // 새 비밀번호 변경
-router.post("/changepw", (req, res) => {
+router.post("/changepw", isLoggedIn, (req, res) => {
     const { newpw1 } = req.body;
     const email = req.session?.email || req.session?.kakao_email;
 
@@ -142,40 +178,43 @@ router.post("/changepw", (req, res) => {
 
 // ------------------------------------------------------------------------------------------ 회원 탈퇴
 
-router.post('/pwout', (req, res)=>{
+router.post('/pwout', isLoggedIn, (req, res) => {
     const email = req.session?.email || req.session?.kakao_email;
     const { pwout } = req.body
-    
+
     if (!email) return res.json({ success: false, message: "로그인이 필요합니다." });
     if (!pwout) return res.json({ success: false, message: "비밀번호 입력하세요." });
 
     console.log(pwout)
     console.log(email)
 
-    
+
 
     const sql = 'SELECT password FROM user_info WHERE email = ?'
-    conn.query(sql, [email], (err, rows)=>{
-        if(err){return res.status(500).json({ success: false, message: "DB 오류" })}
-        if(!rows.length) return res.json({ success : false, message : '회원 정보 찾을 수 없음'})
+    conn.query(sql, [email], (err, rows) => {
+        if (err) { return res.status(500).json({ success: false, message: "DB 오류" }) }
+        if (!rows.length) return res.json({ success: false, message: '회원 정보 찾을 수 없음' })
 
-        if(rows[0].password !== pwout)
-        {return res.json({ success: false, message : '비밀번호 일치하지 않습니다.'})}
+        if (rows[0].password !== pwout) { return res.json({ success: false, message: '비밀번호 일치하지 않습니다.' }) }
     })
 
     const updateSql = "UPDATE USER_INFO SET account_status = 'WITHDRAWAL' WHERE email = ?"
-    conn.query(updateSql, [email], (err2)=>{
-        if(err2){return res.status(500).json({ success: false, message : '탈퇴 오류'})}
+    conn.query(updateSql, [email], (err2) => {
+        if (err2) { return res.status(500).json({ success: false, message: '탈퇴 오류' }) }
 
-        req.session.destroy(()=>{
+        req.session.destroy(() => {
             res.json({ success: true, message: "회원 탈퇴가 완료되었습니다." });
         })
     })
 
 })
 
-router.get('/resvDetail', (req, res)=>{
+router.get('/resvDetail', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/ticketinfo.html'))
-})
-      
+});
+
+router.get('/resvCancel', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/ticketcancel.html'))
+});
+
 module.exports = router
