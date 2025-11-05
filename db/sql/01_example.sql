@@ -1,8 +1,30 @@
-양식이지롱
-
-SELECT email, pw FROM user_info 
-WHERE email = 'sck09013@naver.com' AND pw = '11111111'
+create user malang@localhost IDENTIFIED by '1234';
 
 SELECT email FROM user_info WHERE email = 'sck09013@naver.com' && sign_method = 'local'
 
 SELECT email, password FROM USER_INFO WHERE password = '2222'
+
+select 
+    user_info.name AS *user_name* ,
+    user_info.email,
+    reservation_info.resv_id, 
+    reservation_info.resv_number,
+    reservation_info.final_amount,
+    reservation_info.resv_date,
+    seat_layout.seat_number,
+    perf_schedule.schedule_date, 
+    perf_schedule.schedule_time,
+    venue_info.venue_name,
+    performance_info.poster_url,
+    performance_info.name
+    
+    from reservation_info 
+    join user_info on user_info.user_id = reservation_info.user_id 
+    join seat_layout on seat_layout.seat_id = reservation_info.seat_id
+    join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+    join venue_info on venue_info.venue_id = perf_schedule.venue_id
+    join performance_info on performance_info.perf_id = perf_schedule.perf_id
+
+    where user_info.email = 'dlrhkdwo@naver.com'
+
+    

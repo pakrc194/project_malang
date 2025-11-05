@@ -66,7 +66,7 @@ router.post('/login', (req, res) => {
 
         // 관리자인 경우 managermain.html 으로 이동
         if (user.sign_method === 'admin') {
-            return res.json({ success: true, message: '로그인 성공(매니저)', redirect: '/admin' });
+            return res.json({ success: true, message: '로그인 성공(매니저)', redirect: '/admin/perf' });
         } else {
             return res.json({ success: true, message: '로그인 성공(일반회원)', redirect: '/main' });
         }

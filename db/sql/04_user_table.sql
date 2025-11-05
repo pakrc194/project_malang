@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 -- Active: 1761830851051@@127.0.0.1@3306@malang_db
+=======
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
+>>>>>>> psj
 -- 1. USER_GRADE (회원 등급)
 drop database malang_db;
 
@@ -23,10 +27,17 @@ CREATE TABLE USER_INFO (
     name VARCHAR(50) NOT NULL COMMENT '이름',
     question VARCHAR(255) COMMENT '이메일 찾기 질문',
     answer VARCHAR(255) COMMENT '이메일 찾기 답변',
+<<<<<<< HEAD
     sign_method ENUM('local', 'kakao') NOT NULL COMMENT '가입/로그인 방식', 
     account_status ENUM('ACTIVE', 'WITHDRAWAL') NOT NULL DEFAULT 'ACTIVE' COMMENT '계정 상태 (ACTIVE:정상, WITHDRAWAL:탈퇴)',
     score DECIMAL(10, 0) NOT NULL DEFAULT 0 COMMENT '누적 등급 점수',
     grade_id INT NOT NULL COMMENT '회원 등급 FK',
+=======
+    sign_method ENUM('local', 'kakao', 'admin') NOT NULL COMMENT '가입/로그인 방식', 
+    account_status ENUM('ACTIVE', 'WITHDRAWAL') NOT NULL DEFAULT 'ACTIVE' COMMENT '계정 상태 (ACTIVE:정상, WITHDRAWAL:탈퇴)',
+    score DECIMAL(10, 0) NOT NULL DEFAULT 0 COMMENT '누적 등급 점수',
+    grade_id INT NOT NULL DEFAULT 1 COMMENT '회원 등급 FK',
+>>>>>>> psj
     FOREIGN KEY (grade_id) REFERENCES USER_GRADE(grade_id)
 );
 

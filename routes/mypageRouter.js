@@ -3,6 +3,7 @@ const router = express.Router()
 const path = require('path')
 const conn = require('../db/db')
 
+
 let titleArr = {
     reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
 }
@@ -35,14 +36,56 @@ router.get('/', (req, res) => {
     res.redirect('/mypage/pwChange')     //  리다이렉트 '/info/hello' 로 URL 이동
 })
 
+ router.get('/reserveSelect', (req, res) => {
 
-router.get('/reserveSelect', (req, res) => {
     data.mainUrl = 'reserveSelect'
 
-    res.render("../views/mypage/mypage.html", data)
+     const email = req.session?.email || req.session?.kakao_email;
+
+     console.log(email)
+
+     const sql = ` 
+     select
+     
+     user_info.name AS user_name,
+     user_info.email,
+     reservation_info.resv_id, 
+     reservation_info.resv_number,
+     reservation_info.resv_status,
+     reservation_info.final_amount,
+     reservation_info.resv_date,
+     seat_layout.seat_number,
+     seat_layout.seat_row,
+     perf_schedule.schedule_date, 
+     perf_schedule.schedule_time,
+     venue_info.venue_name,
+     performance_info.poster_url,
+     performance_info.name AS performance_name
+    
+     from reservation_info 
+     join user_info on user_info.user_id = reservation_info.user_id 
+     join seat_layout on seat_layout.seat_id = reservation_info.seat_id
+     join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+     join venue_info on venue_info.venue_id = perf_schedule.venue_id
+     join performance_info on performance_info.perf_id = perf_schedule.perf_id
+
+     where user_info.email = ?
+     `
+
+      conn.query(sql, [email], (err, rows) => {
+         if (err) {
+             console.error('예매 내역 조회 에러:', err);
+             return res.status(500).send('서버 에러');
+         }
+
+         console.log(rows)
+         res.render('../views/mypage/mypage.html', { mainUrl : 'reserveSelect', resvList : rows });
+
+ })
+
 })
 
-
+    
 router.get('/pwChange', (req, res) => {
     data.mainUrl = `pwChange`
 
@@ -129,6 +172,10 @@ router.post('/pwout', (req, res)=>{
         })
     })
 
+})
+
+router.get('/resvDetail', (req, res)=>{
+    res.sendFile(path.join(__dirname, '../views/ticketinfo.html'))
 })
       
 module.exports = router
