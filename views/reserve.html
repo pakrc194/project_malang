@@ -153,10 +153,7 @@
     </style>
 
     <script>
-        let ddd = ""
-            function returndata(dd) {
-                ddd = dd
-            }
+        
         
         // 1 웹소켓 서버에 연결시도
         const socket = new WebSocket('ws://localhost:80')
@@ -170,7 +167,6 @@
 
             console.log(`reserve에서 수신: `, e.data)
             const data = JSON.parse(e.data);
-            returndata(data.result)
             
 
             if (data.type == 'temp') {

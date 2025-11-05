@@ -54,19 +54,48 @@ INSERT INTO seat_price (grade, price) VALUES
     (4, "네번째_쿠폰", 40000),
     (5, "다섯번째_쿠폰", 50000);
 
-    
+    DROP TABLE seat_layout;
+    CREATE TABLE seat_layout(
+        seat_id INT PRIMARY KEY AUTO_INCREMENT,
+        venue_id INT,
+        area VARCHAR(10),
+        seat_row INT,
+        seat_number INT,
+        grade_code ENUM('R', 'S', 'A')
+    );
+    -- INSERT INTO SEAT_LAYOUT (venue_id, area, seat_row, seat_number, grade_code)
+    -- SELECT
+    -- 1 AS venue_id,
+    -- 'I' AS area,
+    -- r.n AS seat_row,
+    -- s.n AS seat_number,
+    -- 'A' AS grade_code
+    -- FROM (
+    -- SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+    -- ) r,
+    -- (
+    -- SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+    -- UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+    -- ) s
+    -- ORDER BY seat_row, seat_number;
+
     INSERT INTO SEAT_LAYOUT (venue_id, area, seat_row, seat_number, grade_code)
-    SELECT
+SELECT
     1 AS venue_id,
-    'A' AS area,
+    a.area,
     r.n AS seat_row,
     s.n AS seat_number,
-    'R' AS grade_code
-    FROM (
-    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
-    ) r,
-    (
-    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
-    UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
-    ) s
-    ORDER BY seat_row, seat_number;
+    CASE
+        WHEN a.area IN ('A','B','C') THEN 'R'
+        WHEN a.area IN ('D','E','F') THEN 'S'
+        WHEN a.area IN ('G','H','I') THEN 'A'
+    END AS grade_code
+FROM
+    (SELECT 'A' AS area UNION SELECT 'B' UNION SELECT 'C'
+     UNION SELECT 'D' UNION SELECT 'E' UNION SELECT 'F'
+     UNION SELECT 'G' UNION SELECT 'H' UNION SELECT 'I') a,
+    (SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) r,
+    (SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+     UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) s
+ORDER BY a.area, r.n, s.n;
+

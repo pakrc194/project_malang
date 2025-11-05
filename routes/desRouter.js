@@ -10,10 +10,10 @@ nunjucks.configure('views', {
     express: app
 })
 
-let venue_id = 0
 
 // 상세페이지
 router.get('/:id', (req, res)=>{
+    let venue_id = 0
     let query = `SELECT 
     p.id AS performance_id,
     p.name AS performance_name,
@@ -61,7 +61,7 @@ router.get('/:id', (req, res)=>{
     //     console.log(rrr)
     //     console.log(rrr[0].cast_list)
     // })
-    let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
+    // let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
     conn.query(query, (err, resPerf)=>{
         if (resPerf && resPerf.length > 0){
             venue_id = resPerf[0].venue_id
@@ -82,7 +82,8 @@ router.get('/:id', (req, res)=>{
 router.post('/reserve/:id', (req, res)=>{
     console.log(req.body.items[0])
     console.log(req.params.id)
-    conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
+    conn.query(`select * from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
+        let venue_id = resPf[0].venue_id
         conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
             
             let arr={
@@ -101,32 +102,8 @@ router.post('/reserve/:id', (req, res)=>{
 })
 
 
-// router.post('/temp/:id', (req, res)=>{
-//     const {dd, tt, flag} = req.body
-//     conn.query(`select theater_info.* from performance_info join theater_info where performance_info.venue_id = theater_info.id and performance_info.id = ${req.params.id}`, (err, resQuery)=>{
-//         if(err) {
-//             console.log('sql 실패', err.message)
-//             res.render('../views/list.html')
-//         }
-//         else {
-//             arr = {
-//                 date: dd,  // 선택 날짜
-//                 time: tt,  // 선택 회차
-//                 flag: flag, // 표시해야할 날짜
-//                 name: resQuery[0].name // 공연장 이름
-//             }
-//         }
-//     })
-    
-//     res.json({message: 'receive'})
-// })
-
-let temp_data = [] // grade, area, s_row, s_col, price
 router.post('/coupon', (req, res)=>{
-    // temp_data = JSON.parse(req.body.items[0])
-    // console.log(JSON.parse(req.body.items[0])[0].split(' '))
-    // console.log((req.body.items[0]).split(' '))
-    // console.log(JSON.parse(req.body.items[0]).length)
+    let temp_data = [] // grade, area, s_row, s_col, price
     for (let i of JSON.parse(req.body.items[0])){
         // console.log(i.split(' '))
         temp_data.push(

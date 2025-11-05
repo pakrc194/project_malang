@@ -147,15 +147,7 @@ CREATE TABLE coupon_info(
     discount_price INT
 );
 
-DROP TABLE seat_layout;
-CREATE TABLE seat_layout(
-    seat_id INT PRIMARY KEY AUTO_INCREMENT,
-    venue_id INT,
-    area VARCHAR(10),
-    seat_row INT,
-    seat_number INT,
-    grade_code ENUM('R', 'S', 'A')
-);
+
 
 DROP TABLE seat_status;
 CREATE TABLE seat_status(

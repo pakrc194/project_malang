@@ -5,15 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>coupon</title>
     <script>
+        document.querySelector(".side_info").innerHTML = ''
         window.addEventListener('DOMContentLoaded', function(){
             let cnt = "{{cnt}}"
             let totprice = "{{ptot}}"
             let use = 0
             let arr = []
             let hidden = document.querySelector(".hidden")
+            
+            for (let i in "{{temp_data}}"){
+                document.querySelector(".side_info").innerHTML += `좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>`
+            }
+            // document.querySelector(".side_info").innerHTML = ''
             document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
             document.querySelectorAll(".coupon_ck").forEach(cck =>{
-                console.log(hidden.value)
+                
+
                 cck.addEventListener('click', ()=>{
                     if (cck.checked == true){
                         use++
@@ -77,8 +84,6 @@
         {% endfor %}
 
         {{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}회차
-        
-
 
     </div>
     <form action="/desc/payment" name="frm" method="POST">
