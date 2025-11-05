@@ -31,9 +31,34 @@
 <body>
     {% include './header.html' %}
     <wrapper>
-        <section>
-            섹션
-        </section>
+        <section class="main_banner">
+          <div class="nbox">
+            <img src="../img/{{visual.poster_url}}" alt="">
+           
+          </div>
+          <div class="lbox">
+            <img src="../img/{{visual.poster_url}}" alt="">
+            
+          </div>
+          <div class="rbox">
+            <img src="../img/{{visual.poster_url}}" alt="">
+          
+          </div>
+    	</section>
+      <section class="main_poster">
+      {% for musical in res %}
+        <div class="box">
+            <div class="pbox">
+            <a href="http://www.interpark.com">
+            <img src="../img/{{musical.poster_url}}" alt=""></a></div>
+            <div class="wbox">
+              {{musical.name}}<br/>
+              {{musical.start_date}} / {{musical.running_time}}
+            </div>
+        </div>
+      {% endfor %}
+		</section>
+    <a href="/main/grade">grade</a>
     </wrapper>
     <footer>
         푸터
