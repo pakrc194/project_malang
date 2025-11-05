@@ -71,49 +71,55 @@ router.get('/:id', (req, res)=>{
             if (!resPerf || resPerf.length === 0) {
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
-            else if (resPerf && resPerf.length > 0){
+            if (resPerf && resPerf.length > 0){
                 res.render("description.html", {perf: resPerf[0], musical: resP})
             }
 
         })
     })
 })
-let arr={}
 
-router.get('/reserve/:id', (req, res)=>{
-    // res.render("reserve.html", {arr})
-    
-    conn.query(`select performance_info.*, theater_info.name as th_name from performance_info join theater_info where performance_info.venue_id = theater_info.id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
-        conn.query(`select seat_price.grade, seat_price.price from seat_price join theater_info on find_in_set(seat_price.grade, theater_info.seat_class) where theater_info.id="${venue_id}" `, (err, resP)=>{
-            // console.log(resP)
-            // console.log(resP)
-
-            res.render("reserve.html", {perf: resPf[0], arr, seat: resP})
+router.post('/reserve/:id', (req, res)=>{
+    console.log(req.body.items[0])
+    console.log(req.params.id)
+    conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
+        conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+            
+            let arr={
+                date: req.body.items[0],  // 선택 날짜
+                time: req.body.items[1],  // 선택 회차
+                flag: req.body.items[2], // 표시해야할 날짜
+                name: resPf[0].venue_name // 공연장 이름
+            }
+            
+            if (resPf && resPf.length > 0){
+                res.render("reserve.html", {perf: resPf[0], arr, seat: resP})
+            }
         })
     })
     
 })
 
 
-router.post('/temp/:id', (req, res)=>{
-    const {dd, tt, flag} = req.body
-    conn.query(`select theater_info.* from performance_info join theater_info where performance_info.venue_id = theater_info.id and performance_info.id = ${req.params.id}`, (err, resQuery)=>{
-        if(err) {
-            console.log('sql 실패', err.message)
-            res.render('../views/list.html')
-        }
-        else {
-            arr = {
-                date: dd,  // 선택 날짜
-                time: tt,  // 선택 회차
-                flag: flag, // 표시해야할 날짜
-                name: resQuery[0].name // 공연장 이름
-            }
-        }
-    })
+// router.post('/temp/:id', (req, res)=>{
+//     const {dd, tt, flag} = req.body
+//     conn.query(`select theater_info.* from performance_info join theater_info where performance_info.venue_id = theater_info.id and performance_info.id = ${req.params.id}`, (err, resQuery)=>{
+//         if(err) {
+//             console.log('sql 실패', err.message)
+//             res.render('../views/list.html')
+//         }
+//         else {
+//             arr = {
+//                 date: dd,  // 선택 날짜
+//                 time: tt,  // 선택 회차
+//                 flag: flag, // 표시해야할 날짜
+//                 name: resQuery[0].name // 공연장 이름
+//             }
+//         }
+//     })
     
-    res.json({message: 'receive'})
-})
+//     res.json({message: 'receive'})
+// })
 
 let temp_data = [] // grade, area, s_row, s_col, price
 router.post('/coupon', (req, res)=>{

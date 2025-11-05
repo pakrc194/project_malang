@@ -6,8 +6,8 @@
     <title>calendar</title>
     <link rel="stylesheet" href="../style/calendar.css">
     <script>
+        const c_socket = new WebSocket('ws://localhost:80')
         window.onload = function(){
-            
             let date = new Date()
             let s_date = new Date("{{perf.start_date}}")
             let e_date = new Date("{{perf.end_date}}")
@@ -136,19 +136,22 @@
                 renderCalendar()
             })    
 
+            let frm = document.forms.frm
             document.querySelector(".reserve").onclick = function() {
                 // console.log(cc())
-                let {dd, tt, flag} = cc()
-                let arr = [dd, tt, flag]
-                socket.send(`select_date ${dd} ${tt}`)
+                // let {dd, tt, flag} = cc()
+                // let arr = [dd, tt, flag]
+                // dd = document.querySelector(".select_date").value
+                // c_socket.send(`select_date ${dd} ${tt}`)
+                frm.submit()
 
-                fetch(`/desc/temp/{{perf.id}}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(cc())
-                })
-                .then(answer=>answer.json())
-                .then(data=>console.log(data))
+                // fetch(`/desc/temp/{{perf.id}}`, {
+                //     method: 'POST',
+                //     headers: {'Content-Type': 'application/json'},
+                //     body: JSON.stringify(cc())
+                // })
+                // .then(answer=>answer.json())
+                // .then(data=>console.log(data))
             }
         }
 
@@ -156,26 +159,33 @@
         function clickE(year, month, day, cnt){
             // console.log(`${year}년 ${month+1}월 ${day}일 ${cnt}`)
             document.querySelector(".time").innerHTML = `${year}년 ${month+1}월 ${day}일<br/>`
+            dd = `${year}-${month+1}-${day}`
             // document.querySelector(".time").innerHTML += `<li class="s_time select" onclick="clickT(${1})">1회차 14:00</li>`
-            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${1})">1회차 14:00</label></li>`
-            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" onclick="ttt(${2})">2회차 19:00</label></li>`
+            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" class="time" onclick="ttt(${year}, ${month+1}, ${day}, ${1})">1회차 14:00</label></li>`
+            document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" class="time" onclick="ttt(${year}, ${month+1}, ${day}, ${2})">2회차 19:00</label></li>`
             document.querySelector(`.clickday:nth-of-type(${cnt})`).classList.toggle("active")
             if (flag != 0){
                 document.querySelector(`.clickday:nth-of-type(${flag})`).classList.toggle("active")
             }
-            flag = cnt
-            dd = `${year}-${month+1}-${day}`
+            document.querySelector(".select_flag").value = cnt
+            // document.querySelector(".select_date").value = JSON.stringify(`${year}-${month+1}-${day}`)
+            document.querySelector(".select_date").value = `${year}-${month+1}-${day}`
+            flag = cnt           
         }
 
-        function ttt(num){
+        function ttt(yy, mm, dd, num){
+            document.querySelector(".reserve").style.display="inline-block"
             tt = num
+            document.querySelector(".select_time").value = num
+                c_socket.send(`select_date ${yy}-${mm}-${dd} ${tt}`)
+
         }
 
-        function cc() {
-            // console.log(dd, tt)
-            return {dd, tt, flag}
-            // module.exports = {dd, tt}
-        }
+        // function cc() {
+        //     // console.log(dd, tt)
+        //     return {dd, tt, flag}
+        //     // module.exports = {dd, tt}
+        // }
 
     </script>
 </head>
@@ -209,7 +219,10 @@
             <div class="time"></div>
         </div>
         <div>
-            <form action="/desc/reserve/{{perf.id}}" target="_blank">
+            <form action="/desc/reserve/{{perf.performance_id}}" name="frm" method="POST" target="_blank">
+                <input type="hidden" name="items" class="select_date">
+                <input type="hidden" name="items" class="select_time">
+                <input type="hidden" name="items" class="select_flag">
                 <input type="submit" value="예매하기" class="reserve">
             </form>
         </div>
