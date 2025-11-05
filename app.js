@@ -39,6 +39,7 @@ const idpwsearchRouter = require('./routes/idpwsearchRouter')
 const mypageRouter = require('./routes/mypageRouter')
 const adminRouter = require('./routes/adminRouter')
 const searchRouter = require('./routes/searchRouter')
+const { base_date_format } = require('./func/date')
 
 
 app.use('/perf', perfRouter)
@@ -89,8 +90,33 @@ wss.on('connection', (ws, req)=>{
         // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
         if (arr[0] == "select_date"){
-            date = arr[1]
-            time = arr[2]
+            date = arr[2]
+            time = arr[3]
+            // 선택한 날짜와 회차를 클라이언트로부터 받음
+            /*
+                 and 
+                perf_schedule.perf_id = ${arr[1]} and perf_schedule.schedule_date = ${dd} and perf_schedule.round = ${time}
+            */
+        let dd = base_date_format(date)
+           console.log('dd: ', dd)
+           
+            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.id 
+                
+                and perf_schedule.perf_id = ${arr[1]}
+                and perf_schedule.round = ${time}
+                and perf_schedule.schedule_date = "${dd}"
+                `,
+            (err, queryData)=>{
+                console.log(queryData.length)
+                wss.clients.forEach(client => {
+                    client.send(JSON.stringify({ type: 'seat_status', queryData }));
+                    // if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    // }
+                });
+                // console.log(queryData)
+                
+            })
+
         }
         else {
             // let Sendarr = {

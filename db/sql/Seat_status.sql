@@ -11,23 +11,20 @@ CREATE TABLE seat_status (
     Foreign Key (schedule_id) REFERENCES perf_schedule(id)
 );
 
-INSERT INTO seat_status (schedule_id, seat_id, seat_status)
-    SELECT
-    r.n AS schedule_id,  -- 100개
-    s.n AS seat_id,      -- 450개
-    "Available" AS seat_status
-    FROM (
-    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
-    UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
-    ) r,
-    (
-    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
-    UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
-    ) s
-    ORDER BY schedule_id, seat_id;
-
-
-
+-- INSERT INTO seat_status (schedule_id, seat_id, seat_status)
+--     SELECT
+--     r.n AS schedule_id,  -- 100개
+--     s.n AS seat_id,      -- 270개
+--     "Available" AS seat_status
+--     FROM (
+--     SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+--     UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+--     ) r,
+--     (
+--     SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+--     UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+--     ) s
+--     ORDER BY schedule_id, seat_id;
 
 
 
@@ -47,7 +44,7 @@ CREATE TEMPORARY TABLE temp_s AS
 WITH RECURSIVE s AS (
   SELECT 1 AS n
   UNION ALL
-  SELECT n + 1 FROM s WHERE n < 450
+  SELECT n + 1 FROM s WHERE n < 270
 )
 SELECT n FROM s;
 
