@@ -138,10 +138,12 @@
 
         // 3.2 클라이언트가 수신
         socket1.onmessage = (e)=>{
-            console.log('seatB1에서 수신: ', (e.data))
+            // console.log('seatB1에서 수신: ', (e.data))
+            console.log('B1에서 데이터 수신')
 
         }
         
+
         window.addEventListener('DOMContentLoaded', function(){
         
             let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
@@ -152,7 +154,7 @@
             
                 for (let i = 0; i < 3; i++) {
                     for (let j = 1; j < 11; j++) {
-                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" class="indiseat" onclick="ck_cnt(this)">`
                         // document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).setAttribute("value", `${grade[aa]} ${area[aa*3]} ${i+1} ${j}`)
                         // console.log(`${aa} ${i} ${j} : `, document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).value)
                     }

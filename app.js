@@ -70,7 +70,7 @@ app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error('세션 삭제 에러 :', err.message);
-      return res.status(500).send('로그아웃 실퍂');
+      return res.status(500).send('로그아웃 실패');
     }
 
     // 쿠키 제거
@@ -93,8 +93,19 @@ let date = ""
 let time = 0
 wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
+    wss.clients.forEach((client) => {
+        client.send('test')
+        // client.send(JSON.stringify({ type: 'sold', queryData }));
+            // if (client.readyState == websocket.OPEN){
+            // }
+            
+    });
+
+
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
+        
+        
         
         // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
@@ -103,16 +114,19 @@ wss.on('connection', (ws, req)=>{
             time = arr[3]
             // 선택한 날짜와 회차를 클라이언트로부터 받음
         let dd = base_date_format(date)
-        //    console.log('dd: ', dd)
+            console.log(date)
+           console.log('dd: ', dd)
            
-            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.id 
+            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
                 
                 and perf_schedule.perf_id = ${arr[1]}
-                and perf_schedule.round = ${time}
+                and perf_schedule.schedule_round = ${time}
                 and perf_schedule.schedule_date = "${dd}"
+                and seat_status.seat_status != "Available"
                 `,
             (err, queryData)=>{
-                console.log(queryData)
+                console.log('좌석 정보 :', queryData)
+                
                 // wss.clients.forEach(client => {
                 //     for (let i of queryData){
                 //         // console.log(i)
