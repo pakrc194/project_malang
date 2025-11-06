@@ -258,9 +258,10 @@ router.post('/payment', async (req, res)=>{
 
         seat_arr.push(seat_id[0].seat_id)
     }
+    let s_arr = seat_arr.join(',')
     console.log(seat_arr)
     let pay_id = await conn.query(`SELECT payment_id FROM payment_info where transaction_id = "${t_id}"`)
-    let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-6, `${seat_arr[0]}`, `${pay_id[0].payment_id}`]
+    let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-6, `${s_arr}`, `${pay_id[0].payment_id}`]
     conn.query(reservQ, reservI)
     // s_id, u_id, seat_arr, pay_id
     res.render('../views/reserv/payment.html', {info: req.body.items})
