@@ -17,7 +17,7 @@
     <hr/>
     <h1>공연</h1>
     {% for perf in perfResult %}
-        {{perf.perf_name}}<br/>
+        <a href="/desc/{{perf.perf_id}}">{{perf.perf_name}}</a><br/>
         {{perf.poster_url}}<br/>
         {{perf.genre}}<hr/>
     {% endfor %}
