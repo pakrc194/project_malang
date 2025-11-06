@@ -14,6 +14,7 @@
 </head>
 <body>
     <h1>detail</h1>
+    <h2>{% if perfInfo.is_hidden > 0 %}숨김처리{% endif %}</h2>
     {{perfInfo.perf_name}}<br/>
     {{perfInfo.poster_url}}<br/>
     {{perfInfo.synopsis_url}}<br/>
@@ -21,7 +22,6 @@
     {{perfInfo.end_date}}<br/>
     {{perfInfo.genre}}<br/>
     {{perfInfo.reg_date}}<br/>
-    {{perfInfo.is_hidden}}<br/>
     {{perfInfo.resv_status}}<hr/>
     {{venueInfo.venue_name}}<br/>
     {{venueInfo.perf_region}}<hr/>
@@ -47,7 +47,9 @@
     
     <a href="/admin/perf/list">뒤로</a>
     <a href="/admin/perf/modify/{{perfInfo.perf_id}}">수정</a>
-    <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
+    {% if perfInfo.is_hidden == 0 %}
+        <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
+    {% endif %}
     <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a>
     <a href="/admin/test/{{perfInfo.perf_id}}">테스트</a>
 </body>

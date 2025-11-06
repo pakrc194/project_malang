@@ -1,19 +1,56 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
 <style>
     header {
         position:relative;
         width: 100%;
         height: 100px;
-        background-color: #aaf;
+        border-bottom: 3px solid #555;
+        box-sizing: border-box;
     }
+    #aLogo {
+        text-decoration: none;
+        color: inherit;
+    }
+    header > div:first-child {
+        width : 500px;
+        margin-top: 20px;
+        margin-left: 10px;
+        height: 40px;
+        float:left;
+    }
+    header > div:first-child > img {
+        width: 40px;
+        height: 40px;
+        margin-top: 5px;
+        float: left;
+    }
+    header > div:first-child > #title {
+        height: 40px;
+        line-height: 40px;
+        font-size: 1.8rem;
+        float: left;
+        margin-left: 20px;
+        font-family: "Hachi Maru Pop", cursive;
+        font-weight: 400;
+        font-style: normal;
+    }
+
     .search_box, .temp_box {
         float:right;
-        width: 500px;
-        border: 1px solid black;
+        text-align: right;
+        width: 300px;
         height: 100px;
+        line-height: 100px;
         box-sizing: border-box;
     }
 </style>
 <header>
+    <div>
+        <img src="/img/malang_logo.png" alt=""><span id="title"><a id="aLogo" href="/">MALANG MUSE</a></span>
+    </div>
+
     <div class="temp_box">
         <a href="/admin/perf">admin</a>
         <a href="/list">list</a>

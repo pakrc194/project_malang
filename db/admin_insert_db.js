@@ -1,4 +1,4 @@
-let iPerfSql = `insert into performance_info (perf_name, poster_url, synopsis_url, start_date, end_date, perf_genre, running_time, venue_id)
+let iPerfSql = `insert into performance_info (perf_name, poster_url, synopsis_url, start_date, end_date, genre, running_time, venue_id)
                     values(?, ?, ?, ?, ?, ?, ?, ?)`
 let iActorSql = `insert into actor_info (actor_name, actor_profile_url, actor_birth_year, actor_gender)
                 values(?, ?, ?, ?)`

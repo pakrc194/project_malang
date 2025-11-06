@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색결과</title>
+    <style>
+        #img_search_actor,
+        #img_search_perf {
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
     {% include './header.html' %}
     <h1>검색결과</h1>
     <h1>배우</h1>
     {% for actor in actorResult %}
-        <a href="/actor/{{actor.actor_id}}">{{actor.actor_name}}</a><br/>
-        {{actor.actor_profile_url}}<br/>
+        <a href="/actor/{{actor.actor_id}}">
+            <img id="img_search_actor" src="/img/{{actor.actor_profile_url}}" alt=""><br/>
+        </a>
+        {{actor.actor_name}}<br/>
         {{actor.actor_birth_year}}{{actor.actor_gender}}<hr/>
     {% endfor %}
     <hr/>
     <h1>공연</h1>
     {% for perf in perfResult %}
-        <a href="/desc/{{perf.perf_id}}">{{perf.perf_name}}</a><br/>
-        {{perf.poster_url}}<br/>
+        <a href="/desc/{{perf.perf_id}}">
+            <img id="img_search_perf" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
+        </a>
+        {{perf.perf_name}}<br/>
         {{perf.genre}}<hr/>
     {% endfor %}
     

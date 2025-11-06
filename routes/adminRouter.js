@@ -129,16 +129,16 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
             let perfScheduleData2 = [perf_id, venue_id, dateString, "19:00", 2]
             tasks.push(conn.query(iPerfScheduleSql, perfScheduleData2))
             
-            console.log(`순회 날짜: ${perfScheduleData1}`);
+            // console.log(`순회 날짜: ${perfScheduleData1}`);
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
-        console.log('------', seatData)
+        // console.log('------', seatData)
         for (const gradeRow of gradeRet) {
             const grade = gradeRow.grade_code;
             const price = seatData[grade];
-            console.log('price : ', perfPriceData)
             const perfPriceData = [perf_id, venue_id, grade, price]
+            console.log('price : ', perfPriceData)
             tasks.push(conn.query(iPerfPriceSql, perfPriceData))
         }
 
@@ -329,6 +329,44 @@ router.post('/perf/casting', (req, res)=>{
     
     res.json()
 })
+
+router.get('/perf/delete/:id', (req, res)=> {
+    let selectSQL = 'select * from performance_info where performance_info.perf_id = ?'
+    conn.query(selectSQL, [req.params.id], (selectErr, selectQuery)=>{
+        if(selectErr)
+            console.log(selectErr)
+        else {
+            console.log(selectQuery)
+            res.render('../views/admin/perf_delete.html', {perf : selectQuery[0]})
+        }
+    })
+}) 
+
+router.post('/perf/hide', (req, res)=> {
+    console.log(req.body.perf_id)
+    let perf_id = req.body.perf_id
+    let selectSQL = 'select * from performance_info where performance_info.perf_id = ?'
+    conn.query(selectSQL, [perf_id], (selectErr, selectQuery)=>{
+        if(selectErr) {
+            console.log(selectErr.message)
+            res.json({msg:'error'})
+        }
+        else {
+            console.log('hide query : ',selectQuery)
+            let updateSql = `update performance_info set is_hidden = 1 where performance_info.perf_id = ?`
+            conn.query(updateSql, [perf_id], (updateErr, updateQuery)=>{
+                if(updateErr) {
+                    console.log(updateErr)
+                } else {
+                    console.log('update : ', updateQuery)
+                    res.json({msg:'success'})
+                }
+            })
+            //res.render('../views/admin/perf_delete.html', {perf : selectQuery[0]})
+        }
+    })
+}) 
+
 
 router.get('/actor/list', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{

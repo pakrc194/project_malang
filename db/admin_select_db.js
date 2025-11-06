@@ -82,4 +82,13 @@ WHERE
 ORDER BY
     S.schedule_date, S.schedule_time, CI.cast_id;`
 
-module.exports = {sPrefCastWpid, sPrefScheduleWpid, sPrefCastIdWpid, sScheduleCast}
+let sPrefActWaid = `
+select actor_info.*, performance_info.perf_id,
+performance_info.perf_name, performance_info.poster_url,
+performance_info.start_date, performance_info.end_date
+from actor_info 
+join perf_cast on actor_info.actor_id = perf_cast.actor_id
+join performance_info on performance_info.perf_id = perf_cast.perf_id
+where actor_info.actor_id = ?;`
+
+module.exports = {sPrefCastWpid, sPrefScheduleWpid, sPrefCastIdWpid, sScheduleCast, sPrefActWaid}
