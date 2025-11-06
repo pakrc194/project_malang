@@ -52,7 +52,8 @@ router.get('/', (req, res) => {
 
 router.get('/myInfo', (req, res) => {
     console.log('email', req.session.email)
-    let email = 'abc111@gmail.com'
+    const email = req.session?.email || req.session?.kakao_email;
+
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
     let tasks = []
