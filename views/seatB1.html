@@ -152,7 +152,7 @@
             
                 for (let i = 0; i < 3; i++) {
                     for (let j = 1; j < 11; j++) {
-                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
                         // document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).setAttribute("value", `${grade[aa]} ${area[aa*3]} ${i+1} ${j}`)
                         // console.log(`${aa} ${i} ${j} : `, document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).value)
                     }
@@ -163,7 +163,7 @@
 
                 for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
                     }
                 }
                 for (let i = 1; i < 3*10+1; i++) {
@@ -172,7 +172,7 @@
 
                 for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
                     }
                 }
                 for (let i = 1; i < 3*10+1; i++) {
@@ -188,26 +188,26 @@
         })
         
         
-        let cnt = 0
+        let seat_cnt = 0
         // 예매 개수 4개로 제한
         function ck_cnt(obj) {
             socket1.send(obj.value)
 
             if (obj.checked == true){
-                cnt++
+                seat_cnt++
             }
             else {
-                cnt--
+                seat_cnt--
             }
 
-            if (cnt > 4) {
-                alert('선택 안됨')
+            if (seat_cnt > 4) {
+                alert('좌석 선택 안됨')
                 obj.checked = false
-                cnt--
+                seat_cnt--
                 socket1.send(obj.value)
             }
             
-            console.log(obj.value, cnt)
+            console.log(obj.value, seat_cnt)
             
         }
     </script>

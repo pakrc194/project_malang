@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
 insert into theater_info (name, location, seat_class) VALUES 
     ("샤롯데씨어터", "서울", "R,S,A"),
     ("드림씨어터", "부산", "R,S,A"),
@@ -100,3 +100,9 @@ FROM
      UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) s
 ORDER BY a.area, r.n, s.n;
 
+insert into user_grade (grade_name, grade_image_url, grade_score, discount_rate) VALUES 
+    ("입문", 'grade_shape_3.jpg', 0, 0),
+    ("애호", 'grade_shape_4.jpg', 100000, 0),
+    ("열정", 'grade_shape_5.jpg', 300000, 0.05),
+    ("전문", 'grade_shape_6.jpg', 1000000, 0.08),
+    ("명예", 'grade_shape_star.jpg', 5000000, 0.10);  

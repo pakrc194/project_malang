@@ -165,9 +165,9 @@
         // 3.2 클라이언트가 수신
         socket.onmessage = (e)=>{
 
-            console.log(`reserve에서 수신: `, e.data)
-            // const data = JSON.parse(e.data);
-            
+            // let data = e.data
+            const data = JSON.parse(e.data);
+            console.log(`reserve에서 수신: `, data)
 
             if (data.type == 'temp') {
                 if (data.error) {
@@ -209,7 +209,7 @@
 
 </head>
 <body>
-     <form action="/desc/coupon/{{id}}" name="frm"  method="POST">
+     <form action="/desc/discount/{{id}}" name="frm"  method="POST">
     <!-- <h1>좌석선택하기</h1> -->
     <div class="Big">
         <!-- <div class="musical_name">뮤지컬 〈MAD HATTER〉</div> -->

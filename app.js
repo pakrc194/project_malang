@@ -104,15 +104,15 @@ wss.on('connection', (ws, req)=>{
                 and perf_schedule.schedule_date = "${dd}"
                 `,
             (err, queryData)=>{
-                console.log(queryData.length)
-                wss.clients.forEach(client => {
-                    for (let i of queryData){
-                        // console.log(i)
-                        client.send(JSON.stringify({ type: 'seat_status', i }));
-                    }
-                    // if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    // }
-                });
+                console.log(queryData)
+                // wss.clients.forEach(client => {
+                //     for (let i of queryData){
+                //         // console.log(i)
+                //         client.send(JSON.stringify({ type: 'seat_status', i }));
+                //     }
+                //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
+                //     // }
+                // });
                 // console.log(queryData)
                 
             })

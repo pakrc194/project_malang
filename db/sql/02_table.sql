@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
 drop table theater_info;
 
 CREATE TABLE theater_info(  
@@ -21,21 +21,28 @@ CREATE TABLE perf_schedule(
     FOREIGN KEY (venue_id) REFERENCES venue_info(id)
 );
 
+DROP TABLE user_grade;
+CREATE TABLE user_grade(
+    grade_id INT PRIMARY KEY AUTO_INCREMENT,
+    grade_name VARCHAR(50),
+    grade_score INT,
+    discount_rate DECIMAL(5, 2),
+    grade_image_url VARCHAR(255)
+);
 drop table user_info;
 
 CREATE TABLE user_info(  
-    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
-    name varchar(10),
-    pw varchar(20),
-    email VARCHAR(30),
-    score int,
-<<<<<<< HEAD
-    sign_method varchar(10),
-    question varchar(50),
-    answer varchar(50)
-=======
-    sign_method varchar(10)  
->>>>>>> psj
+    user_id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    email VARCHAR(100),
+    password varchar(255),
+    user_name varchar(50),
+    question VARCHAR(255),
+    answer VARCHAR(255),
+    sign_method ENUM('local', 'kakao', 'admin'),
+    account_stats ENUM('ACTIVE', 'WITHDRAWAL'),
+    score DECIMAL(10, 0),
+    grade_id INT,
+    FOREIGN KEY (grade_id) REFERENCES user_grade(grade_id)
 );
 
 drop table grade_info;
