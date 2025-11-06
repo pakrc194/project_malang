@@ -159,7 +159,7 @@
             <div>{{ musical.name }}</div>
             <div>{{ musical.start_date }} ~ {{ musical.end_date }}</div>
             <div>러닝타임: {{ musical.running_time }}분</div>
-            <div>예매 가능일: ???</div>
+            <div>예매 가능일: {{ musical.start_date }}</div>
           </div>
         </div>
         {% endfor %}
