@@ -149,6 +149,10 @@
             height: 50px;
             width: 300px;
         }
+        .choiceDate > img{
+            height: 350px;
+            width: 200px;
+        }
 
     </style>
 
@@ -216,7 +220,7 @@
         <div class="musical_info">
             <div class="musical_seat">
 
-                {%  include 'seatB1.html' %} 
+                {%  include 'reserv/seatB1.html' %} 
 
             </div>
             <div class="seat_aside">
@@ -226,7 +230,8 @@
                 </div>
                 
                 <div  class="choiceDate">
-                    {% include 'minicalendar.html' %}
+                    <img src="../../img/{{perf.poster_url}}">
+                    {{arr.date}} {{arr.time}}회차
                 </div>
                 <div class="seatG">
                     {% for i in seat %}

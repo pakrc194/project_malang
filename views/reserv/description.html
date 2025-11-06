@@ -24,7 +24,7 @@
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
                     console.log(`/desc/actor/`+act_box.classList[1])
-                    window.open(`/desc/actor/`+act_box.classList[1])
+                    window.open(`/actor/`+act_box.classList[1])
                 })
             })
         })
@@ -33,11 +33,10 @@
     
 </head>
 <body>
+    {% include '../header.html' %}
     <div class="big_poster" onclick="ck_big()"><img src="../img/{{perf.poster_url}}"><div class="b_p_tx">클릭하여 창 나가기</div></div>
     <div class="Big">
-        <div class="site_header">
-            사이트 로고 - 메인화면 헤더 가져오기
-        </div>
+
         <div class="musical_name">뮤지컬 〈{{perf.performance_name}}〉</div>
         <div class="des_main">
             <div class="musical_info">

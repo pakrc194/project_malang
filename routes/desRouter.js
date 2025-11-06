@@ -85,7 +85,7 @@ router.get('/:id', (req, res)=>{
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
             if (resPerf && resPerf.length > 0){
-                res.render("description.html", {perf: resPerf[0], musical: resP})
+                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
             }
 
         })
@@ -131,7 +131,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 
             // })
             if (resPf && resPf.length > 0){
-                res.render("reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
+                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
             }
         })
     })
@@ -179,7 +179,7 @@ router.post('/discount/:id', (req, res)=>{
             conn.query(discountQuery, (err, resDC)=>{
                 console.log(resDC)
                 // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                res.render('discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
             })
         })
     })
@@ -191,7 +191,7 @@ router.get('/actor/:id', (req, res)=>{
 
     conn.query(`select * from actor_info where actor_id = ${req.params.id}`, (err, resActor)=>{
         console.log(resActor[0])
-        res.render("../views/actor.html", {id: req.params.id, actor: resActor[0]})
+        res.render("../views/actorInfo.html", {id: req.params.id, actor: resActor[0]})
     })
 
 })
@@ -253,7 +253,7 @@ router.post('/payment', (req, res)=>{
         conn.query(`UPDATE seat_status SET seat_status = "Sold" 
                 WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
-                    AND round = ${req.body.items[3].split(' ')[3]})
+                    AND schedule_round = ${req.body.items[3].split(' ')[3]})
                     
                 AND seat_id = (SELECT seat_id FROM seat_layout 
                     WHERE area = "${req.body.items[i].split(' ')[1]}"
@@ -262,7 +262,7 @@ router.post('/payment', (req, res)=>{
     }
     
 
-    res.render('../views/payment.html', {info: req.body.items})
+    res.render('../views/reserv/payment.html', {info: req.body.items})
 })
 
 
