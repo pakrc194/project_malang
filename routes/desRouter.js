@@ -27,8 +27,8 @@ router.get('/:id', (req, res)=>{
 
     let venue_id = 0
     let query = `SELECT 
-    p.id AS performance_id,
-    p.name AS performance_name,
+    p.perf_id AS performance_id,
+    p.perf_name AS performance_name,
     p.poster_url,
     p.synopsis_url,
     p.start_date,
@@ -38,15 +38,15 @@ router.get('/:id', (req, res)=>{
 
     v.venue_id,
     v.venue_name,
-    v.region,
+    v.venue_region,
     v.venue_type,
-    v.seat_class,
+    v.seat_grade,
 
     JSON_ARRAYAGG(
         JSON_OBJECT(
-            'actor_id', a.id,
+            'actor_id', a.actor_id,
             'actor_name', a.actor_name,
-            'profile_image_url', a.profile_image_url,
+            'actor_profile_url', a.actor_profile_url,
             'cast_name', c.cast_name,
             'cast_story', c.cast_story
         )
@@ -56,17 +56,17 @@ router.get('/:id', (req, res)=>{
     JOIN venue_info v 
         ON p.venue_id = v.venue_id
     JOIN perf_cast pc 
-        ON p.id = pc.perf_id
+        ON p.perf_id = pc.perf_id
     JOIN actor_info a 
-        ON pc.actor_id = a.id
+        ON pc.actor_id = a.actor_id
     JOIN cast_info c 
         ON pc.cast_id = c.cast_id
 
-    WHERE p.id = ${req.params.id}
+    WHERE p.perf_id = ${req.params.id}
     GROUP BY 
-        p.id, p.name, p.poster_url, p.synopsis_url, 
+        p.perf_id, p.perf_name, p.poster_url, p.synopsis_url, 
         p.start_date, p.end_date, p.genre, p.running_time,
-        v.venue_id, v.venue_name, v.region, v.venue_type, v.seat_class;
+        v.venue_id, v.venue_name, v.venue_region, v.venue_type, v.seat_grade;
     `
 
     // conn.query(query, (err, rrr)=>{
@@ -75,11 +75,12 @@ router.get('/:id', (req, res)=>{
     // })
     // let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
     conn.query(query, (err, resPerf)=>{
+        console.log(resPerf[0].cast_list)
         if (resPerf && resPerf.length > 0){
             venue_id = resPerf[0].venue_id
         }
         // 공연장에 해당하는 좌석 가격 가져오기
-        conn.query(`select * from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+        conn.query(`select * from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
             if (!resPerf || resPerf.length === 0) {
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
@@ -96,9 +97,10 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // console.log(req.body.items[0])
     // console.log(req.params.id)
     console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
-    conn.query(`select * from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
+    conn.query(`select * from performance_info join venue_info 
+                where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
-        conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+        conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
             
             let arr={
                 date: req.body.items[0],  // 선택 날짜
@@ -173,8 +175,9 @@ router.post('/discount/:id', (req, res)=>{
             month: resS[0].choice_date.getMonth() +1,
             day: resS[0].choice_date.getDate()
         }
-        conn.query(`select * from performance_info where id = ${req.params.id}`, (err, resCP)=>{
+        conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
             conn.query(discountQuery, (err, resDC)=>{
+                console.log(resDC)
                 // resDC = 회원 등급 이름, 등급 할인률, 회원id
                 res.render('discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
             })
@@ -186,7 +189,7 @@ router.post('/discount/:id', (req, res)=>{
 router.get('/actor/:id', (req, res)=>{
     console.log('배우 상세정보 페이지로 이동')
 
-    conn.query(`select * from actor_info where id = ${req.params.id}`, (err, resActor)=>{
+    conn.query(`select * from actor_info where actor_id = ${req.params.id}`, (err, resActor)=>{
         console.log(resActor[0])
         res.render("../views/actor.html", {id: req.params.id, actor: resActor[0]})
     })
