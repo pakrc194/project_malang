@@ -43,6 +43,8 @@ const listRouter = require('./routes/listRouter')
 const myGradeRouter = require('./routes/gradeRouter')
 const interestRouter = require('./routes/interestRouter')
 const actorInfoRouter = require('./routes/actorInfoRouter')
+const { base_date_format } = require('./func/date')
+const { isLoggedIn } = require('./func/ck_login')
 
 
 app.use('/perf', perfRouter)
@@ -59,7 +61,7 @@ app.use('/mypage/interest', interestRouter)
 app.use('/desc', desRouter)
 app.use('/actor', actorInfoRouter)
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res)=>{    
     res.redirect('/main')
 })
 
@@ -97,19 +99,34 @@ wss.on('connection', (ws, req)=>{
         // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
         if (arr[0] == "select_date"){
-            date = arr[1]
-            time = arr[2]
+            date = arr[2]
+            time = arr[3]
+            // 선택한 날짜와 회차를 클라이언트로부터 받음
+        let dd = base_date_format(date)
+        //    console.log('dd: ', dd)
+           
+            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.id 
+                
+                and perf_schedule.perf_id = ${arr[1]}
+                and perf_schedule.round = ${time}
+                and perf_schedule.schedule_date = "${dd}"
+                `,
+            (err, queryData)=>{
+                console.log(queryData)
+                // wss.clients.forEach(client => {
+                //     for (let i of queryData){
+                //         // console.log(i)
+                //         client.send(JSON.stringify({ type: 'seat_status', i }));
+                //     }
+                //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
+                //     // }
+                // });
+                // console.log(queryData)
+                
+            })
+
         }
         else {
-            // let Sendarr = {
-            //     type: "seat_reserve",
-            //     area: arr[1],
-            //     s_row: arr[2],
-            //     s_col: arr[3],
-            //     date: arr[4],
-            //     time: arr[5]
-            // }
-            // ws.send(JSON.stringify(Sendarr))
             arr.push(date)
             arr.push(time)
             arr.push(new Date(Date.now() + 5*60*1000))

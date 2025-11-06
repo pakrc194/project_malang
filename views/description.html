@@ -23,7 +23,8 @@
         window.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
-                    console.log(act_box.classList[1])            
+                    console.log(`/desc/actor/`+act_box.classList[1])
+                    window.open(`/desc/actor/`+act_box.classList[1])
                 })
             })
         })
@@ -82,7 +83,7 @@
                 <div class="actor_box">
                     {% for i in perf.cast_list %}
                         <div class="ind_actor {{i.actor_id}}">
-                            <img src="../img/{{i.profile_image_url}}" alt="">
+                            <img src="../img/{{i.actor_profile_url}}" alt="">
                             <div class="actor_name">{{i.actor_name}}</div>
                             <div calss="cast_name">{{i.cast_name}}</div>
                         </div>
@@ -97,9 +98,6 @@
         </div>
         <div class="seat">
             <img src="../img/seat.png" alt="">
-        </div>
-        <div class="review">
-            <img src="../img/review.png" alt="">
         </div>
         <div class="footer">
             <img src="../img/footer.png" alt="">
