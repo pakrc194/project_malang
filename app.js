@@ -40,6 +40,7 @@ const mypageRouter = require('./routes/mypageRouter')
 const adminRouter = require('./routes/adminRouter')
 const searchRouter = require('./routes/searchRouter')
 const { base_date_format } = require('./func/date')
+const { isLoggedIn } = require('./func/ck_login')
 
 
 app.use('/perf', perfRouter)
@@ -52,7 +53,7 @@ app.use('/admin', adminRouter)
 app.use('/search', searchRouter)
 app.use('/desc', desRouter)
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res)=>{    
     res.redirect('/main')
 })
 
@@ -118,15 +119,6 @@ wss.on('connection', (ws, req)=>{
 
         }
         else {
-            // let Sendarr = {
-            //     type: "seat_reserve",
-            //     area: arr[1],
-            //     s_row: arr[2],
-            //     s_col: arr[3],
-            //     date: arr[4],
-            //     time: arr[5]
-            // }
-            // ws.send(JSON.stringify(Sendarr))
             arr.push(date)
             arr.push(time)
             arr.push(new Date(Date.now() + 5*60*1000))

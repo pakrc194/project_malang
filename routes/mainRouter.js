@@ -9,6 +9,8 @@ const conn = require('../db/db')
 
 
 router.get('/', (req, res) => {
+        console.log('세션 이메일 확인: ', req.session.kakao_email)
+
 
     const loginout = req.session.email || req.session.kakao_email
 

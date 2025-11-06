@@ -2,6 +2,7 @@ const express = require('express')
 const nunjucks = require('nunjucks')
 const conn = require('../db/db')
 const { base_date_format } = require('../func/date')
+const { isLoggedIn } = require('../func/ck_login')
 const router = express.Router()
 const app = express()
 
@@ -14,6 +15,8 @@ nunjucks.configure('views', {
 
 // 상세페이지
 router.get('/:id', (req, res)=>{
+        console.log('상세페이지 세션 이메일 확인: ', req.session.kakao_email)
+
     let venue_id = 0
     let query = `SELECT 
     p.id AS performance_id,
@@ -80,9 +83,10 @@ router.get('/:id', (req, res)=>{
     })
 })
 
-router.post('/reserve/:id', (req, res)=>{
+router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // console.log(req.body.items[0])
     // console.log(req.params.id)
+    console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
     conn.query(`select * from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
         conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
