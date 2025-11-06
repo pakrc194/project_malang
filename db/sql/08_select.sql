@@ -82,3 +82,29 @@ WHERE
     S.perf_id = 1
 ORDER BY
     S.schedule_date, S.schedule_time, CI.cast_id;
+
+    select actor_id, count(*) from user_interest_actor group by actor_id ORDER BY count(*) desc;
+
+
+SELECT
+    T1.actor_id,
+    AI.actor_name,        -- 👈 배우 이름 추가
+    T1.interest_count
+FROM
+    (
+        -- 1. 배우별 관심 사용자 수 카운트 및 상위 5명 선택
+        SELECT
+            actor_id,
+            COUNT(*) AS interest_count
+        FROM
+            user_interest_actor
+        GROUP BY
+            actor_id
+        ORDER BY
+            interest_count DESC
+        LIMIT 5
+    ) AS T1
+INNER JOIN
+    ACTOR_INFO AS AI ON T1.actor_id = AI.actor_id  -- 👈 ACTOR_INFO 테이블과 조인
+ORDER BY
+    RAND();  -- 2. 상위 5명의 순서를 랜덤으로 섞음

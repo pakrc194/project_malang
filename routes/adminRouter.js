@@ -330,6 +330,12 @@ router.post('/perf/casting', (req, res)=>{
     res.json()
 })
 
+router.get('/perf/delete/:id', (req, res)=> {
+    let selectSQL = 'select * from performance_info where performance_info.perf_id = ?'
+    conn.query()
+}) 
+
+
 router.get('/actor/list', (req, res)=>{
     conn.query('select * from actor_info', (err, resQuery)=>{
         if(err) {
