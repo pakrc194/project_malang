@@ -1,7 +1,7 @@
 let sPrefCastWpid = `SELECT
-    PINFO.name,       
+    PINFO.perf_name,       
     A.actor_name,           
-    A.profile_image_url,    
+    A.actor_profile_url,    
     CINFO.cast_name,        
     CINFO.cast_story,        
     P.perf_id,              -- 공연 ID
@@ -65,10 +65,10 @@ let sScheduleCast = `SELECT
     S.schedule_id,
     S.schedule_date,
     S.schedule_time,
-    S.round,
+    S.schedule_round,
     CI.cast_name,           
     AI.actor_name,          -- 배우 이름
-    AI.profile_image_url    -- 배우 프로필 사진 URL
+    AI.actor_profile_url    -- 배우 프로필 사진 URL
 FROM
     SCHEDULE_CAST AS SC  -- 스케줄 캐스팅 연결 테이블
 INNER JOIN

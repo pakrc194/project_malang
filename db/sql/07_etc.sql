@@ -1,4 +1,8 @@
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 -- 17. REVIEW_INFO (리뷰 정보) - 이름 변경 및 FK 참조 업데이트
+
+drop table review_info
+
 CREATE TABLE REVIEW_INFO (
     review_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '리뷰 ID',
     user_id INT NOT NULL COMMENT '작성자 FK',
@@ -14,6 +18,9 @@ CREATE TABLE REVIEW_INFO (
     FOREIGN KEY (perf_id) REFERENCES PERFORMANCE_INFO(perf_id) ON DELETE CASCADE,
     FOREIGN KEY (resv_id) REFERENCES RESERVATION_INFO(resv_id) ON DELETE CASCADE
 );
+
+
+drop table review_reaction
 
 -- 18. REVIEW_REACTION (리뷰 반응) - FK 참조 업데이트
 CREATE TABLE REVIEW_REACTION (

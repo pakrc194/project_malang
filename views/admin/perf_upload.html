@@ -255,10 +255,10 @@
             {%for actor in res%}
                 <div class="admin_actor_info" id="actor{{actor.actor_id}}">
                     <div>
-                        <img src="../../img/{{actor.profile_image_url}}" width="50px" alt="">
+                        <img src="../../img/{{actor.actor_profile_url}}" width="50px" alt="">
                     </div>
                     <p id="actorName{{actor.actor_id}}">
-                        {{actor.actor_name}}({{actor.birth_year}}/{{actor.gender}})
+                        {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
                     </p>
                 </div>
             {%endfor%}

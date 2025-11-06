@@ -14,7 +14,7 @@
 </head>
 <body>
     <h1>detail</h1>
-    {{perfInfo.name}}<br/>
+    {{perfInfo.perf_name}}<br/>
     {{perfInfo.poster_url}}<br/>
     {{perfInfo.synopsis_url}}<br/>
     {{perfInfo.start_date}}<br/>
@@ -24,10 +24,10 @@
     {{perfInfo.is_hidden}}<br/>
     {{perfInfo.resv_status}}<hr/>
     {{venueInfo.venue_name}}<br/>
-    {{venueInfo.region}}<hr/>
+    {{venueInfo.perf_region}}<hr/>
     {% for cast in perfCast%}
         {{cast.actor_name}}<br/>
-        {{cast.profile_image_url}}<br/>
+        {{cast.actor_profile_url}}<br/>
         {{cast.cast_name}}<hr/>
     {% endfor %}
     <div class="schedule_list">
@@ -36,7 +36,7 @@
                 <tr>
                     <td>{{schedule.schedule_date}}</td>
                     <td>{{schedule.schedule_time}}</td>
-                    <td>{{schedule.round}}</td>
+                    <td>{{schedule.schedule_round}}</td>
                     <td>{{schedule.cast_name}} : {{schedule.actor_name}}</td>
                     <td>{{schedule.actor_profile_url}}</td>
                 </tr>

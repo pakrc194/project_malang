@@ -390,10 +390,10 @@ router.get('/reserv/list', (req, res)=>{
     let reservSQL = 'select * from reservation_info'
     reservSQL = `
         select 
-        R.resv_id, R.resv_number, R.total_amount, R.grade_discount_rate_at_resv, R.final_amount,
+        R.resv_id, R.resv_number, R.total_amount, R.discount_rate, R.final_amount,
         R.resv_date, R.resv_status,
-        user_info.user_id, user_info.email, P.name, P.poster_url,
-        PS.schedule_date, PS.schedule_time, PS.round
+        user_info.user_id, user_info.email, P.perf_name, P.poster_url,
+        PS.schedule_date, PS.schedule_time, PS.schedule_round
         from reservation_info as R
         join user_info on user_info.user_id = R.user_id
         join perf_schedule as PS on PS.schedule_id = R.schedule_id
@@ -416,10 +416,10 @@ router.get('/reserv/detail', (req, res)=>{
     
     let reservSQL = `
         select 
-        R.resv_id, R.resv_number, R.total_amount, R.grade_discount_rate_at_resv, R.final_amount,
+        R.resv_id, R.resv_number, R.total_amount, R.discount_rate, R.final_amount,
         R.resv_date, R.resv_status,
-        user_info.*, P.name, P.poster_url,
-        PS.schedule_date, PS.schedule_time, PS.round
+        user_info.*, P.perf_name, P.poster_url,
+        PS.schedule_date, PS.schedule_time, PS.schedule_round
         from reservation_info as R
         join user_info on user_info.user_id = R.user_id
         join perf_schedule as PS on PS.schedule_id = R.schedule_id

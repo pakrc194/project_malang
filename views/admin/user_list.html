@@ -10,6 +10,7 @@
     {% include './list_nav.html' %}
     {% for user in userlist %}
         <a href="/admin/user/detail/{{user.user_id}}">{{user.email}}</a><br/>
+        {{user.user_name}}<br/>
         {{user.sign_method}}<br/>
         {{user.account_status}}<br/>
         {{user.score}}<br/>

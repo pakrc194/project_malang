@@ -1,36 +1,27 @@
-<<<<<<< HEAD
-=======
 -- Active: 1761632592171@@127.0.0.1@3306@malang_db
 -- 8. VENUE_INFO (공연장 정보) - 이름 변경
 CREATE TABLE VENUE_INFO (
     venue_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '공연장 ID',
     venue_name VARCHAR(100) NOT NULL COMMENT '공연장 이름',
-    venue_type ENUM('대극장', '소극장') NOT NULL COMMENT '공연장 분류',
+    venue_grade ENUM('R,S,A', 'S,A') NOT NULL COMMENT '좌석 등급',
     region VARCHAR(50) NOT NULL COMMENT '공연장 지역 (예: 서울, 부산)' 
 );
 
->>>>>>> psj
 -- 5. PERFORMANCE_INFO (공연 정보) - 이름 변경
 CREATE TABLE PERFORMANCE_INFO (
     perf_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '공연 ID',
-    name VARCHAR(100) NOT NULL COMMENT '공연 이름',
+    perf_name VARCHAR(100) NOT NULL COMMENT '공연 이름',
     poster_url VARCHAR(255) COMMENT '포스터 사진 URL',
     synopsis_url VARCHAR(255) COMMENT '시놉시스 사진 URL',
     start_date DATE NOT NULL COMMENT '공연 시작 날짜',
     end_date DATE NOT NULL COMMENT '공연 종료 날짜',
     genre VARCHAR(50) NOT NULL COMMENT '장르',
     running_time INT NOT NULL COMMENT '러닝타임 (분)',
-<<<<<<< HEAD
-    reg_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '공연 등록일',
-    is_hidden BOOLEAN NOT NULL DEFAULT FALSE COMMENT '공연 숨김 처리 여부',
-    resv_status ENUM('OPEN', 'CLOSED', 'PREPARING') NOT NULL DEFAULT 'PREPARING' COMMENT '예매 가능 상태'
-=======
     venue_id INT NOT NULL COMMENT '공연장 FK',
     reg_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '공연 등록일',
     is_hidden BOOLEAN NOT NULL DEFAULT FALSE COMMENT '공연 숨김 처리 여부',
     resv_status ENUM('OPEN', 'CLOSED', 'PREPARING') NOT NULL DEFAULT 'PREPARING' COMMENT '예매 가능 상태',
     FOREIGN KEY (venue_id) REFERENCES VENUE_INFO(venue_id)
->>>>>>> psj
 );
 
 -- 6. CAST_INFO (배역 정보) - 이름 변경 및 FK 참조 업데이트
@@ -54,17 +45,6 @@ CREATE TABLE PERF_CAST (
     UNIQUE KEY (perf_id, cast_id, actor_id)
 );
 
-<<<<<<< HEAD
--- 8. VENUE_INFO (공연장 정보) - 이름 변경
-CREATE TABLE VENUE_INFO (
-    venue_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '공연장 ID',
-    venue_name VARCHAR(100) NOT NULL COMMENT '공연장 이름',
-    venue_type ENUM('대극장', '소극장') NOT NULL COMMENT '공연장 분류',
-    region VARCHAR(50) NOT NULL COMMENT '공연장 지역 (예: 서울, 부산)' 
-);
-=======
-
->>>>>>> psj
 
 -- 9. SEAT_LAYOUT (좌석 배치) - FK 참조 업데이트
 CREATE TABLE SEAT_LAYOUT (

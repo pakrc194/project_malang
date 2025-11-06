@@ -20,16 +20,6 @@ CREATE TABLE RESERVATION_INFO (
     FOREIGN KEY (used_coupon_id) REFERENCES USER_COUPON(coupon_id)
 );
 
--- 14. RESERVATION_DETAIL (예매 상세) - FK 참조 업데이트
-CREATE TABLE RESERVATION_DETAIL (
-    resv_detail_id INT PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
-    resv_id INT NOT NULL COMMENT '예매 FK',
-    seat_id INT NOT NULL COMMENT '좌석 FK',
-    price_at_resv DECIMAL(10, 0) NOT NULL COMMENT '예매 시점의 좌석 등급별 가격 (할인 미적용 순수 가격)',
-    FOREIGN KEY (resv_id) REFERENCES RESERVATION_INFO(resv_id) ON DELETE CASCADE,
-    FOREIGN KEY (seat_id) REFERENCES SEAT_LAYOUT(seat_id),
-    UNIQUE KEY (resv_id, seat_id)
-);
 
 -- 15. PAYMENT_INFO (결제 정보) - 이름 변경 및 FK 참조 업데이트
 CREATE TABLE PAYMENT_INFO (

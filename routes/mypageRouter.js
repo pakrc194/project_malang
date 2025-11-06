@@ -42,7 +42,6 @@ router.get('/myInfo', (req, res) => {
     let email = 'abc111@gmail.com'
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
-    let couponSQL = 'select count(*) from user_coupon where user_id = ?'
     let tasks = []
 
 
@@ -50,16 +49,13 @@ router.get('/myInfo', (req, res) => {
         console.log(userInfoQuery)
         let userId = userInfoQuery[0].user_id
         tasks.push(conn.query(reservSQL, [userId]))
-        tasks.push(conn.query(couponSQL, [userId]))
 
         let[reservQuery, couponQuery]= await Promise.all(tasks)
         console.log('reserv----', reservQuery)
         console.log(reservQuery[0]['count(*)'])
-        console.log('coupon----', couponQuery)
-        console.log(couponQuery[0]['count(*)'])
         
 
-        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], couponCnt :couponQuery[0]['count(*)'],  reservCnt :reservQuery[0]['count(*)']})
+        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], reservCnt :reservQuery[0]['count(*)']})
     })
     //res.render("../views/list.html")
 })
