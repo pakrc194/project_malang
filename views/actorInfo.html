@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload = function() {
+            let toggleInterest = document.querySelector('#toggleInterest')
+
+            toggleInterest.addEventListener('click', (e)=>{
+                let actorId =  document.querySelector('#actor_id').value
+                console.log('actorId : ', actorId)
+
+                fetch(`/actor/interest/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({actorId: actorId})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.msg=='delete') {
+                        alert('관심 취소')
+                        toggleInterest.value='+'
+                    } else if(data.msg=='insert') {
+                        alert('관심 등록')
+                        toggleInterest.value='-'
+                    } else {
+                        alert('실패')
+                    }
+                    console.log(data)
+                })
+                .catch(err => console.log('에러 :', err.message))
+            })
+        }
+    </script>
+</head>
+<body>
+    <h1>배우 상세정보</h1>
+    <input type="hidden" id="actor_id" value="{{actorInfo.actor_id}}">
+    {{actorInfo.actor_name}}<br/>
+    {{actorInfo.actor_profile_url}}<br/>
+    {{actorInfo.actor_birth_year}}<br/>
+    {{actorInfo.actor_gender}}<hr/>
+    <input type="button" id="toggleInterest" value="{% if isInterest == true %}-{% else %}+{% endif %}"><hr>
+    
+</body>
+</html>

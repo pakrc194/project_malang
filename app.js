@@ -42,6 +42,7 @@ const searchRouter = require('./routes/searchRouter')
 const listRouter = require('./routes/listRouter')
 const myGradeRouter = require('./routes/gradeRouter')
 const interestRouter = require('./routes/interestRouter')
+const actorInfoRouter = require('./routes/actorInfoRouter')
 
 
 app.use('/perf', perfRouter)
@@ -56,6 +57,7 @@ app.use('/list', listRouter)
 app.use('/mypage/grade', myGradeRouter)
 app.use('/mypage/interest', interestRouter)
 app.use('/desc', desRouter)
+app.use('/actor', actorInfoRouter)
 
 app.get('/', (req, res)=>{
     res.redirect('/main')
