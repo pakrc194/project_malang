@@ -121,3 +121,30 @@ where actor_info.actor_id = 7;
 select * from performance_info join venue_info 
         where performance_info.perf_id = venue_info.venue_id and 
         performance_info.genre = '오리지널'
+
+
+
+UPDATE seat_status SET seat_status = "Sold" 
+                WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
+                    WHERE schedule_date = "2025-11-29" 
+                    AND schedule_round = 1)
+                    
+                AND seat_id = (SELECT seat_id FROM seat_layout 
+                    WHERE area = "F"
+                    AND seat_row = 3
+                    AND seat_number = 6);
+
+SELECT schedule_id FROM perf_schedule
+                    WHERE schedule_date = "2025-11-29" 
+                    AND schedule_round = 1
+                    AND perf_id = 1
+
+
+                    SELECT seat_id FROM seat_layout 
+                    WHERE area = "F"
+                    AND seat_row = 3
+                    AND seat_number = 6
+                    AND venue_id = 1;
+
+
+select * from seat_status where schedule_id = 57 and seat_id = 294

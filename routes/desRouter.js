@@ -148,6 +148,7 @@ router.post('/discount/:id', (req, res)=>{
     else {
         email = req.session.kakao_email
     }
+    console.log('items : ',req.body.items[0])
 
     let temp_data = [] // grade, area, s_row, s_col, price
     for (let i of JSON.parse(req.body.items[0])){
@@ -253,15 +254,20 @@ router.post('/payment', (req, res)=>{
         conn.query(`UPDATE seat_status SET seat_status = "Sold" 
                 WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
-                    AND schedule_round = ${req.body.items[3].split(' ')[3]})
+                    AND schedule_round = ${req.body.items[3].split(' ')[3]}
+                    AND perf_id = ${req.body.items[2]}
+                    )
                     
                 AND seat_id = (SELECT seat_id FROM seat_layout 
                     WHERE area = "${req.body.items[i].split(' ')[1]}"
                     AND seat_row = ${req.body.items[i].split(' ')[2]}
-                    AND seat_number = ${req.body.items[i].split(' ')[3]})`)
+                    AND seat_number = ${req.body.items[i].split(' ')[3]}
+                    AND venue_id = 1)`)
+                    //1번쨰 서브쿼리 perf_id 필요
+                    //2번쨰 서브쿼리 venue_id 필요
     }
     
-
+    //res.send('hello')
     res.render('../views/reserv/payment.html', {info: req.body.items})
 })
 

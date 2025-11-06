@@ -41,3 +41,15 @@ CREATE TABLE SEAT_STATUS (
     FOREIGN KEY (user_id) REFERENCES USER_INFO(user_id),
     UNIQUE KEY (schedule_id, seat_id)
 );
+
+
+CREATE TABLE SEAT_TEMP (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    grade VARCHAR(10),
+    area VARCHAR(10),
+    s_row INT,
+    s_col INT,
+    choice_date DATE,
+    choice_time INT, /* 공연 회차를 INT로 정의 */
+    expires DATETIME
+);

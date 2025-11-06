@@ -1,4 +1,4 @@
--- Active: 1761802030139@@127.0.0.1@3306@malang_db
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 DROP TABLE seat_status;
 CREATE TABLE seat_status (
     status_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -8,7 +8,7 @@ CREATE TABLE seat_status (
     user_id INT,
     temp_resv_time DATETIME,
     Foreign Key (seat_id) REFERENCES seat_layout(seat_id),
-    Foreign Key (schedule_id) REFERENCES perf_schedule(id)
+    Foreign Key (schedule_id) REFERENCES perf_schedule(schedule_id)
 );
 
 -- INSERT INTO seat_status (schedule_id, seat_id, seat_status)

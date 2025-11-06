@@ -45,6 +45,7 @@ CREATE TABLE PERF_CAST (
     UNIQUE KEY (perf_id, cast_id, actor_id)
 );
 
+drop table seat_layout
 
 -- 9. SEAT_LAYOUT (좌석 배치) - FK 참조 업데이트
 CREATE TABLE SEAT_LAYOUT (

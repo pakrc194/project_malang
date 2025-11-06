@@ -146,7 +146,7 @@
       <div class="poster_list">
         {% for musical in coming_benner %}
         <div class="poster_item">
-          <a href="/desc/1">
+          <a href="/desc/{{musical.perf_id}}">
             <img src="../img/{{ musical.poster_url }}" alt="{{ musical.name }}">
           </a>
           <div class="poster_info">
