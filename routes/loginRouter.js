@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
         return res.json({ success: false, message: '이메일, 비밀번호 입력하세요' })
     }
     // DB 조회(이메일, 비밀번호, 회원주소, 활성화 상태)
-    const sql = 'SELECT email, password, sign_method, account_status FROM USER_INFO WHERE email = ?';
+    const sql = 'SELECT user_id, email, password, sign_method, account_status FROM USER_INFO WHERE email = ?';
     conn.query(sql, [email], (err, results) => {
         if (err) {
             console.error('DB 에러 발생:', err);
@@ -61,8 +61,11 @@ router.post('/login', (req, res) => {
         // 로그인 성공
         req.session.email = user.email;
         req.session.signMethod = user.sign_method;
+        req.session.user_id = user.user_id;
 
         console.log('로그인 성공:', user.email);
+        console.log('로그인 성공:', user.sign_method);
+        console.log('로그인 성공:', user.user_id);
 
         // 관리자인 경우 managermain.html 으로 이동
         if (user.sign_method === 'admin') {

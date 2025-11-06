@@ -45,30 +45,44 @@ router.use((req, res, next) => {
 // ------------------------------------------------------------------------------------------
 
 router.get('/', (req, res) => {
+
+    const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+    console.log(sessionuserid)
+
     //res.render('../views/mypage.html')
     //res.sendFile(path.join(__dirname, '../views/mypage.html'))
+    if(email == null){
+        res.redirect('/login')
+    } else {
     res.redirect('/mypage/myInfo')     //  리다이렉트 '/info/hello' 로 URL 이동
+    }
 })
 
 router.get('/myInfo', (req, res) => {
     console.log('email', req.session.email)
-    let email = 'abc111@gmail.com'
+    const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
     let tasks = []
 
-
+    let reservCnt = 0
     conn.query(selectSQL, [email], async (userInfoErr, userInfoQuery)=> {
         console.log(userInfoQuery)
-        let userId = userInfoQuery[0].user_id
-        tasks.push(conn.query(reservSQL, [userId]))
+        if(userInfoQuery.length>0) {
+            let userId = userInfoQuery[0].user_id
+            tasks.push(conn.query(reservSQL, [userId]))
 
-        let[reservQuery, couponQuery]= await Promise.all(tasks)
-        console.log('reserv----', reservQuery)
-        console.log(reservQuery[0]['count(*)'])
-        
-
-        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], reservCnt :reservQuery[0]['count(*)']})
+            let[reservQuery, couponQuery]= await Promise.all(tasks)
+            console.log('reserv----', reservQuery)
+            console.log(reservQuery[0]['count(*)'])
+            reservCnt = reservQuery[0]['count(*)']
+            console.log(sessionuserid)
+        }
+       
+        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], reservCnt :reservCnt})
     })
     //res.render("../views/list.html")
 })
@@ -78,13 +92,13 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
     data.mainUrl = 'reserveSelect'
 
     const email = req.session?.email || req.session?.kakao_email;
-
+    const sessionuserid = req.session?.user_id
     console.log(email)
 
     const sql = ` 
      select
      
-     user_info.name AS user_name,
+     user_info.user_name,
      user_info.email,
      reservation_info.resv_id, 
      reservation_info.resv_number,
@@ -93,11 +107,12 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
      reservation_info.resv_date,
      seat_layout.seat_number,
      seat_layout.seat_row,
+     seat_layout.area,
      perf_schedule.schedule_date, 
      perf_schedule.schedule_time,
      venue_info.venue_name,
      performance_info.poster_url,
-     performance_info.name AS performance_name
+     performance_info.perf_name
     
      from reservation_info 
      join user_info on user_info.user_id = reservation_info.user_id 
@@ -114,8 +129,16 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
             console.error('예매 내역 조회 에러:', err);
             return res.status(500).send('서버 에러');
         }
+        console.log(sessionuserid)
 
         const today = new Date();
+
+        let seatArr = rows[0].seat_id_arr.split(',')
+        const seatArrsql = `select seat_number from seat_layout where seat_id_arr`
+        conn.query(seatArrsql, [seatArr], (err, seatRows)=>{
+            
+        })
+        
 
         for (const row of rows) {
             row.resv_date = base_date_format(row.resv_date);
@@ -149,6 +172,11 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
 router.get('/pwChange', isLoggedIn, (req, res) => {
     data.mainUrl = `pwChange`
 
+    const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+
+    console.log(sessionuserid)
+
     res.render("../views/mypage/mypage.html", data)
 })
 
@@ -171,6 +199,7 @@ router.post("/checkpw", isLoggedIn, (req, res) => {
             console.error('이메일 확인 오류:', err.message)
             return res.status(500).json({ exists: false })
         }
+        
         res.json({ exists: results.length > 0 });
     })
 });
@@ -179,6 +208,7 @@ router.post("/checkpw", isLoggedIn, (req, res) => {
 router.post("/changepw", isLoggedIn, (req, res) => {
     const { newpw1 } = req.body;
     const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
 
     console.log(newpw1)
     console.log(email)
@@ -192,6 +222,8 @@ router.post("/changepw", isLoggedIn, (req, res) => {
             return res.status(500).json({ success: false, message: "DB 오류" })
         };
 
+        console.log(sessionuserid)
+
         if (result.affectedRows > 0) {
             res.json({ success: true, message: "비밀번호가 성공적으로 변경되었습니다." });
         } else {
@@ -203,7 +235,9 @@ router.post("/changepw", isLoggedIn, (req, res) => {
 // ------------------------------------------------------------------------------------------ 회원 탈퇴
 
 router.post('/pwout', isLoggedIn, (req, res) => {
+
     const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
     const { pwout } = req.body
 
     if (!email) return res.json({ success: false, message: "로그인이 필요합니다." });
@@ -211,6 +245,7 @@ router.post('/pwout', isLoggedIn, (req, res) => {
 
     console.log(pwout)
     console.log(email)
+    console.log(sessionuserid)
 
 
 

@@ -11,14 +11,16 @@
     <h1>배우</h1>
     {% for actor in actorResult %}
         {{actor.actor_name}}<br/>
-        {{actor.profile_image_url}}<br/>
-        {{actor.birth_year}}{{actor.gender}}<hr/>
+        <img src="../img/{{actor.actor_profile_url}}" alt="">
+        <br/>
+        {{actor.actor_birth_year}}{{actor.actor_gender}}<hr/>
     {% endfor %}
     <hr/>
     <h1>공연</h1>
     {% for perf in perfResult %}
-        {{perf.name}}<br/>
-        {{perf.poster_url}}<br/>
+        {{perf.perf_name}}<br/>
+        <img src="../img/{{perf.poster_url}}" alt="">
+        <br/>
         {{perf.genre}}<hr/>
     {% endfor %}
     

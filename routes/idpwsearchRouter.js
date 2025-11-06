@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 router.post('/findid', (req, res) => {
     const { name, question, answer } = req.body;
 
-    const sql = 'SELECT email FROM USER_INFO WHERE name = ? AND question = ? AND answer = ?';
+    const sql = 'SELECT email FROM USER_INFO WHERE user_name = ? AND question = ? AND answer = ?';
     conn.query(sql, [name, question, answer], (err, rows) => {
         if (err) {
             console.error(err);

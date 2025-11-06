@@ -15,13 +15,14 @@ router.get('/', (req, res) => {
 
     const loginout = req.session.email || req.session.kakao_email
 
+    // 1. 메인배너(현재 상영)
     const mainbenner = `
     SELECT * FROM performance_info
     WHERE start_date <= NOW() AND end_date >= NOW()
     LIMIT 10
   `;
 
-    // 2. 오픈 예정 (아직 시작 안한 공연)
+    // 2. 오픈 예정
     const comingbenner = `
     SELECT * FROM performance_info
     WHERE start_date > NOW()
@@ -29,7 +30,7 @@ router.get('/', (req, res) => {
     LIMIT 5
   `;
 
-    // 3. 배우 추천 (관심순 정렬 후 랜덤 추출)
+    // 3. 배우 추천
     const actorbenner = `
     SELECT * FROM actor_info
     ORDER BY RAND()
