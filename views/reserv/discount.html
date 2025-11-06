@@ -25,6 +25,15 @@
             
             document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
             document.querySelector(".dc_price").value = totprice
+            document.querySelector(".card_number").addEventListener('input', ()=>{
+                if (document.querySelector(".card_number").value.trim() !== ''){
+                    document.querySelector(".total_price_btn").disabled = false
+                }
+                else {
+                    document.querySelector(".total_price_btn").disabled = true
+
+                }
+            })
             let frm = document.forms.frm
             document.querySelector(".total_price_btn").onclick = function() {
                 frm.submit()
@@ -73,7 +82,7 @@
         {% for i in temp_data %}
             <input type="hidden" name="items" class="seat" value="{{i.grade}} {{i.area}} {{i.s_row}} {{i.s_col}} {{i.price}}">
         {% endfor %}
-        <input type="submit" class="total_price_btn" value="{{ptot}}원 결제하기">
+        <input type="submit" class="total_price_btn" value="{{ptot}}원 결제하기" disabled>
     </form>
 </body>
 </html>

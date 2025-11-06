@@ -148,6 +148,7 @@
         .select_done {
             height: 50px;
             width: 300px;
+            
         }
         .choiceDate > img{
             height: 350px;
@@ -178,7 +179,7 @@
                     console.log('데이터 받아오기 실패: ', data.error)
                 }
                 else {
-                    document.querySelector(".seatC").innerHTML = `선택한 좌석<br/>`
+                    document.querySelector(".seatC").innerHTML = ``
                     let arr = []
                     
                     let totprice = 0
@@ -194,15 +195,25 @@
                         arr.push(`${grade} ${area} ${s_row} ${s_col} ${price}`)
                         
                     }
+                    
+                    
                     document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
                     document.querySelector(".itemsInput").value = JSON.stringify(arr)
                     document.querySelector(".Total").value = totprice
+                    if (totprice != 0) {
+                        document.querySelector(".select_done").disabled = false
+                    }
+                    else {
+                        document.querySelector(".select_done").disabled = true
+                    }
                 }
             }
+                    
         }
 
         
         window.addEventListener('DOMContentLoaded', function(){
+            
             let frm = document.forms.frm
             document.querySelector(".select_done").onclick = function() {
                frm.submit()
@@ -241,12 +252,13 @@
                     [violet] S석 130,000원<br/>
                     [skyblue] A석 90,000원<br/> -->
                 </div>
-                <div class="seatC">선택한 좌석</div>
+                선택한 좌석
+                <div class="seatC"></div>
                 <div class="doneBtn">
                     <!-- <div class="seat_tot_price">좌석의 가격 합산 정보</div> -->
                         <input type="hidden" name="items" class="itemsInput">
                         <input type="hidden" name="items" class="Total">
-                        <input type="submit" class="select_done" name="seat_select" value="좌석 선택 완료">
+                        <input type="submit" class="select_done" name="seat_select" value="좌석을 선택해주세요" disabled>
                    
                 </div>
             </div>

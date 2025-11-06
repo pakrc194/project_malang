@@ -9,13 +9,11 @@
     <!-- <script src="../js/description.js"></script> -->
      <script>
         function click_poster(){
-            console.log('포스터 클릭')
             document.querySelector(".big_poster").style.display = "block"
             document.querySelector("body").style.overflow="hidden"
         }
 
         function ck_big(){
-            console.log('큰 포스터 클릭')
             document.querySelector(".big_poster").style.display = "none"
             document.querySelector("body").style.overflow = "visible"
         }
@@ -33,8 +31,8 @@
     
 </head>
 <body>
-    {% include '../header.html' %}
     <div class="big_poster" onclick="ck_big()"><img src="../img/{{perf.poster_url}}"><div class="b_p_tx">클릭하여 창 나가기</div></div>
+    {% include '../header.html' %}
     <div class="Big">
 
         <div class="musical_name">뮤지컬 〈{{perf.performance_name}}〉</div>

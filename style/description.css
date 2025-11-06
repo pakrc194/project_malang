@@ -13,6 +13,9 @@
     /* left: -600px; */
 
 }
+.big_poster > img{
+    margin-top: 10px;
+}
 
 .b_p_tx {
     color: #fff;
