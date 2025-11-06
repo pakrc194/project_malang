@@ -6,11 +6,31 @@
     <title>Document</title>
 </head>
 <script>
-    
+    window.onload = function() {
+        let btnHide = document.querySelector('#btnHide')
+        let perfId = document.querySelector('#perf_id')
+        btnHide.addEventListener('click', (e)=>{
+            console.log('perf_id : ', perfId.value)
+            fetch(`/admin/perf/hide`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({perf_id: perfId.value})
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                alert('숨김처리')
+                location.href=`/admin/perf/detail/${perfId.value}`
+            })
+            .catch(err => console.log('에러 :', err.message))
+        })
+    }
 </script>
 <body>
     <h1>공연 삭제</h1>
-
+    <input type="hidden" id="perf_id" value="{{perf.perf_id}}">
     {{perf.perf_name}}<br/>
     {{perf.poster_url}}<hr/>
     <input type="button" id="btnHide" value="숨김"/>

@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const conn = require('../db/db')
+const {sPrefActWaid} = require('../db/admin_select_db')
 const { base_date_format } = require('../func/date')
 
 
@@ -23,7 +24,11 @@ router.get('/:id', async (req, res) => {
     let actorInfoSQL = 'select * from actor_info where actor_id = ?'
     conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
         console.log(actorInfoQuery)
-        res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest})
+        
+        conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
+            console.log(perfListQuery)
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
+        })
     })
 })
 

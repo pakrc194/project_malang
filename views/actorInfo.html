@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #actor_profile, #perf_poster {
+            width : 100px;
+        }
+    </style>
     <script>
         window.onload = function() {
             let toggleInterest = document.querySelector('#toggleInterest')
@@ -11,7 +16,7 @@
             toggleInterest.addEventListener('click', (e)=>{
                 let actorId =  document.querySelector('#actor_id').value
                 console.log('actorId : ', actorId)
-
+                
                 fetch(`/actor/interest/toggle`, {
                     method: 'POST',
                     headers: {
@@ -41,10 +46,16 @@
     <h1>배우 상세정보</h1>
     <input type="hidden" id="actor_id" value="{{actorInfo.actor_id}}">
     {{actorInfo.actor_name}}<br/>
-    {{actorInfo.actor_profile_url}}<br/>
+    <img id="actor_profile" src="/img/{{actorInfo.actor_profile_url}}" alt="{{actorInfo.actor_profile_url}}"><br/>
     {{actorInfo.actor_birth_year}}<br/>
     {{actorInfo.actor_gender}}<hr/>
     <input type="button" id="toggleInterest" value="{% if isInterest == true %}-{% else %}+{% endif %}"><hr>
-    
+    {% for perf in perfList %}
+    {{perf.perf_name}}<br/>
+    <a href="/desc/{{perf.perf_id}}">
+        <img id="perf_poster" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
+    </a>
+    {{perf.start_date}}~{{perf.end_date}}<hr/>
+    {% endfor %}
 </body>
 </html>

@@ -1,3 +1,4 @@
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;
@@ -108,3 +109,15 @@ INNER JOIN
     ACTOR_INFO AS AI ON T1.actor_id = AI.actor_id  -- 👈 ACTOR_INFO 테이블과 조인
 ORDER BY
     RAND();  -- 2. 상위 5명의 순서를 랜덤으로 섞음
+
+select actor_info.*, 
+performance_info.perf_name, performance_info.poster_url,
+performance_info.start_date, performance_info.end_date
+from actor_info 
+join perf_cast on actor_info.actor_id = perf_cast.actor_id
+join performance_info on performance_info.perf_id = perf_cast.perf_id
+where actor_info.actor_id = 7;
+
+select * from performance_info join venue_info 
+        where performance_info.perf_id = venue_info.venue_id and 
+        performance_info.genre = '오리지널'
