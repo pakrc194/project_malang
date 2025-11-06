@@ -138,28 +138,32 @@
 
         // 3.2 클라이언트가 수신
         socket1.onmessage = (e)=>{
-            console.log('seatB1에서 수신: ', e.data)
-        }
-        window.addEventListener('DOMContentLoaded', function(){
+            console.log('seatB1에서 수신: ', (e.data))
 
+        }
+        
+        window.addEventListener('DOMContentLoaded', function(){
+        
             let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
             let row = ["first", "second", "third"]
             let grade = ["R", "S", "A"]
-
+            
             for(let aa = 0; aa < 3; aa++) {
-
+            
                 for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                    for (let j = 1; j < 11; j++) {
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
+                        // document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).setAttribute("value", `${grade[aa]} ${area[aa*3]} ${i+1} ${j}`)
+                        // console.log(`${aa} ${i} ${j} : `, document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).value)
                     }
                 }
                 for (let i = 1; i < 3*10+1; i++) {
                     document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
                 }
 
-                for (let i = 0; i < 53; i++) {
+                for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
                     }
                 }
                 for (let i = 1; i < 3*10+1; i++) {
@@ -168,7 +172,7 @@
 
                 for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
+                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="${cnt++} indiseat" onclick="ck_cnt(this)">`
                     }
                 }
                 for (let i = 1; i < 3*10+1; i++) {
@@ -176,17 +180,14 @@
                 }
             }
 
-
-            console.log("{{area}}")
+            
             // forEach로 선택된 좌석이 있다면 비활성화(disabled=true)
-            document.querySelectorAll(".indiseat").forEach(seats=>{
-                if (seats.value.split(' ')[1] == "{{area}}" && seats.value.split(' ')[2] == eval("{{row}}") && seats.value.split(' ')[3] == eval("{{col}}")) {
-                    seats.disabled = true
-                    console.log(seats.value.split(' ')[1], seats.value.split(' ')[2], seats.value.split(' ')[3])
-                }
-            })
+            // document.querySelectorAll(".indiseat").forEach(seats=>{
+            //     console.log(seats.classList)
+            // })
         })
-
+        
+        
         let cnt = 0
         // 예매 개수 4개로 제한
         function ck_cnt(obj) {
@@ -216,21 +217,20 @@
     <!-- <h1>대공연장1 좌석표</h1> -->
     <div class="seat_wrapper">
         <div class="first">
-            <div class="section"></div>
-            <div class="stair">
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
+            <div class="section">
             </div>
-            <div class="section"></div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
-                <div>4</div>
-                <div>5</div>
+            </div>
+            <div class="section">
+                
+            </div>
+            <div class="stair">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
             </div>
             <div class="section"></div>
 
@@ -238,44 +238,39 @@
         <div class="hallway"></div>
 
         <div class="second">
-            <div class="section"></div>
+            <div class="section">
+            </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
-                <div>4</div>
-                <div>5</div>
             </div>
             <div class="section"></div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
-                <div>4</div>
-                <div>5</div>
             </div>
             <div class="section"></div>
 
         </div>
         <div class="hallway"></div>
         <div class="third">
-            <div class="section"></div>
+            <div class="section">
+            </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
-                <div>4</div>
-                <div>5</div>
             </div>
             <div class="section"></div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
-                <div>4</div>
-                <div>5</div>
             </div>
             <div class="section"></div>
+
 
         </div>
         <!-- <input type="checkbox"> -->

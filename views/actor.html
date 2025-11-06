@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배우정보페이지</title>
+    <style>
+        .actor_big_info{
+            margin: auto;
+            background-color: #ad0;
+            width: 1200px;
+            height: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+        }
+
+        .actor_big_info > img {
+            height: 300px;
+            width: 250px;
+            margin-top: 30px;
+        }
+        .actor_info {
+            height: 360px;
+            width: 910px;
+            background-color: antiquewhite;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="actor_big_info">
+
+        <img src="../../img/{{actor.profile_image_url}}">
+        <div class="actor_info">
+            <div class="actor_name">{{actor.actor_name}}}</div>
+            <div calss="actor_birth">출생년도 {{actor.birth_year}}</div>
+            <div class="actor_gender">
+                {% if actor.gender == "M" %}
+                    남자
+                {% elseif actor.gender == "F" %}
+                    여자
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

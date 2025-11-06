@@ -23,7 +23,8 @@
         window.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
-                    console.log(act_box.classList[1])            
+                    console.log(`/desc/actor/`+act_box.classList[1])
+                    window.open(`/desc/actor/`+act_box.classList[1])
                 })
             })
         })

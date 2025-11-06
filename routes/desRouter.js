@@ -1,6 +1,7 @@
 const express = require('express')
 const nunjucks = require('nunjucks')
 const conn = require('../db/db')
+const { base_date_format } = require('../func/date')
 const router = express.Router()
 const app = express()
 
@@ -80,8 +81,8 @@ router.get('/:id', (req, res)=>{
 })
 
 router.post('/reserve/:id', (req, res)=>{
-    console.log(req.body.items[0])
-    console.log(req.params.id)
+    // console.log(req.body.items[0])
+    // console.log(req.params.id)
     conn.query(`select * from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
         conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_class) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
@@ -92,10 +93,31 @@ router.post('/reserve/:id', (req, res)=>{
                 flag: req.body.items[2], // 표시해야할 날짜
                 name: resPf[0].venue_name // 공연장 이름
             }
-            
-            if (resPf && resPf.length > 0){
-                res.render("reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
-            }
+
+            let dd = base_date_format(arr.date)
+           
+            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.id 
+                
+                and perf_schedule.perf_id = ${req.params.id}
+                and perf_schedule.round = ${arr.time}
+                and perf_schedule.schedule_date = "${dd}"
+                `,
+            (err, queryData)=>{
+                // console.log(queryData.length)
+                // wss.clients.forEach(client => {
+                //     for (let i of queryData){
+                //         console.log(i)
+                //         client.send(JSON.stringify({ type: 'seat_status', i }));
+                //     }
+                //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
+                //     // }
+                // });
+                // console.log(queryData)
+                
+                if (resPf && resPf.length > 0){
+                    res.render("reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, queryData})
+                }
+            })
         })
     })
     
@@ -141,13 +163,14 @@ router.post('/coupon/:id', (req, res)=>{
 })
 
 
-router.get('/actor', (req, res)=>{
+router.get('/actor/:id', (req, res)=>{
     console.log('배우 상세정보 페이지로 이동')
-    console.log(req.query.actor_id)
-    // console.logo(req.body)
-    // conn.query('select * from actor_info', (err, res)=>{
-    //     console.log(res)
-    // })
+
+    conn.query(`select * from actor_info where id = ${req.params.id}`, (err, resActor)=>{
+        console.log(resActor[0])
+        res.render("../views/actor.html", {id: req.params.id, actor: resActor[0]})
+    })
+
 })
 
 let payment_info = {}

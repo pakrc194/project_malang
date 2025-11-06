@@ -166,7 +166,7 @@
         socket.onmessage = (e)=>{
 
             console.log(`reserve에서 수신: `, e.data)
-            const data = JSON.parse(e.data);
+            // const data = JSON.parse(e.data);
             
 
             if (data.type == 'temp') {
@@ -197,6 +197,7 @@
             }
         }
 
+        
         window.addEventListener('DOMContentLoaded', function(){
             let frm = document.forms.frm
             document.querySelector(".select_done").onclick = function() {
