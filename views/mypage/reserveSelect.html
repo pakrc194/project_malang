@@ -4,12 +4,15 @@
         padding: 0px;
     }
 
-    section {
+    .reservLists {
         width: 800px;
         border: 1px solid #000;
+        box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        box-sizing: border-box;
+        
     }
 
     img {
@@ -23,6 +26,14 @@
     .reserveMenu {
         width: 800px;
         border: 1px solid #000;
+        box-sizing: border-box;
+        
+    }
+
+    .sortList{
+        width: 800px;
+        overflow: auto;
+        box-sizing: border-box;
     }
 </style>
 <script>
@@ -35,15 +46,12 @@
         });
     };
 </script>
-<wrapper>
-    <section>
-        <select id="sortSelect">
-            <option value="latest" {% if sort=='latest' %}selected{% endif %}>날짜순</option>
-            <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
-        </select>
-
-    </section>
-    <section>
+<section class="sortList">
+    <select id="sortSelect">
+        <option value="latest" {% if sort=='latest' %}selected{% endif %}>날짜순</option>
+        <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
+    </select>
+    <div class="reservLists">
         <!-- {% if resvList and resvList.length > 0 %} -->
         {% for i in resvList %}
         <div class="reserveMenu">
@@ -92,8 +100,9 @@
         예매 내역이 없습니다.
         {% endif %}
 
-    </section>
-</wrapper>
+    </div>
+</section>
+
 <script>
     function resvDetail(resvid) {
         // 상세내역 페이지 이동
