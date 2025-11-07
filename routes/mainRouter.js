@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
     SELECT * FROM performance_info
     WHERE start_date > NOW() and is_hidden = 0
     ORDER BY start_date ASC
-    LIMIT 5
+    LIMIT 4
   `;
 
     // 3. 배우 추천

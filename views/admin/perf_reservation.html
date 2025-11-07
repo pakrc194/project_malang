@@ -9,13 +9,14 @@
     {% include './admin_header.html' %}
     <h1>예매 목록</h1>
     {% for reserv in reservList %}
-        <a href="/admin/reserv/detail?resvId={{reserv.resv_id}}&userId={{reserv.user_id}}">{{reserv.resv_number}}</a><br/>
-        {{reserv.email}}<br/>
+        {{reserv.resv_number}}<br/>
+        {{reserv.user_name}}<br/>
         {{reserv.perf_name}}<br/>
         {{reserv.poster_url}}<br/>
         {{reserv.schedule_date}}<br/>
         {{reserv.schedule_time}}<br/>
         {{reserv.schedule_round}}<br/>
+        {{reserv.seat_id_arr}}<br/>
         {{reserv.total_amount}}<br/>
         {{reserv.discount_rate}}<br/>
         {{reserv.final_amount}}<br/>

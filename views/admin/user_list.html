@@ -9,12 +9,13 @@
     {% include './admin_header.html' %}
     <h1>회원 목록</h1>
     {% for user in userlist %}
-        {{user.email}}<br/>
+        <a href="/admin/reserv/detail?userId={{user.user_id}}">{{user.email}}</a><br/>
         {{user.user_name}}<br/>
         {{user.sign_method}}<br/>
         {{user.account_status}}<br/>
         {{user.score}}<br/>
-        {{user.grade_id}}<hr/>
+        {{user.grade_id}}<br/>
+        예매 수 {{user.resv_cnt}}<hr/>
     {% endfor %}
 </body>
 </html>

@@ -411,10 +411,25 @@ router.get('/user', (req, res)=> {
     res.redirect('/admin/user/list')
 })
 router.get('/user/list', (req, res)=> {
+    let tasks = []
     let userQuery = 'select * from user_info'
-    conn.query(userQuery, (req, ret)=> {
-        console.log(ret)
+    conn.query(userQuery, async (err, ret)=> {
+        let countSQL = `select count(*) from reservation_info where user_id = ?`
+        for(let user of ret) {
+            tasks.push(conn.query(countSQL, user.user_id))
+        }
+        let [...users] = await Promise.all(tasks)
+        console.log(users)
+        console.log(users[0])
+        console.log(users[0][0])
+        for(let i in ret) {
+            console.log('count : ', users[i][0]['count(*)'])
+            ret[i].resv_cnt = users[i][0]['count(*)']
+        }
+        
+
         res.render('../views/admin/user_list.html', {userlist : ret})
+        
     })
 })
 
@@ -423,18 +438,22 @@ router.get('/reserv', (req, res)=>{
     res.redirect('/admin/reserv/list')
 })
 router.get('/reserv/list', (req, res)=>{
-    let reservSQL = 'select * from reservation_info'
-    reservSQL = `
-        select 
-        R.resv_id, R.resv_number, R.total_amount, R.discount_rate, R.final_amount,
-        R.resv_date, R.resv_status,
-        user_info.user_id, user_info.email, P.perf_name, P.poster_url,
-        PS.schedule_date, PS.schedule_time, PS.schedule_round
-        from reservation_info as R
-        join user_info on user_info.user_id = R.user_id
-        join perf_schedule as PS on PS.schedule_id = R.schedule_id
-        join performance_info as P on P.perf_id = PS.schedule_id
-    `
+    let reservSQL = `select * from reservation_info 
+        join user_info on user_info.user_id = reservation_info.user_id
+        join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id`
+        
+    // reservSQL = `
+    //     select 
+    //     R.resv_id, R.resv_number, R.total_amount, R.discount_rate, R.final_amount,
+    //     R.resv_date, R.resv_status,
+    //     user_info.user_id, user_info.email, P.perf_name, P.poster_url,
+    //     PS.schedule_date, PS.schedule_time, PS.schedule_round
+    //     from reservation_info as R
+    //     join user_info on user_info.user_id = R.user_id
+    //     join perf_schedule as PS on PS.schedule_id = R.schedule_id
+    //     join performance_info as P on P.perf_id = PS.schedule_id
+    // `
 
     conn.query(reservSQL, (err, reservQuery)=>{
         if(err)
@@ -446,9 +465,7 @@ router.get('/reserv/list', (req, res)=>{
 })
 router.get('/reserv/detail', (req, res)=>{
     let userId = req.query.userId
-    let resvId = req.query.resvId
     console.log(userId)
-    console.log(resvId)
     
     let reservSQL = `
         select 
@@ -460,15 +477,21 @@ router.get('/reserv/detail', (req, res)=>{
         join user_info on user_info.user_id = R.user_id
         join perf_schedule as PS on PS.schedule_id = R.schedule_id
         join performance_info as P on P.perf_id = PS.schedule_id
-        where user_info.user_id = ? and R.resv_id = ?
+        where user_info.user_id = ?
     `
 
-    conn.query(reservSQL, [userId, resvId], (err, reservQuery)=>{
+    reservSQL = `select * from reservation_info 
+        join user_info on user_info.user_id = reservation_info.user_id
+        join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id
+        where user_info.user_id = ?`
+
+    conn.query(reservSQL, [userId], (err, reservQuery)=>{
         if(err)
             console.log('err : ', err.message)
         else 
             console.log(reservQuery)
-        res.render('../views/admin/reserv_detail.html', {reserv : reservQuery[0]})
+        res.render('../views/admin/reserv_detail.html', {reservList : reservQuery})
     })
 })
 
