@@ -7,8 +7,10 @@ const { base_date_format, base_time_format } = require('../func/date.js')
 
 function isLoggedIn(req, res, next) {
     if (req.session?.email || req.session?.kakao_email) {
+        console.log('id confirm')
         next();
     } else {
+        console.log('id confirm xxxx')
         res.send(`
             <script>
                 alert('로그인 후 이용 가능합니다.');
@@ -50,6 +52,7 @@ router.get('/', (req, res) => {
     const sessionuserid = req.session?.user_id
     console.log(sessionuserid)
 
+    
 
     //res.render('../views/mypage.html')
     //res.sendFile(path.join(__dirname, '../views/mypage.html'))
@@ -64,6 +67,7 @@ router.get('/myInfo', (req, res) => {
     console.log('email', req.session.email)
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+    const loginout = req.session.email || req.session.kakao_email
 
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
@@ -83,7 +87,7 @@ router.get('/myInfo', (req, res) => {
             console.log(sessionuserid)
         }
 
-        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt })
+        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout })
     })
     //res.render("../views/list.html")
 })
@@ -94,6 +98,8 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
 
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+
+    const loginout = req.session.email || req.session.kakao_email
 
     const sort = req.query.sort || 'latest';
 
@@ -183,7 +189,8 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
             aside: data.aside,
             mainUrl: data.mainUrl,    
             resvList: rows,    
-            sort
+            sort,
+            loginout
         })
 
     })
@@ -197,17 +204,21 @@ router.get('/pwChange', isLoggedIn, (req, res) => {
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
 
+    const loginout = req.session.email || req.session.kakao_email
+
     console.log(sessionuserid)
+    console.log(loginout)
     console.log(email)
 
-    res.render("../views/mypage/mypage.html", data)
+    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout })
 })
 
-router.get('/memberOut', (req, res) => {
+router.get('/memberOut', isLoggedIn, (req, res) => {
 
     data.mainUrl = 'memberOut'
+    const loginout = req.session.email || req.session.kakao_email
 
-    res.render("../views/mypage/mypage.html", data)
+    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout })
 })
 
 // ------------------------------------------------------------------------------------------
@@ -219,6 +230,7 @@ router.post("/checkpw", isLoggedIn, (req, res) => {
 
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+    
 
     console.log(sessionuserid)
     console.log(email)
@@ -311,6 +323,8 @@ router.get('/resvDetail', (req, res) => {
      const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
 
+    const loginout = req.session.email || req.session.kakao_email
+
     console.log(sessionuserid)
     console.log(email)
 
@@ -370,7 +384,7 @@ router.get('/resvDetail', (req, res) => {
             }
         }
         console.log(cancelresv)
-            res.render("../views/ticketinfo.html", { io : cancelresv[0] })
+            res.render("../views/ticketinfo.html", { io : cancelresv[0], loginout })
 
         }
 })
@@ -380,6 +394,8 @@ router.get('/resvCancel', async (req, res) => {
 
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+
+    const loginout = req.session.email || req.session.kakao_email
 
     console.log(sessionuserid)
     console.log(email)
@@ -447,7 +463,7 @@ router.get('/resvCancel', async (req, res) => {
         }
 
         console.log(cancelresv)
-            res.render("../views/ticketcancel.html", { io : cancelresv[0] })
+            res.render("../views/ticketcancel.html", { io : cancelresv[0], loginout })
 
         }
     })
