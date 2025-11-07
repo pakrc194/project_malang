@@ -72,7 +72,7 @@ app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error('세션 삭제 에러 :', err.message);
-      return res.status(500).send('로그아웃 실퍂');
+      return res.status(500).send('로그아웃 실패');
     }
 
     // 쿠키 제거
@@ -93,45 +93,63 @@ const wss = new websocket.Server({server})
 let arr = []
 let date = ""
 let time = 0
+let venue_id = 0
+let perf_id = 0
 wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
+    wss.clients.forEach((client) => {
+        // client.send('test')
+        // client.send(JSON.stringify({ type: 'sold', queryData }));
+            // if (client.readyState == websocket.OPEN){
+            // }
+            
+    });
+
+
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
         // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
         if (arr[0] == "select_date"){
+            perf_id = arr[1]
             date = arr[2]
             time = arr[3]
+            venue_id = arr[4]
             // 선택한 날짜와 회차를 클라이언트로부터 받음
+            // let dd = base_date_format(date)
+        //     console.log(date)
+        //     console.log('dd: ', dd)
             let dd = base_date_format(date)
         //    console.log('dd: ', dd)
            
-            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.id 
+        //     conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
                 
-                and perf_schedule.perf_id = ${arr[1]}
-                and perf_schedule.schedule_round = ${time}
-                and perf_schedule.schedule_date = "${dd}"
-                `,
-            (err, queryData)=>{
-                console.log(queryData)
-                // wss.clients.forEach(client => {
-                //     for (let i of queryData){
-                //         // console.log(i)
-                //         client.send(JSON.stringify({ type: 'seat_status', i }));
-                //     }
-                //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
-                //     // }
-                // });
-                // console.log(queryData)
+        //         and perf_schedule.perf_id = ${arr[1]}
+        //         and perf_schedule.schedule_round = ${time}
+        //         and perf_schedule.schedule_date = "${dd}"
+        //         and seat_status.seat_status != "Available"
+        //         `,
+        //     (err, queryData)=>{
+        //         console.log('좌석 정보 :', queryData)
                 
-            })
+        //         // wss.clients.forEach(client => {
+        //         //     for (let i of queryData){
+        //         //         // console.log(i)
+        //         //         client.send(JSON.stringify({ type: 'seat_status', i }));
+        //         //     }
+        //         //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
+        //         //     // }
+        //         // });
+        //         // console.log(queryData)
+                
+        //     })
 
         }
         else {
             arr.push(date)
             arr.push(time)
             arr.push(new Date(Date.now() + 5*60*1000))
-    
+            console.log('arr: ', arr)
             let find_seat = `select * from seat_temp 
             where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"
             and choice_date = "${arr[4]}" and choice_time = "${arr[5]}";`
@@ -150,6 +168,7 @@ wss.on('connection', (ws, req)=>{
                 let selDate = arr[4]
                 let selRound = arr[5]
                 conn.query(sql, (err, res, field)=>{
+                    console.log(res)
                     if (res.length == 0) {
                         let iSeatTempSQL = `insert into seat_temp (grade, area, s_row, s_col, choice_date, choice_time, expires) values (?, ?, ?, ?, ?, ?, ?)`
                         st_in(iSeatTempSQL, arr)
@@ -171,8 +190,10 @@ wss.on('connection', (ws, req)=>{
             }
     
             function send_data() {
-
-                conn.query(`select * from seat_temp INNER JOIN seat_price where seat_temp.grade = seat_price.grade`, (err, result)=>{
+                conn.query(`select * from seat_temp INNER JOIN perf_price 
+                        where seat_temp.grade = perf_price.grade_code 
+                        AND perf_price.venue_id=${venue_id}
+                        AND perf_price.perf_id=${perf_id}`, (err, result)=>{
                     // ws.send(JSON.stringify({ type: 'temp', result }))
                     // new BroadcastChannel(JSON.stringify({ type: 'temp', result }))
                     if(err)
