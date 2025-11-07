@@ -9,7 +9,7 @@ const { base_date_format } = require('../func/date')
 router.get('/:id', async (req, res) => {
     console.log('email', req.session?.email, req.params.id)
     const email = req.session?.email || req.session?.kakao_email;
-    let userId = 7
+    let userId = req.session?.user_id
     let isInterest = false
     if(email) {
         let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
@@ -33,7 +33,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/interest/toggle', (req, res) => {
-    let userId = 7
+    let userId = req.session?.user_id
     console.log(req.body.actorId)
     let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
     let iInterestSql = `insert into user_interest_actor (actor_id, user_id) values (?, ?)`
@@ -54,7 +54,7 @@ router.post('/interest/toggle', (req, res) => {
                     }
                 })
             } else {
-                conn.query(dInterestSql, [req.body.actorId, 7], (deleteErr, deleteQuery)=> {
+                conn.query(dInterestSql, [req.body.actorId, userId], (deleteErr, deleteQuery)=> {
                     if(deleteErr) {
                         console.log(deleteErr.message)
                         res.json({msg : 'error'})

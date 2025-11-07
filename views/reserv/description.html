@@ -21,8 +21,8 @@
         window.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
-                    console.log(`/actor/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
-                    window.open(`/actor/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
+                    console.log(`/cast/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
+                    window.open(`/cast/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
                 })
             })
         })

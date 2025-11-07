@@ -20,14 +20,14 @@ router.get('/', (req, res) => {
     // 1. 메인배너(현재 상영)
     const mainbenner = `
     SELECT * FROM performance_info
-    WHERE start_date <= NOW() AND end_date >= NOW()
+    WHERE start_date <= NOW() AND end_date >= NOW() and is_hidden = 0
     LIMIT 10
   `;
 
     // 2. 오픈 예정
     const comingbenner = `
     SELECT * FROM performance_info
-    WHERE start_date > NOW()
+    WHERE start_date > NOW() and is_hidden = 0
     ORDER BY start_date ASC
     LIMIT 5
   `;
