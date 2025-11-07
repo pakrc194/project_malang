@@ -138,7 +138,9 @@
       <div class="banner_list">
         {% for visual in main_bennr %}
         <div class="banner_item">
+          <a href="/desc/{{visual.perf_id}}">
           <img src="../img/{{ visual.poster_url }}" alt="{{ visual.name }}">
+          </a>
           <div class="banner_info">
             <div>{{ visual.perf_name }}</div>
             <div>{{ visual.start_date }} ~ {{ visual.end_date }}</div>
@@ -153,7 +155,7 @@
       <div class="poster_list">
         {% for musical in coming_benner %}
         <div class="poster_item">
-          <a href="/desc/1">
+          <a href="/desc/{{musical.perf_id}}">
             <img src="../img/{{ musical.poster_url }}" alt="{{ musical.name }}">
           </a>
           <div class="poster_info">
@@ -176,7 +178,9 @@
       <div class="actor_list">
         {% for actor in actor_benner %}
         <div class="actor_item">
+          <a href="actor/{{actor.actor_id}}">
           <img src="../img/{{ actor.actor_profile_url }}" alt="">
+          </a>
           <div>{{ actor.actor_name }}</div>
         </div>
         {% endfor %}

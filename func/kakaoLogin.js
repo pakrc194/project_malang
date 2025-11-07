@@ -115,7 +115,7 @@ router.get("/redirect", async function (req, res) {
     // 결괏값 0이면 DB 추가 insert into 
     if (results.length === 0) {
       const insertQuery = `
-        INSERT INTO USER_INFO (name, email, score, sign_method)
+        INSERT INTO USER_INFO (user_name, email, score, sign_method)
         VALUES (?, ?, ?, ?)
       `
 

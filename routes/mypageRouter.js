@@ -19,7 +19,7 @@ function isLoggedIn(req, res, next) {
 }
 
 let titleArr = {
-    grade: '내등급',reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
+    grade: '내등급', reserveSelect: '예매내역', pwChange: '비밀번호 변경', memberOut: '회원 탈퇴'
 }
 
 let data = {}
@@ -50,12 +50,13 @@ router.get('/', (req, res) => {
     const sessionuserid = req.session?.user_id
     console.log(sessionuserid)
 
+
     //res.render('../views/mypage.html')
     //res.sendFile(path.join(__dirname, '../views/mypage.html'))
-    if(email == null){
+    if (email == null) {
         res.redirect('/login')
     } else {
-    res.redirect('/mypage/myInfo')     //  리다이렉트 '/info/hello' 로 URL 이동
+        res.redirect('/mypage/myInfo')     //  리다이렉트 '/info/hello' 로 URL 이동
     }
 })
 
@@ -69,20 +70,20 @@ router.get('/myInfo', (req, res) => {
     let tasks = []
 
     let reservCnt = 0
-    conn.query(selectSQL, [email], async (userInfoErr, userInfoQuery)=> {
+    conn.query(selectSQL, [email], async (userInfoErr, userInfoQuery) => {
         console.log(userInfoQuery)
-        if(userInfoQuery.length>0) {
+        if (userInfoQuery.length > 0) {
             let userId = userInfoQuery[0].user_id
             tasks.push(conn.query(reservSQL, [userId]))
 
-            let[reservQuery, couponQuery]= await Promise.all(tasks)
+            let [reservQuery, couponQuery] = await Promise.all(tasks)
             console.log('reserv----', reservQuery)
             console.log(reservQuery[0]['count(*)'])
             reservCnt = reservQuery[0]['count(*)']
             console.log(sessionuserid)
         }
-       
-        res.render("../views/mypage/mypage.html",{mainUrl:'myInfo', myInfo: userInfoQuery[0], reservCnt :reservCnt})
+
+        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt })
     })
     //res.render("../views/list.html")
 })
@@ -93,6 +94,12 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
 
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+
+    const sort = req.query.sort || 'latest';
+
+    let orderSql = 'reservation_info.resv_date DESC'
+    if (sort === 'name') orderSql = 'performance_info.perf_name ASC'
+
     console.log(email)
 
     const sql = ` 
@@ -105,26 +112,25 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
      reservation_info.resv_status,
      reservation_info.final_amount,
      reservation_info.resv_date,
-     seat_layout.seat_number,
-     seat_layout.seat_row,
-     seat_layout.area,
      perf_schedule.schedule_date, 
      perf_schedule.schedule_time,
      venue_info.venue_name,
      performance_info.poster_url,
-     performance_info.perf_name
-    
-     from reservation_info 
+     performance_info.perf_name,
+     reservation_info.seat_id_arr,
+     reservation_info.resv_count
+
+     from reservation_info
+
      join user_info on user_info.user_id = reservation_info.user_id 
-     join seat_layout on seat_layout.seat_id = reservation_info.seat_id
      join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
      join venue_info on venue_info.venue_id = perf_schedule.venue_id
      join performance_info on performance_info.perf_id = perf_schedule.perf_id
-
      where user_info.email = ?
+     ORDER BY ${orderSql}
      `
 
-    conn.query(sql, [email], (err, rows) => {
+    conn.query(sql, [email], async (err, rows) => {
         if (err) {
             console.error('예매 내역 조회 에러:', err);
             return res.status(500).send('서버 에러');
@@ -132,13 +138,6 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
         console.log(sessionuserid)
 
         const today = new Date();
-
-        let seatArr = rows[0].seat_id_arr.split(',')
-        const seatArrsql = `select seat_number from seat_layout where seat_id_arr`
-        conn.query(seatArrsql, [seatArr], (err, seatRows)=>{
-            
-        })
-        
 
         for (const row of rows) {
             row.resv_date = base_date_format(row.resv_date);
@@ -149,20 +148,43 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
             const diff = Math.ceil((perfDate - today) / (1000 * 60 * 60 * 24));
 
             if (diff > 0) {
-                row.d_day = `D-${diff}`;
+                row.d_day = `D-${diff}`
+                row.cancelable = true
             } else if (diff === 0) {
-                row.d_day = 'D-DAY';
+                row.d_day = 'D-DAY'
+                row.cancelable = false
             } else {
-                row.d_day = '공연 종료';
+                row.d_day = '공연 종료'
+                row.cancelable = false
+            }
+
+            const seatArr = row.seat_id_arr ? row.seat_id_arr.split(',') : [];
+
+            if (seatArr.length > 0) {
+                const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
+                const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+
+
+                const seatNumbers = []
+                for (let i = 0; i < seatRows.length; i++) {
+                    seatNumbers.push(seatRows[i].seat_number)
+                }
+
+                row.seats = seatRows;
+            } else {
+                row.seats = []
             }
         }
 
-        console.log(rows)
+       
+
         res.render('../views/mypage/mypage.html', {
             title: data.title,
             aside: data.aside,
-            mainUrl: data.mainUrl, resvList: rows
-        });
+            mainUrl: data.mainUrl,    
+            resvList: rows,    
+            sort
+        })
 
     })
 
@@ -176,6 +198,7 @@ router.get('/pwChange', isLoggedIn, (req, res) => {
     const sessionuserid = req.session?.user_id
 
     console.log(sessionuserid)
+    console.log(email)
 
     res.render("../views/mypage/mypage.html", data)
 })
@@ -193,13 +216,24 @@ router.get('/memberOut', (req, res) => {
 
 router.post("/checkpw", isLoggedIn, (req, res) => {
     const { oldpw } = req.body
+
+    const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+
+    console.log(sessionuserid)
+    console.log(email)
+
+    if (req.session?.kakao_email) {
+        return res.json({ exists: false, message: "카카오 로그인 사용자는 비밀번호 변경이 불가합니다." });
+    }
+
     const sql = "SELECT * FROM user_info WHERE password = ?"
     conn.query(sql, [oldpw], (err, results) => {
         if (err) {
             console.error('이메일 확인 오류:', err.message)
             return res.status(500).json({ exists: false })
         }
-        
+
         res.json({ exists: results.length > 0 });
     })
 });
@@ -209,6 +243,10 @@ router.post("/changepw", isLoggedIn, (req, res) => {
     const { newpw1 } = req.body;
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
+
+    if (req.session?.kakao_email) {
+        return res.json({ success: false, message: "카카오 로그인 사용자는 비밀번호 변경이 불가합니다." });
+    }
 
     console.log(newpw1)
     console.log(email)
@@ -269,11 +307,162 @@ router.post('/pwout', isLoggedIn, (req, res) => {
 })
 
 router.get('/resvDetail', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/ticketinfo.html'))
+
+     const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+
+    console.log(sessionuserid)
+    console.log(email)
+
+    const sql = ` 
+     select
+     
+     user_info.user_name,
+     user_info.email,
+     user_info.user_id,
+     payment_info.payment_id,
+     reservation_info.user_id,
+     reservation_info.resv_number,
+     reservation_info.resv_count,
+     reservation_info.total_amount,
+     reservation_info.discount_rate,
+     reservation_info.final_amount,
+     payment_info.payment_method,
+     reservation_info.resv_id,
+     reservation_info.seat_id_arr
+     
+     from reservation_info
+
+     join user_info on user_info.user_id = reservation_info.user_id
+     join payment_info on payment_info.payment_id = reservation_info.payment_id
+
+     where user_info.email = ? AND reservation_info.resv_id = ?
+     `
+
+    const resv_id = req.query.resv_id
+
+    conn.query(sql, [email, resv_id], async (err, cancelresv) => {
+        if (err) {
+            console.error('예매 내역 조회 에러:', err);
+            
+            return res.status(500).send('서버 에러');
+            
+        } else {
+            console.log(cancelresv[0])
+
+            for (const cclresv of cancelresv) {
+            
+            const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
+
+            if (seatArr.length > 0) {
+                const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
+                const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+
+
+                const seatNumbers = []
+                for (let i = 0; i < seatRows.length; i++) {
+                    seatNumbers.push(seatRows[i].seat_number)
+                }
+
+                cclresv.seats = seatRows;
+            } else {
+                cclresv.seats = []
+            }
+        }
+        console.log(cancelresv)
+            res.render("../views/ticketinfo.html", { io : cancelresv[0] })
+
+        }
+})
 });
 
-router.get('/resvCancel', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/ticketcancel.html'))
+router.get('/resvCancel', async (req, res) => {
+
+    const email = req.session?.email || req.session?.kakao_email;
+    const sessionuserid = req.session?.user_id
+
+    console.log(sessionuserid)
+    console.log(email)
+
+    const sql = ` 
+     select
+     
+     user_info.user_name,
+     user_info.email,
+     user_info.user_id,
+     payment_info.payment_id,
+     reservation_info.user_id,
+     reservation_info.resv_number,
+     reservation_info.resv_count,
+     reservation_info.total_amount,
+     reservation_info.discount_rate,
+     reservation_info.final_amount,
+     payment_info.payment_method,
+     reservation_info.resv_id,
+     reservation_info.seat_id_arr,
+     payment_info.payment_date
+     
+     from reservation_info
+
+     join user_info on user_info.user_id = reservation_info.user_id
+     join payment_info on payment_info.payment_id = reservation_info.payment_id
+
+     where user_info.email = ? AND reservation_info.resv_id = ?
+     `
+
+    const resv_id = req.query.resv_id
+
+    conn.query(sql, [email, resv_id], async (err, cancelresv) => {
+        if (err) {
+            console.error('예매 내역 조회 에러:', err);
+            
+            return res.status(500).send('서버 에러');
+            
+        } else {
+            console.log(cancelresv[0])
+
+            const today = new Date();
+
+            for (const cclresv of cancelresv) {
+
+                cclresv.payment_date = base_date_format(cclresv.payment_date)
+                
+                
+            const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
+
+            if (seatArr.length > 0) {
+                const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
+                const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+
+
+                const seatNumbers = []
+                for (let i = 0; i < seatRows.length; i++) {
+                    seatNumbers.push(seatRows[i].seat_number)
+                }
+
+                cclresv.seats = seatRows;
+            } else {
+                cclresv.seats = []
+            }
+        }
+
+        console.log(cancelresv)
+            res.render("../views/ticketcancel.html", { io : cancelresv[0] })
+
+        }
+    })
+
+
+
+    
+    //case1  input hidden value={{reserv_id}}
+    /**
+     * 취소하기 -> 
+     * ticket.html 결제취소(a //ticket/cancel?res=1). post (reserv_id, payment_id) 
+     * 
+     * get post /ticket/cancel
+     * render = mypage/reservation
+     */
 });
 
 module.exports = router

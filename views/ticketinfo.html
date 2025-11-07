@@ -1,1 +1,81 @@
-나는 티켓 정보 페이지야.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예매취소</title>
+</head>
+<style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        header {
+            width: 100%;
+            height: 100px;
+            background-color: #ff0;
+            border: 1px solid #000;
+        }
+
+        footer {
+            width: 100%;
+            height: 100px;
+            background-color: #ff0;
+            border: 1px solid #000;
+        }
+
+        wrapper {
+            width: 1200px;
+            background-color: #fa0;
+            border: 1px solid #000;
+            margin: auto;
+            display: block;
+        }
+
+        section {
+            border: 1px solid #000;
+            width: 100%px;
+            margin: auto;
+            display: block;
+            height: 300px;
+        }
+    </style>
+    <script>
+        
+    </script>
+<body>
+    <header>헤더</header>
+    <wrapper>
+        <section class="ticketprice">
+            
+            예매자 : {{io.user_name}}
+            <hr>
+            예매 번호 : {{io.resv_number}}
+            <br>
+            예매 좌석 : 
+            {% for seats in io.seats %}
+            {{ seats.area }}{{ seats.seat_row }}{{seats.seat_number}}번({{ seats.grade_code }})
+            {% endfor %}
+            <br>
+            예매 수량 : {{io.resv_count}}
+            <br>
+            결제 수단 : {{io.payment_method}}
+            <br>
+            할인 전 가격 : {{io.total_amount}}
+            <br>
+            할인율 : {{io.discount_rate}}
+            <br>
+            할인 적용 가격 : {{io.final_amount}}
+            
+        </section>
+        <section>
+    
+        <section>
+            이전으로
+            <input type="button" value="예매내역" id="reserveSelectgo">
+        </section>
+    </wrapper>
+    <footer>푸터</footer>
+</body>
+</html>

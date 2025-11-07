@@ -32,9 +32,28 @@ router.get('/', (req, res) => {
 
     // 3. 배우 추천
     const actorbenner = `
-    SELECT * FROM actor_info
-    ORDER BY RAND()
-    LIMIT 5
+    SELECT
+    T1.actor_id,
+    AI.actor_name,
+    AI.actor_profile_url,      
+    T1.interest_count
+FROM
+    (
+        SELECT
+            actor_id,
+            COUNT(*) AS interest_count
+        FROM
+            user_interest_actor
+        GROUP BY
+            actor_id
+        ORDER BY
+            interest_count DESC
+        LIMIT 5
+    ) AS T1
+INNER JOIN
+    ACTOR_INFO AS AI ON T1.actor_id = AI.actor_id 
+ORDER BY
+    RAND();
   `;
 
     conn.query(mainbenner, (err1, main_bennr) => {
