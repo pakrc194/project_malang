@@ -85,6 +85,8 @@ router.get('/:id', (req, res)=>{
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
             if (resPerf && resPerf.length > 0){
+                resPerf[0].start_date = base_date_format(resPerf[0].start_date)
+                resPerf[0].end_date = base_date_format(resPerf[0].end_date)
                 res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
             }
 

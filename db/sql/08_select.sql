@@ -148,3 +148,35 @@ SELECT schedule_id FROM perf_schedule
 
 
 select * from seat_status where schedule_id = 57 and seat_id = 294
+
+
+
+select * from schedule_cast where schedule_cast.cast_id = 1
+
+select schedule_cast.cast_id, schedule_cast.actor_id,
+perf_schedule.schedule_date, perf_schedule.schedule_time, perf_schedule.schedule_round
+ from schedule_cast 
+    join perf_schedule on schedule_cast.schedule_id = perf_schedule.schedule_id
+    where schedule_cast.cast_id = 1
+
+
+select schedule_cast.*, CI.cast_name, AI.actor_name,
+PS.schedule_date, PS.schedule_time, PS.schedule_round 
+from schedule_cast 
+join perf_schedule as PS on schedule_cast.schedule_id = PS.schedule_id
+and PS.perf_id = 1
+JOIN
+    CAST_INFO AS CI ON schedule_cast.cast_id = CI.cast_id
+JOIN
+    ACTOR_INFO AS AI ON schedule_cast.actor_id = AI.actor_id
+ORDER BY
+    schedule_cast.schedule_id, CI.cast_id;
+
+
+select actor_info.* from perf_cast 
+join actor_info on actor_info.actor_id = perf_cast.actor_id
+where perf_cast.cast_id = 1 and perf_cast.perf_id = 1
+
+
+select * from performance_info join venue_info 
+where performance_info.perf_id = venue_info.venue_id 

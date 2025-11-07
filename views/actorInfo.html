@@ -49,8 +49,11 @@
     <img id="actor_profile" src="/img/{{actorInfo.actor_profile_url}}" alt="{{actorInfo.actor_profile_url}}"><br/>
     {{actorInfo.actor_birth_year}}<br/>
     {{actorInfo.actor_gender}}<hr/>
+    {{actorInfo.actor_history}}<hr>
     <input type="button" id="toggleInterest" value="{% if isInterest == true %}-{% else %}+{% endif %}"><hr>
+    <h2>상영작</h2>
     {% for perf in perfList %}
+    
     {{perf.perf_name}}<br/>
     <a href="/desc/{{perf.perf_id}}">
         <img id="perf_poster" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>

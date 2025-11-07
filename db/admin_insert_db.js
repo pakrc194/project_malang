@@ -1,7 +1,7 @@
 let iPerfSql = `insert into performance_info (perf_name, poster_url, synopsis_url, start_date, end_date, genre, running_time, venue_id)
                     values(?, ?, ?, ?, ?, ?, ?, ?)`
-let iActorSql = `insert into actor_info (actor_name, actor_profile_url, actor_birth_year, actor_gender)
-                values(?, ?, ?, ?)`
+let iActorSql = `insert into actor_info (actor_name, actor_profile_url, actor_birth_year, actor_gender, actor_history)
+                values(?, ?, ?, ?, ?)`
 let iCastSql = `insert into cast_info (perf_id, cast_name, cast_story)
                     values(?, ?, ?)`
 let iPerfCastSql = `insert into perf_cast (perf_id, cast_id, actor_id)

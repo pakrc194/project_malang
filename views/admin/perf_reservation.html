@@ -6,8 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>예매관리</h1>
-    {% include './list_nav.html' %}
+    {% include './admin_header.html' %}
+    <h1>예매 목록</h1>
     {% for reserv in reservList %}
         <a href="/admin/reserv/detail?resvId={{reserv.resv_id}}&userId={{reserv.user_id}}">{{reserv.resv_number}}</a><br/>
         {{reserv.email}}<br/>

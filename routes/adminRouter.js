@@ -8,6 +8,8 @@ const {base_date_format} = require('../func/date')
 const util = require('util');
 
 router.get('/perf', (req, res)=>{
+
+
     res.redirect('/admin/perf/list')
 })
 router.get('/actor', (req, res)=>{
@@ -18,6 +20,8 @@ conn.query = util.promisify(conn.query);
 
 //공연 데이터가 없어서 공연장으로 임시 대체
 router.get('/perf/list', (req, res)=>{
+    const loginout = req.session.email || req.session.kakao_email
+
     conn.query('select * from performance_info', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
@@ -29,7 +33,7 @@ router.get('/perf/list', (req, res)=>{
                 perf.end_date = base_date_format(perf.end_date)
                 perf.reg_date = base_date_format(perf.reg_date)
             }
-            res.render('../views/admin/perf_list.html', {res : resQuery})
+            res.render('../views/admin/perf_list.html', {loginout, res : resQuery})
         }
     })
 })
@@ -385,11 +389,11 @@ router.get('/actor/upload', (req, res)=>{
 })
 
 router.post('/actor/upload', multer.single('fprofile'), (req, res)=>{
-    console.log('actor upload req : ', req.body.name, req.body.fbirth, req.body.fgender)
+    console.log('actor upload req : ', req.body.fname, req.body.fbirth, req.body.fgender)
     console.log('actor upload req fname: ', req.file.filename)
-    
-    let {fname, fbirth, fgender} = req.body
-    let data =[fname, req.file.filename, fbirth, fgender]
+    console.log('actor upload history', req.body.fhistory)
+    let {fname, fbirth, fgender, fhistory} = req.body
+    let data =[fname, req.file.filename, fbirth, fgender, fhistory]
 
     conn.query(iActorSql, data, (err, ret)=>{
         if(err) {
@@ -413,13 +417,7 @@ router.get('/user/list', (req, res)=> {
         res.render('../views/admin/user_list.html', {userlist : ret})
     })
 })
-router.get('/user/detail/:id', (req, res)=> {
-    let userQuery = 'select * from user_info where user_id = ?'
-    conn.query(userQuery, [req.params.id], (req, ret)=> {
-        console.log(ret[0])
-        res.render('../views/admin/user_detail.html', {userInfo : ret[0]})
-    })
-})
+
 
 router.get('/reserv', (req, res)=>{
     res.redirect('/admin/reserv/list')

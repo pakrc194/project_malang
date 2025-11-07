@@ -10,9 +10,11 @@
     <form action="/admin/actor/upload" method="POST" enctype="multipart/form-data">
         이름 <input type="text" name="fname"><br/>
         사진 <input type="file" name="fprofile"><br/>
-        나이 <input type="text" name="fbirth"><br/>
+        출생년도 <input type="text" name="fbirth"><br/>
         성별 남<input type="radio" name="fgender" value="m" checked>
             여<input type="radio" name="fgender" value="f"><br/>
+        이력<br/>
+        <textarea name="fhistory" rows="10" cols="50"></textarea>
         <input type="submit" value="업로드">
         <a href="/admin/actor">뒤로</a>
         <hr/>

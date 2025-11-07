@@ -6,10 +6,10 @@
     <title>회원목록</title>
 </head>
 <body>
+    {% include './admin_header.html' %}
     <h1>회원 목록</h1>
-    {% include './list_nav.html' %}
     {% for user in userlist %}
-        <a href="/admin/user/detail/{{user.user_id}}">{{user.email}}</a><br/>
+        {{user.email}}<br/>
         {{user.user_name}}<br/>
         {{user.sign_method}}<br/>
         {{user.account_status}}<br/>

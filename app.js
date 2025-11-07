@@ -43,6 +43,7 @@ const listRouter = require('./routes/listRouter')
 const myGradeRouter = require('./routes/gradeRouter')
 const interestRouter = require('./routes/interestRouter')
 const actorInfoRouter = require('./routes/actorInfoRouter')
+const castInfoRouter = require('./routes/castInfoRouter')
 const { base_date_format } = require('./func/date')
 const { isLoggedIn } = require('./func/ck_login')
 
@@ -60,6 +61,7 @@ app.use('/mypage/grade', myGradeRouter)
 app.use('/mypage/interest', interestRouter)
 app.use('/desc', desRouter)
 app.use('/actor', actorInfoRouter)
+app.use('/cast', castInfoRouter)
 
 app.get('/', (req, res)=>{    
     res.redirect('/main')
