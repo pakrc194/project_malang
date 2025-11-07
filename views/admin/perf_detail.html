@@ -10,14 +10,17 @@
             height: 500px;
             overflow: auto;
         }
+        img {
+            width: 100px;
+        }
     </style>
 </head>
 <body>
     <h1>detail</h1>
     <h2>{% if perfInfo.is_hidden > 0 %}숨김처리{% endif %}</h2>
     {{perfInfo.perf_name}}<br/>
-    {{perfInfo.poster_url}}<br/>
-    {{perfInfo.synopsis_url}}<br/>
+    <img src="/img/{{perfInfo.poster_url}}" alt=""><br/>
+    <img src="/img/{{perfInfo.synopsis_url}}" alt=""><br/>
     {{perfInfo.start_date}}<br/>
     {{perfInfo.end_date}}<br/>
     {{perfInfo.genre}}<br/>
@@ -27,7 +30,7 @@
     {{venueInfo.perf_region}}<hr/>
     {% for cast in perfCast%}
         {{cast.actor_name}}<br/>
-        {{cast.actor_profile_url}}<br/>
+        <img src="/img/{{cast.actor_profile_url}}" alt=""><br/>
         {{cast.cast_name}}<hr/>
     {% endfor %}
     <div class="schedule_list">
@@ -38,7 +41,7 @@
                     <td>{{schedule.schedule_time}}</td>
                     <td>{{schedule.schedule_round}}</td>
                     <td>{{schedule.cast_name}} : {{schedule.actor_name}}</td>
-                    <td>{{schedule.actor_profile_url}}</td>
+                    <td><img src="/img/{{schedule.actor_profile_url}}" alt=""></td>
                 </tr>
             {% endfor %}
         </table>
@@ -50,7 +53,7 @@
     {% if perfInfo.is_hidden == 0 %}
         <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
     {% endif %}
-    {# <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a> #}
-    <a href="/admin/test/{{perfInfo.perf_id}}">테스트</a>
+    <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a>
+    {# <a href="/admin/test/{{perfInfo.perf_id}}">테스트</a> #}
 </body>
 </html>

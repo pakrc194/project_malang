@@ -68,7 +68,7 @@ router.get('/perf/detail/:id', (req, res)=>{
 })
 
 router.get('/perf/upload', (req, res)=>{
-    conn.query('select * from actor_info', (err, resQuery)=>{
+    conn.query('select * from actor_info order by actor_info.actor_name', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
             res.render('../views/admin/perf_upload.html')
@@ -211,7 +211,7 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
                     cast_id, 
                     currentActorId
                 ];
-                console.log('----',iScheduleCastData)
+                // console.log('----',iScheduleCastData)
                 afterTasks.push(conn.query(iScheduleCastSql, iScheduleCastData));
             }
             scheduleCount++; 
@@ -373,7 +373,7 @@ router.post('/perf/hide', (req, res)=> {
 
 
 router.get('/actor/list', (req, res)=>{
-    conn.query('select * from actor_info', (err, resQuery)=>{
+    conn.query('select * from actor_info order by actor_info.actor_name', (err, resQuery)=>{
         if(err) {
             console.log('sql 실패', err.message)
             res.render('../views/admin/actor_list.html')

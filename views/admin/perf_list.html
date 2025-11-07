@@ -8,12 +8,18 @@
         img {
             width: 100px;
         }
+        .perf_list {
+            width: 1000px;
+            height: 500px;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
     {% include './admin_header.html' %}
     <h1>공연 목록</h1>
-     <table border="">
+    <div class="perf_list">
+        <table border="">
             <tr>
                 <td>번호</td>
                 <td>공연이름</td>
@@ -25,20 +31,22 @@
                 <td>예매상태</td>
                 <td>등록일</td>
             </tr>  
-        {%for perf in res%}
-            <tr>
-                <td>{{loop.index}}</td>
-                <td><a href="/admin/perf/detail/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
-                <td><img src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"></td>
-                <td>{{perf.genre}}</td>
-                <td>{{perf.running_time}}</td>
-                <td>{{perf.start_date}}</td>
-                <td>{{perf.end_date}}</td>
-                <td>{{perf.resv_status}}</td>
-                <td>{{perf.reg_date}}</td>
-            </tr>    
-        {%endfor%}
-    </table>
+            {%for perf in res%}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td><a href="/admin/perf/detail/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
+                    <td><img src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"></td>
+                    <td>{{perf.genre}}</td>
+                    <td>{{perf.running_time}}</td>
+                    <td>{{perf.start_date}}</td>
+                    <td>{{perf.end_date}}</td>
+                    <td>{{perf.resv_status}}</td>
+                    <td>{{perf.reg_date}}</td>
+                </tr>    
+            {%endfor%}
+        </table>
+    </div>
+
     <a href="/admin/perf/upload">등록</a>
 </body>
 </html>
