@@ -10,7 +10,7 @@
         }
         .actor_list {
             width: 1000px;
-            height: 1000px;
+            height: 500px;
             overflow: auto;
         }
     </style>
@@ -29,7 +29,7 @@
             </tr>
             {%for actor in res%}
                 <tr>
-                    <td>{{actor.actor_id}}</td>
+                    <td>{{loop.index}}</td>
                     <td>{{actor.actor_name}}</td>
                     <td><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
                     <td>{{actor.actor_birth_year}}</td>
