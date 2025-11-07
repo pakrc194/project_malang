@@ -249,7 +249,35 @@ router.post('/payment', async (req, res)=>{
     res.render('../views/reserv/payment.html', {info: req.body.items})
 })
 
+router.get('/resv/cancle', async (req, res)=>{
+    let resv_id = 4
+    let CancelUpdate = `UPDATE reservation_info SET resv_status="CANCELLED" WHERE resv_id=${resv_id}`
+    let RefUpdate = `UPDATE payment_info
+                    JOIN reservation_info ON payment_info.payment_id = reservation_info.payment_id
+                    SET payment_info.payment_status="REFUNDED"
+                    WHERE payment_info.payment_id = reservation_info.payment_id
+                    AND reservation_info.resv_id=${resv_id}`
+    let ticket_count = `SELECT resv_count FROM reservation_info where resv_id=${resv_id}`
+    // ticket_count만큼 반복문 실행 필요
+    let SeatstatusUpdate = `UPDATE seat_status
+                        JOIN reservation_info ON FIND_IN_SET(seat_status.seat_id, reservation_info.seat_id_arr)
+                        SET seat_status.seat_status="Available", seat_status.user_id=NULL
+                        WHERE seat_status.schedule_id = reservation_info.schedule_id
+                        AND reservation_info.resv_id = ${resv_id}
+                        AND FIND_IN_SET(seat_status.seat_id, reservation_info.seat_id_arr)`
+                            
+    let UserscoreUpdate = `UPDATE user_info
+                            JOIN reservation_info ON user_info.user_id = reservation_info.user_id
+                            SET user_info.score = (user_info.score-reservation_info.final_amount)
+                            WHERE user_info.user_id = reservation_info.user_id
+                            AND reservation_info.resv_id=${resv_id}`
+    conn.query(CancelUpdate)
+    conn.query(RefUpdate)
+    conn.query(SeatstatusUpdate)
+    conn.query(UserscoreUpdate)
 
+    res.render('../views/ticketcancel.html', {resv_id: resv_id})
+})
 
 
 
