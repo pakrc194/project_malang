@@ -177,7 +177,7 @@
             document.querySelector(".reserve").style.display="inline-block"
             tt = num
             document.querySelector(".select_time").value = num
-                c_socket.send(`select_date {{perf.performance_id}} ${yy}-${mm}-${dd} ${tt} {{venue_id}}`)
+                c_socket.send(`select_date {{perf.performance_id}} ${yy}-${mm}-${dd} ${tt} {{perf.venue_id}}`)
 
         }
 
@@ -204,6 +204,7 @@
                 </div>
             </div>
             <div class="calendar">
+                
                 <ul class="weeks">
                     <li>일</li>
                     <li>월</li>

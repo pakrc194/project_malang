@@ -102,6 +102,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
+        console.log('reserve_venue_id', venue_id)
         // conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
         conn.query(`select grade_code, price FROM perf_price where perf_price.venue_id="${venue_id}" AND perf_price.perf_id=${req.params.id}`, (err, resP)=>{
             
@@ -114,7 +115,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
 
             console.log(resP)
             if (resPf && resPf.length > 0){
-                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, venue_id: venue_id})
+                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
             }
         })
     })
@@ -257,8 +258,8 @@ router.post('/payment', async (req, res)=>{
     res.render('../views/reserv/payment.html', {info: req.body.items})
 })
 
-router.get('/resv/cancle', async (req, res)=>{
-    let resv_id = 4
+router.post('/payment/cancel', async (req, res)=>{
+    let resv_id = req.body.resvId
     let CancelUpdate = `UPDATE reservation_info SET resv_status="CANCELLED" WHERE resv_id=${resv_id}`
     let RefUpdate = `UPDATE payment_info
                     JOIN reservation_info ON payment_info.payment_id = reservation_info.payment_id
@@ -283,8 +284,8 @@ router.get('/resv/cancle', async (req, res)=>{
     conn.query(RefUpdate)
     conn.query(SeatstatusUpdate)
     conn.query(UserscoreUpdate)
-
-    res.render('../views/ticketcancel.html', {resv_id: resv_id})
+    
+    res.json({msg: 'success'})
 })
 
 

@@ -79,7 +79,7 @@
             <br>
             결제 금액 : {{i.final_amount}}원
         </div>
-        {% if i.resv_status == 'REFUNDED' %}
+        {% if i.resv_status == 'CANCELLED' %}
         예매 상태 : 환불 완료
         {% elif i.resv_status == 'PAID' %}
         {% if i.cancelable %}

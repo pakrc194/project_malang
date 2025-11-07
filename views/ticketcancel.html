@@ -42,13 +42,38 @@
         }
     </style>
     <script>
+        window.onload = function() {
+            
+
+            let resvId = document.querySelector('#resv_id').value
+            document.querySelector('#paymentcancel').addEventListener('click', (e)=>{
+                fetch(`/desc/payment/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({resvId: resvId})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if(data.msg=='success') {
+                        alert('환불완료')
+                        location.href='/mypage/reserveSelect'    
+                    }
+                        
+                })
+                .catch(err => console.log('에러 :', err.message))
+                
+            })
+        }
         
     </script>
 <body>
     <header>헤더</header>
     <wrapper>
         <section class="ticketprice">
-            
+            <input type="hidden" id="resv_id" value="{{io.resv_id}}">
             예매자 : {{io.user_name}}
             <hr>
             예매 번호 : {{io.resv_number}}

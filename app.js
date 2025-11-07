@@ -190,6 +190,7 @@ wss.on('connection', (ws, req)=>{
             }
     
             function send_data() {
+                console.log('send data', venue_id, perf_id)
                 conn.query(`select * from seat_temp INNER JOIN perf_price 
                         where seat_temp.grade = perf_price.grade_code 
                         AND perf_price.venue_id=${venue_id}
