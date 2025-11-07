@@ -22,7 +22,7 @@ router.get('/:id', (req, res)=>{
     else {
         email = req.session.kakao_email
     }
-
+    const loginout = req.session.email || req.session.kakao_email
         console.log('상세페이지 세션 이메일 확인: ', email)
 
     let venue_id = 0
@@ -87,7 +87,7 @@ router.get('/:id', (req, res)=>{
             if (resPerf && resPerf.length > 0){
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
-                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
+                res.render("reserv/description.html", {perf: resPerf[0], musical: resP, loginout})
             }
 
         })

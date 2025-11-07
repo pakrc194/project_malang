@@ -31,7 +31,8 @@ router.get('/:genre', (req, res) => {
     }
 
     if(genre == 'all') {
-        let listSql = `select * from performance_info join venue_info where performance_info.perf_id = venue_info.venue_id ${orderQuery};`
+        let listSql = `select * from performance_info join venue_info 
+        where performance_info.venue_id = venue_info.venue_id and performance_info.is_hidden = 0 ${orderQuery};`
         conn.query(listSql, (err, listQuery)=>{
             console.log(listQuery)
             for(let perf of listQuery) {
@@ -43,7 +44,8 @@ router.get('/:genre', (req, res) => {
     } else {
         let genreList = {origin:"오리지널", creative:'창작', license:'라이선스', nonVerbal:'넌버벌퍼포먼스'}
         let listSql = `select * from performance_info join venue_info 
-        where performance_info.perf_id = venue_info.venue_id
+        where performance_info.venue_id = venue_info.venue_id
+        and performance_info.is_hidden = 0 
         and performance_info.genre = '${genreList[genre]}'
         ${orderQuery};`
         conn.query(listSql, (err, listQuery)=>{

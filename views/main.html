@@ -125,8 +125,6 @@
 
 <body>
   {% include './header.html' %}
-
-  <a href="desc/resv/cancle">1번 취소</a>
   <wrapper>
     <section class="main_banner">
       <h2>메인배너</h2>
@@ -144,7 +142,9 @@
         {% endfor %}
       </div>
     </section>
-
+<div class="allview">
+        <a href="/list">전체보기</a>
+      </div>
     <section class="main_poster">
       <h2>공연 오픈 예정</h2>
       <div class="poster_list">
@@ -162,9 +162,7 @@
         </div>
         {% endfor %}
       </div>
-      <div class="allview">
-        <a href="/list">전체보기</a>
-      </div>
+      
     </section>
 
     <!-- 배우 추천 -->

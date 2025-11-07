@@ -30,6 +30,7 @@
                 <td>종료날짜</td>
                 <td>예매상태</td>
                 <td>등록일</td>
+                <td>숨김 여부</td>
             </tr>  
             {%for perf in res%}
                 <tr>
@@ -42,6 +43,7 @@
                     <td>{{perf.end_date}}</td>
                     <td>{{perf.resv_status}}</td>
                     <td>{{perf.reg_date}}</td>
+                    <td>{{perf.is_hidden}}</td>
                 </tr>    
             {%endfor%}
         </table>
