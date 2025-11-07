@@ -118,6 +118,7 @@
       height: 100px;
       text-align: center;
       line-height: 100px;
+      background-color: #fa0;
     }
   </style>
 </head>
@@ -131,9 +132,11 @@
       <div class="banner_list">
         {% for visual in main_bennr %}
         <div class="banner_item">
+          <a href="/desc/{{visual.perf_id}}">
           <img src="../img/{{ visual.poster_url }}" alt="{{ visual.name }}">
+          </a>
           <div class="banner_info">
-            <div>{{ visual.name }}</div>
+            <div>{{ visual.perf_name }}</div>
             <div>{{ visual.start_date }} ~ {{ visual.end_date }}</div>
           </div>
         </div>
@@ -150,7 +153,7 @@
             <img src="../img/{{ musical.poster_url }}" alt="{{ musical.name }}">
           </a>
           <div class="poster_info">
-            <div>{{ musical.name }}</div>
+            <div>{{ musical.perf_name }}</div>
             <div>{{ musical.start_date }} ~ {{ musical.end_date }}</div>
             <div>러닝타임: {{ musical.running_time }}분</div>
             <div>예매 가능일: {{ musical.start_date }}</div>
@@ -169,7 +172,9 @@
       <div class="actor_list">
         {% for actor in actor_benner %}
         <div class="actor_item">
+          <a href="actor/{{actor.actor_id}}">
           <img src="../img/{{ actor.actor_profile_url }}" alt="">
+          </a>
           <div>{{ actor.actor_name }}</div>
         </div>
         {% endfor %}

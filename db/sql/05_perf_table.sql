@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761830851051@@127.0.0.1@3306@malang_db
 -- 8. VENUE_INFO (공연장 정보) - 이름 변경
 CREATE TABLE VENUE_INFO (
     venue_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '공연장 ID',
@@ -58,6 +58,16 @@ CREATE TABLE SEAT_LAYOUT (
     FOREIGN KEY (venue_id) REFERENCES VENUE_INFO(venue_id),
     UNIQUE KEY (venue_id, area, seat_row, seat_number)
 );
+
+CREATE TABLE SEAT_TEMP (
+    grade VARCHAR(10) COMMENT '좌석등급',
+    area VARCHAR(10) COMMENT '좌석구역',
+    s_row INT COMMENT '좌석열',
+    s_col INT COMMENT '좌석번호',
+    choice_date DATE COMMENT '공연 날짜',
+    choice_time INT COMMENT '공연 회차',
+    expires DATETIME COMMENT '좌석 선택 만료 시간'
+)
 
 -- 10. PERF_PRICE (공연별/공연장별 좌석 가격) - FK 참조 업데이트
 CREATE TABLE PERF_PRICE (

@@ -50,7 +50,7 @@ router.post('/submit', (req, res) => {
     // --------------------------------------------------------------------------------------------------------------------------------------------
     // 3번 사항
 
-    const sql = 'INSERT INTO USER_INFO (email, name, password, question, answer, score, sign_method) VALUES (?, ?, ?, ?, ?, 0, "local")';
+    const sql = 'INSERT INTO USER_INFO (email, user_name, password, question, answer, score, sign_method) VALUES (?, ?, ?, ?, ?, 0, "local")';
     conn.query(sql, [email, name, pw1, question, answer], (err, result) => {
         if (err) {
             console.error('회원가입 실패:', err.message);
