@@ -98,7 +98,6 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     conn.query('delete from seat_temp')
     // console.log(req.body.items[0])
     // console.log(req.params.id)
-    console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
     conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
@@ -124,7 +123,6 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
 
 
 router.post('/discount/:id', (req, res)=>{
-    console.log('할인 세션 이메일 확인: ', req.session.kakao_email)
     let email = ''
     if (req.session.email) {
         email = req.session.email
@@ -132,6 +130,7 @@ router.post('/discount/:id', (req, res)=>{
     else {
         email = req.session.kakao_email
     }
+    console.log('할인 세션 이메일 확인: ', email)
     console.log('items : ',req.body.items[0])
 
     let temp_data = [] // grade, area, s_row, s_col, price
@@ -153,7 +152,6 @@ router.post('/discount/:id', (req, res)=>{
     let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
     where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
     conn.query('select choice_date, choice_time from seat_temp', (err, resS)=>{
-        if (err) console.log(err.message)
         let arr1 = {
             choice_time: resS[0].choice_time, 
             year: resS[0].choice_date.getFullYear(), 
@@ -210,7 +208,7 @@ router.post('/payment', async (req, res)=>{
     conn.query(insertQ, insertI)
 
     // // 사용자 정보 업데이트
-    let userUpQ = `UPDATE user_info SET score = score + ${req.body.items[5]} WHERE user_id = ${req.body.items[1].split(' ')[0]}`
+    let userUpQ = `UPDATE user_info SET score = (score + ${req.body.items[5]}) WHERE user_id = ${req.body.items[1].split(' ')[0]}`
     conn.query(userUpQ)
     // // 좌석 상태 업데이트
     let date = `${req.body.items[3].split(' ')[0]}-${req.body.items[3].split(' ')[1]}-${req.body.items[3].split(' ')[2]}`

@@ -134,7 +134,7 @@
     </style>
 
     <script>
-        const socket1 = new WebSocket('ws://localhost:80')
+        const socket1 = new WebSocket({host: '0.0.0.0', port: 80})
 
         // 3.2 클라이언트가 수신
         socket1.onmessage = (e)=>{
