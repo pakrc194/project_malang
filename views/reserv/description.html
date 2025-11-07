@@ -21,8 +21,8 @@
         window.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
-                    console.log(`/desc/actor/`+act_box.classList[1])
-                    window.open(`/actor/`+act_box.classList[1])
+                    console.log(`/actor/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
+                    window.open(`/actor/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
                 })
             })
         })
@@ -55,7 +55,7 @@
                         {{perf.running_time}}분<br/>
                         {{perf.genre}}뮤지컬<br/>
                         {% for info in musical %}
-                        {{info.grade}}석 {{info.price}}원<br/>
+                        {{info.grade_code}}석 {{info.price}}원<br/>
                         {% endfor %}
 
                         <!-- R석 160,000원<br/>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="actor_box">
                     {% for i in perf.cast_list %}
-                        <div class="ind_actor {{i.actor_id}}">
+                        <div class="ind_actor {{i.actor_id}} {{i.cast_id}}">
                             <img src="../img/{{i.actor_profile_url}}" alt="">
                             <div class="actor_name">{{i.actor_name}}</div>
                             <div calss="cast_name">{{i.cast_name}}</div>

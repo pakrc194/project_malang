@@ -193,8 +193,10 @@
         let seat_cnt = 0
         // 예매 개수 4개로 제한
         function ck_cnt(obj) {
+            // let venue_id = "{{venue_id}}"
+            // let send_value = [obj.value, venue_id].join(' ')
             socket1.send(obj.value)
-
+            // console.log('send_value: ', send_value)
             if (obj.checked == true){
                 seat_cnt++
             }

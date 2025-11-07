@@ -47,6 +47,7 @@ router.get('/:id', (req, res)=>{
             'actor_id', a.actor_id,
             'actor_name', a.actor_name,
             'actor_profile_url', a.actor_profile_url,
+            'cast_id', c.cast_id,
             'cast_name', c.cast_name,
             'cast_story', c.cast_story
         )
@@ -79,12 +80,12 @@ router.get('/:id', (req, res)=>{
             venue_id = resPerf[0].venue_id
         }
         // 공연장에 해당하는 좌석 가격 가져오기
-        conn.query(`select * from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+        conn.query(`select * from perf_price where venue_id=${venue_id} AND perf_id=${req.params.id}`, (err, resP)=>{
             if (!resPerf || resPerf.length === 0) {
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
             if (resPerf && resPerf.length > 0){
-                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
+                res.render("reserv/description.html", {perf: resPerf[0], musical: resP, venue_id: venue_id})
             }
 
         })
@@ -96,41 +97,22 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // console.log(req.body.items[0])
     // console.log(req.params.id)
     console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
-    conn.query(`select * from performance_info join venue_info 
+    conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
-        conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+        // conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
+        conn.query(`select grade_code, price FROM perf_price where perf_price.venue_id="${venue_id}" AND perf_price.perf_id=${req.params.id}`, (err, resP)=>{
             
             let arr={
                 date: req.body.items[0],  // 선택 날짜
                 time: req.body.items[1],  // 선택 회차
                 flag: req.body.items[2], // 표시해야할 날짜
-                name: resPf[0].venue_name // 공연장 이름
+                name: resPf[0].venue_name, // 공연장 이름
             }
 
-            // let dd = base_date_format(arr.date)
-           
-            // conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
-                
-            //     and perf_schedule.perf_id = ${req.params.id}
-            //     and perf_schedule.round = ${arr.time}
-            //     and perf_schedule.schedule_date = "${dd}"
-            //     `,
-            // (err, queryData)=>{
-            //     console.log(queryData.length)
-            //     wss.clients.forEach(client => {
-            //         for (let i of queryData){
-            //             console.log(i)
-            //             client.send(JSON.stringify({ type: 'seat_status', i }));
-            //         }
-            //         // if (client !== ws && client.readyState === WebSocket.OPEN) {
-            //         // }
-            //     });
-            //     console.log(queryData)
-                
-            // })
+            console.log(resP)
             if (resPf && resPf.length > 0){
-                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
+                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, venue_id: venue_id})
             }
         })
     })

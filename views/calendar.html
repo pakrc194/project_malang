@@ -177,7 +177,7 @@
             document.querySelector(".reserve").style.display="inline-block"
             tt = num
             document.querySelector(".select_time").value = num
-                c_socket.send(`select_date {{perf.performance_id}} ${yy}-${mm}-${dd} ${tt}`)
+                c_socket.send(`select_date {{perf.performance_id}} ${yy}-${mm}-${dd} ${tt} {{venue_id}}`)
 
         }
 
