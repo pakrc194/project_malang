@@ -16,13 +16,14 @@
             appearance: none;
             box-sizing: border-box;
             background-clip: content-box;
-            margin: 0;
+            margin: -3px;
             padding: 0;
             width: 15px;
             height: 15px;
             cursor: pointer;
             background-color: yellowgreen;
             border: 3px solid yellowgreen;
+            /* margin-left: 8px; */
         }
         .first > .section > input:checked {
             border-color: #f00;
@@ -38,6 +39,7 @@
             cursor: pointer;
             background-color: violet;
             border: 3px solid violet;
+            margin-left: 8px;
         }
         .second > .section > input:checked {
             border-color: #f00;
@@ -53,6 +55,7 @@
             cursor: pointer;
             background-color: skyblue;
             border: 3px solid skyblue;
+            margin-left: 8px;
         }
         .third > .section > input:checked {
             border-color: #f00;
@@ -130,7 +133,7 @@
             border-color: #555;
             background-color: #555;
             cursor: default;
-        }    
+        }
     </style>
 
     <script>
@@ -138,55 +141,64 @@
 
         // 3.2 클라이언트가 수신
         socket1.onmessage = (e)=>{
-            // console.log('seatB1에서 수신: ', (e.data))
+            console.log('seatB1에서 수신: ', (e.data))
             console.log('B1에서 데이터 수신')
-
         }
         
 
         window.addEventListener('DOMContentLoaded', function(){
-        
             let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
             let row = ["first", "second", "third"]
             let grade = ["R", "S", "A"]
+            let seat_id = 1
             
-            for(let aa = 0; aa < 3; aa++) {
             
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 1; j < 11; j++) {
-                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" class="indiseat" onclick="ck_cnt(this)">`
-                        // document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).setAttribute("value", `${grade[aa]} ${area[aa*3]} ${i+1} ${j}`)
-                        // console.log(`${aa} ${i} ${j} : `, document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).value)
-                    }
-                }
-                for (let i = 1; i < 3*10+1; i++) {
-                    document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
-                }
+            // for(let aa = 0; aa < 3; aa++) {
+            
+            //     for (let i = 0; i < 3; i++) {
+            //         for (let j = 1; j < 11; j++) {
+            //             document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" class="indiseat ${seat_id++}" onclick="ck_cnt(this)">`
+            //             // document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).setAttribute("value", `${grade[aa]} ${area[aa*3]} ${i+1} ${j}`)
+            //             // console.log(`${aa} ${i} ${j} : `, document.querySelector(`.${row[aa]} > .section > .indiseat:nth-of-type(${j})`).value)
+            //         }
+            //     }
+            //     for (let i = 1; i < 3*10+1; i++) {
+            //         document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+            //     }
 
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
-                    }
-                }
-                for (let i = 1; i < 3*10+1; i++) {
-                    document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
-                }
+            //     for (let i = 0; i < 3; i++) {
+            //         for (let j = 0; j < 10; j++) {
+            //             document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" class="indiseat ${seat_id++}" onclick="ck_cnt(this)">`
+            //         }
+            //     }
+            //     for (let i = 1; i < 3*10+1; i++) {
+            //         document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+            //     }
 
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 10; j++) {
-                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat" onclick="ck_cnt(this)">`
-                    }
-                }
-                for (let i = 1; i < 3*10+1; i++) {
-                    document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
-                }
-            }
+            //     for (let i = 0; i < 3; i++) {
+            //         for (let j = 0; j < 10; j++) {
+            //             document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" class="indiseat ${seat_id++}" onclick="ck_cnt(this)">`
+            //         }
+            //     }
+            //     for (let i = 1; i < 3*10+1; i++) {
+            //         document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+            //     }
+            // }
 
             
             // forEach로 선택된 좌석이 있다면 비활성화(disabled=true)
             // document.querySelectorAll(".indiseat").forEach(seats=>{
             //     console.log(seats.classList)
             // })
+
+            document.querySelectorAll("#indiseat").forEach(seat =>{
+                console.log(seat.className)
+                if (seat.className == "Sold") {
+                    seat.style.borderColor = "#555"
+                    seat.style.backgroundColor= "#555"
+                    seat.style.cursor= "default";
+                }
+            })
         })
         
         
@@ -219,9 +231,18 @@
 </head>
 <body>
     <!-- <h1>대공연장1 좌석표</h1> -->
+    
     <div class="seat_wrapper">
+        
+        {{ii.seat_id}} {{ii.seat_status}}
         <div class="first">
             <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id <= 30 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="stair">
                 <div>1</div>
@@ -229,55 +250,107 @@
                 <div>3</div>
             </div>
             <div class="section">
-                
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 30 and ii.seat_id <= 60 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
             </div>
-            <div class="section"></div>
+            <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 60 and ii.seat_id <= 90 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
+            </div>
 
         </div>
         <div class="hallway"></div>
-
+        
         <div class="second">
             <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 90 and ii.seat_id <= 120 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
             </div>
-            <div class="section"></div>
+            <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 120 and ii.seat_id <= 150 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
+            </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
             </div>
-            <div class="section"></div>
+            <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 150 and ii.seat_id <= 180 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
+            </div>
 
         </div>
+        
         <div class="hallway"></div>
         <div class="third">
             <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 180 and ii.seat_id <= 210 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
             </div>
-            <div class="section"></div>
+            <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 210 and ii.seat_id <= 240 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
+            </div>
             <div class="stair">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
             </div>
-            <div class="section"></div>
-
-
+            <div class="section">
+                {% for ii in avoid %}
+                    {% if ii.seat_id > 240 and ii.seat_id <= 270 %}
+                    {{ii.seat_id}}
+                    <input type="checkbox" value="{{ii.seat_id}}" id="indiseat" class="{{ii.seat_status}}">
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
         <!-- <input type="checkbox"> -->
+        
     </div>
 </body>
 </html>
