@@ -72,7 +72,7 @@ router.get('/:id', (req, res)=>{
     // })
     // let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
     conn.query(query, (err, resPerf)=>{
-        console.log(resPerf)
+        // console.log(resPerf)
         venue_id = resPerf[0].venue_id
         // 공연장에 해당하는 좌석 가격 가져오기
         conn.query(`select * from perf_price where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, resP)=>{
@@ -80,9 +80,9 @@ router.get('/:id', (req, res)=>{
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
             if (resPerf && resPerf.length > 0){
-                console.log('resP', resP)
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
+                console.log('resPerf', resPerf[0])
                 res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
             }
 
@@ -133,7 +133,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 and perf_schedule.schedule_date = "${base_date_format(req.body.items[0])}"
                 
                 `, (err, resSold)=>{
-                    console.log('resSold: ', resSold)
+                    // console.log('resSold: ', resSold)
                     if (resPf && resPf.length > 0){
                         res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold})
                     }

@@ -125,11 +125,11 @@ wss.on('connection', (ws, req)=>{
                 and seat_status.seat_status != "Available"
                 `,
             (err, queryData)=>{
-                console.log('좌석 정보 :', queryData)
+                // console.log('좌석 정보 :', queryData)
                 wss.clients.forEach(client =>{
                     client.send(JSON.stringify({type: 'seat_status, i'}))
                 })
-                ws.send('좌석정보 보냄')
+                // ws.send('좌석정보 보냄')
                 
                 // wss.clients.forEach(client => {
                 //     for (let i of queryData){
