@@ -170,7 +170,6 @@
             // console.log(`${year}년 ${month+1}월 ${day}일 ${cnt}`)
             document.querySelector(".time").innerHTML = `${year}년 ${month+1}월 ${day}일<br/>`
             dd = `${year}-${month+1}-${day}`
-            // document.querySelector(".time").innerHTML += `<li class="s_time select" onclick="clickT(${1})">1회차 14:00</li>`
             document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" class="time" onclick="ttt(${year}, ${month+1}, ${day}, ${1})">1회차 14:00</label></li>`
             document.querySelector(".time").innerHTML += `<li class="s_time"><label><input type="radio" name="time_ck" class="time" onclick="ttt(${year}, ${month+1}, ${day}, ${2})">2회차 19:00</label></li>`
             document.querySelector(`.clickday:nth-of-type(${cnt})`).classList.toggle("active")
@@ -180,7 +179,7 @@
             document.querySelector(".select_flag").value = cnt
             // document.querySelector(".select_date").value = JSON.stringify(`${year}-${month+1}-${day}`)
             document.querySelector(".select_date").value = `${year}-${month+1}-${day}`
-            flag = cnt           
+            flag = cnt
         }
 
         function ttt(yy, mm, dd, num){
@@ -190,6 +189,9 @@
                 c_socket.send(`select_date {{perf.performance_id}} ${yy}-${mm}-${dd} ${tt} {{perf.venue_id}}`)
 
         }
+        // console.log("{{sche[0].schedule_date}}")
+        // console.log(JSON.stringify("{{sche.schedule_date}}"))
+        
 
         // function cc() {
         //     // console.log(dd, tt)

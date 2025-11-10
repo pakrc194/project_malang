@@ -95,6 +95,9 @@ let date = ""
 let time = 0
 let venue_id = 0
 let perf_id = 0
+let schedule_id = 0
+let user_id = 0
+let seat_id = 0
 wss.on('connection', (ws, req)=>{
     // 5.1 클라이언트로부터 메세지 수신
     wss.clients.forEach((client) => {
@@ -106,29 +109,34 @@ wss.on('connection', (ws, req)=>{
     });
     // ws.send('서버 보냄', arr)
 
-    ws.on('message', (msg)=>{
+    ws.on('message', async (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
         arr = msg.toString().split(' ')
-        if (arr[0] == "select_date"){
+        if (arr[0] == "user_id") {
+            user_id = arr[1]
+        }
+        else if (arr[0] == "select_date"){
             perf_id = arr[1]
-            date = arr[2]
+            date = base_date_format(arr[2])
             time = arr[3]
             venue_id = arr[4]
             // 선택한 날짜와 회차를 클라이언트로부터 받음
-            let dd = base_date_format(date)
+            // and seat_status.seat_status != "Available"
            
-            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
+            conn.query(`select distinct seat_status.schedule_id from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
                 
                 and perf_schedule.perf_id = ${arr[1]}
                 and perf_schedule.schedule_round = ${time}
-                and perf_schedule.schedule_date = "${dd}"
-                and seat_status.seat_status != "Available"
+                and perf_schedule.schedule_date = "${date}"
+                
                 `,
             (err, queryData)=>{
-                // console.log('좌석 정보 :', queryData)
-                wss.clients.forEach(client =>{
-                    client.send(JSON.stringify({type: 'seat_status, i'}))
-                })
+                console.log('좌석 정보 :', queryData)
+                schedule_id = queryData[0].schedule_id
+                console.log(schedule_id)
+                // wss.clients.forEach(client =>{
+                //     client.send(JSON.stringify({type: 'seat_status, i'}))
+                // })
                 // ws.send('좌석정보 보냄')
                 
                 // wss.clients.forEach(client => {
@@ -145,10 +153,90 @@ wss.on('connection', (ws, req)=>{
 
         }
         else {
+            // seat_status의 seat_status를 Reserved로 바꾸고 user_id에 user_id 넣어주기
             arr.push(date)
             arr.push(time)
             arr.push(new Date(Date.now() + 5*60*1000))
             console.log('arr: ', arr)
+
+            conn.query(`SELECT seat_id FROM seat_layout WHERE venue_id = ${venue_id} 
+                AND area = "${arr[1]}" AND seat_row = ${arr[2]} AND seat_number = ${arr[3]}`, (err, seat) =>{
+                    seat_id = seat[0].seat_id
+
+                    let find_seat_status = `SELECT seat_status FROM seat_status 
+                            WHERE schedule_id = ${schedule_id}
+                            AND seat_id = ${seat_id}`
+
+                    
+                    conn.query(find_seat_status, (err, s_s_up)=>{
+                        // console.log('s_s_up: ', s_s_up)
+                        
+                        let expires = new Date(Date.now() + 5*60*1000)
+                        let formatted = expires.toISOString().slice(0, 19).replace('T', ' ')
+                        console.log(new Date(), formatted)
+
+                        let update_seat_status_R = `UPDATE seat_status SET seat_status = "Reserved", user_id = ${user_id}, temp_resv_time = "${formatted}"
+                                WHERE schedule_id = ${schedule_id} AND seat_id = ${seat_id}`
+                        let update_seat_status_A = `UPDATE seat_status SET seat_status = "Available", user_id = null, temp_resv_time = null
+                                WHERE schedule_id = ${schedule_id} AND seat_id = ${seat_id}`
+                                // 등급, 구역, 열 s_row, 번호 s_col, 가격 price
+                        let send_seat_status = `
+                                SELECT 
+                                perf_price.grade_code AS grade,
+                                seat_layout.area AS area,
+                                seat_layout.seat_row AS s_row,
+                                seat_layout.seat_number AS s_col,
+                                perf_price.price AS price
+
+                                FROM seat_status 
+                                JOIN seat_layout ON seat_status.seat_id = seat_layout.seat_id
+                                JOIN perf_price ON seat_layout.venue_id = perf_price.venue_id
+                                WHERE seat_status.seat_status = "Reserved" 
+                                AND seat_status.user_id = ${user_id}
+                                AND perf_price.perf_id = ${perf_id}
+                                AND seat_layout.grade_code = perf_price.grade_code
+                                AND seat_status.schedule_id = ${schedule_id}
+                                `
+
+                        if (s_s_up[0].seat_status == "Available"){
+                            console.log('상태 변경: ', user_id, schedule_id, seat_id)
+                            // 좌석 정보를 Reserved로 변경
+                            conn.query(update_seat_status_R, (err, res_R)=>{
+                                conn.query(send_seat_status, (err, send_s1)=>{
+                                    console.log('send_s1: ', send_s1[0])
+                                    wss.clients.forEach((client) => {
+                                        if (client.readyState == websocket.OPEN){
+                                            client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
+                                        }
+                                        
+                                    });
+                                })
+
+                            })
+                            
+        
+                        }
+                        else if (s_s_up[0].seat_status == "Reserved"){
+                            // 좌석 정보를 Available로 변경
+                            conn.query(update_seat_status_A, (err, res_A)=>{
+                                conn.query(send_seat_status, (err, send_s1)=>{
+                                    console.log('send_s1: ', send_s1[0])
+                                    wss.clients.forEach((client) => {
+                                        if (client.readyState == websocket.OPEN){
+                                            client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
+                                        }
+                                        
+                                    });
+                                })
+                            })
+                        }
+                    })
+                })
+
+
+            
+
+
             let find_seat = `select * from seat_temp 
             where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"
             and choice_date = "${arr[4]}" and choice_time = "${arr[5]}";`
@@ -167,15 +255,16 @@ wss.on('connection', (ws, req)=>{
                 let selDate = arr[4]
                 let selRound = arr[5]
                 conn.query(sql, (err, res, field)=>{
-                    console.log(res)
-                    if (res.length == 0) {
-                        let iSeatTempSQL = `insert into seat_temp (grade, area, s_row, s_col, choice_date, choice_time, expires) values (?, ?, ?, ?, ?, ?, ?)`
-                        st_in(iSeatTempSQL, arr)
-                    }
-                    else {
-                        st_del(`delete from seat_temp where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"
-                            and choice_date = "${arr[4]}" and choice_time = "${arr[5]}"`)
-                    }
+                    console.log('res: ', res)
+                    // if (res.length == 0) {
+                    //     let iSeatTempSQL = `insert into seat_temp (grade, area, s_row, s_col, choice_date, choice_time, expires) values (?, ?, ?, ?, ?, ?, ?)`
+                    //     st_in(iSeatTempSQL, arr)
+                    // }
+                    // else {
+                    //     st_del(`delete from seat_temp where grade = "${arr[0]}" and area = "${arr[1]}" and s_row = "${arr[2]}" and s_col = "${arr[3]}"
+                    //         and choice_date = "${arr[4]}" and choice_time = "${arr[5]}"`)
+                    // }
+
                 })
             }
     

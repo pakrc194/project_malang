@@ -82,14 +82,21 @@ router.get('/:id', (req, res)=>{
             if (resPerf && resPerf.length > 0){
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
-                console.log('resPerf', resPerf[0])
-                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
+                // console.log('resPerf', resPerf[0])
+                // 스케줄(공연 날짜, 회차)
+                conn.query(`select * from perf_schedule where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, sche)=>{
+                    // console.log(sche)
+                    
+                    res.render("reserv/description.html", {perf: resPerf[0], musical: resP, sche: sche})
+                })
             }
 
         })
     })
 })
 
+
+let schedule_id = 0
 
 router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // 회원 이메일
@@ -103,11 +110,8 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     conn.query(`select user_id FROM user_info where email = "${email}"`, (err, req_id)=>{
         user_id = req_id[0].user_id
     })
-    
-    
-    
-    
-    conn.query('delete from seat_temp')
+        
+    // conn.query('delete from seat_temp')
 
     conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${init_perf_id}`, (err, resPf)=>{
@@ -135,7 +139,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 `, (err, resSold)=>{
                     // console.log('resSold: ', resSold)
                     if (resPf && resPf.length > 0){
-                        res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold})
+                        res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold, user_id: user_id})
                     }
                 })
             
@@ -174,17 +178,23 @@ router.post('/discount/:id', (req, res)=>{
 
     let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
     where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
-    conn.query('select choice_date, choice_time from seat_temp', (err, resS)=>{
-        let arr1 = {
-            choice_time: resS[0].choice_time, 
-            year: resS[0].choice_date.getFullYear(), 
-            month: resS[0].choice_date.getMonth() +1,
-            day: resS[0].choice_date.getDate()
-        }
-        conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
-            conn.query(discountQuery, (err, resDC)=>{
-                // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+
+    conn.query(`SELECT * FROM seat_status WHERE user_id = ${user_id} AND seat_status = "Reserved"`, (err, resS)=>{
+        conn.query(`SELECT * FROM perf_schedule WHERE schedule_id = ${resS[0].schedule_id}`, (err, resSche)=>{
+            console.log(resSche)
+            let date = new Date(resSche[0].schedule_date)
+            let arr1 = {
+                choice_time: resSche[0].schedule_round, 
+                year: date.getFullYear(), 
+                month: date.getMonth() +1,
+                day: date.getDate()
+            }
+            console.log(arr1)
+            conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
+                conn.query(discountQuery, (err, resDC)=>{
+                    // resDC = 회원 등급 이름, 등급 할인률, 회원id
+                    res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                })
             })
         })
     })
@@ -238,7 +248,7 @@ router.post('/payment', async (req, res)=>{
 
 
     for (let i = 6; i < req.body.items.length; i++) {
-        conn.query(`UPDATE seat_status SET seat_status = "Sold", user_id = (SELECT user_id FROM user_info WHERE email = "${email}")
+        conn.query(`UPDATE seat_status SET seat_status = "Sold", temp_resv_time = null
                 WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
                     AND schedule_round = ${req.body.items[3].split(' ')[3]}

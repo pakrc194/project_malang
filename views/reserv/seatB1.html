@@ -204,10 +204,10 @@
         let seat_cnt = 0
         // 예매 개수 4개로 제한
         function ck_cnt(obj) {
-            console.log(obj.className)
+
             if (obj.className == "Available") {
 
-                socket1.send(obj.value)
+                socket1.send([obj.value, "{{user_id}}"].join(' '))
                 if (obj.checked == true){
                     seat_cnt++
                 }
@@ -219,10 +219,12 @@
                     alert('좌석 선택 안됨')
                     obj.checked = false
                     seat_cnt--
-                    socket1.send(obj.value)
+                    // socket1.send(obj.value)
+                    socket1.send([obj.value, "{{user_id}}"].join(' '))
+
                 }
                 
-                console.log(obj.value, seat_cnt)
+                console.log([obj.value, "{{user_id}}"].join(' '))
             }
         }
     </script>
