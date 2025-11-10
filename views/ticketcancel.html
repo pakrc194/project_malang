@@ -33,12 +33,20 @@
             display: block;
         }
 
-        section {
+        .ticketprice {
             border: 1px solid #000;
             width: 100%px;
             margin: auto;
             display: block;
             height: 300px;
+        }
+
+        img {
+            width: 100px;
+            height: 150px;
+        }
+        div {
+            display: flex;
         }
     </style>
     <script>
@@ -72,6 +80,14 @@
 <body>
     <header>헤더</header>
     <wrapper>
+        <div>
+            <img src=../../img/{{io.poster_url}}>
+            
+        </div>
+        <div>
+            뮤지컬  〈{{io.perf_name}}〉<br/>
+            {{io.schedule_date}} {{schedule_time}}
+        </div>
         <section class="ticketprice">
             <input type="hidden" id="resv_id" value="{{io.resv_id}}">
             예매자 : {{io.user_name}}
@@ -80,23 +96,22 @@
             <br>
             예매일 : {{io.payment_date}}
             <br>
-            예매 좌석 : 
+            예매 좌석 : <br/>
             {% for seats in io.seats %}
-            {{ seats.area }}구역 {{ seats.seat_row }}열 {{seats.seat_number}}번({{ seats.grade_code }}석)
+            {{ seats.area }}구역 {{ seats.seat_row }}열 {{seats.seat_number}}번 ({{ seats.grade_code }}석)
             {% endfor %}
             <br>
             예매 수량 : {{io.resv_count}}
             <br>
             결제 수단 : {{io.payment_method}}
             <br>
-            할인 전 가격 : {{io.total_amount}}
+            할인 전 금액 : {{io.total_amount}}
             <br>
             할인율 : {{io.discount_rate}}
             <br>
-            할인 적용 가격 : {{io.final_amount}}
+            최종 결제 금액 : {{io.final_amount}}
             
         </section>
-        <section>
     
         <section>
             결제 취소

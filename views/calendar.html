@@ -6,11 +6,12 @@
     <title>calendar</title>
     <link rel="stylesheet" href="../style/calendar.css">
     <script>
-        const c_socket = new WebSocket('ws://localhost:80')
+        const c_socket = new WebSocket({host: '0.0.0.0', port: 80})
         window.onload = function(){
             let date = new Date()
             let s_date = new Date("{{perf.start_date}}")
             let e_date = new Date("{{perf.end_date}}")
+            console.log('date: ', date, 's_date: ', s_date, (date < s_date))
             // let s_date = new Date("2025-10-22")
             // let e_date = new Date("2026-01-18")
 
@@ -54,8 +55,16 @@
             
             const daysTag = document.querySelector('.days');
             
-            
             const renderCalendar = () => {
+                if (currYear == startYear && currMonth < startMonth){
+                    // 공연이 아직 시작 안 함
+                    // currYear = startYear
+                    currMonth = startMonth
+                }
+                else if (currYear < startYear){
+                    currYear = startYear
+                    currMonth = startMonth
+                }
                 let cnt = 1
                 currentDate.innerHTML = `${currYear}. ${currMonth+1}`
                 let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate();
@@ -64,59 +73,67 @@
                 let lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate();
 
                 let liTag = '';
-                
-                for (let i = firstDayofMonth; i > 0; i--) {
-                    // liTag += `<li class = "inactive">${lastDateofLastMonth - i + 1}</li>`;
-                    liTag += `<li class="inactive"></li>`
-                    cnt++
-                }
-                
-                for (let i = 1; i <= lastDateofMonth; i++) {
-                    if (currYear == startYear && currMonth == startMonth && i < startday){
-                        // 공연 시작일 혹은 오늘보다 이전 날짜 비활성화
-                        liTag += `<li class='inactive' id="set">${i}</li>`;
+                    
+                    for (let i = firstDayofMonth; i > 0; i--) {
+                        // liTag += `<li class = "inactive">${lastDateofLastMonth - i + 1}</li>`;
+                        liTag += `<li class="inactive"></li>`
                         cnt++
                     }
-                    else if (currYear == lastYear && currMonth == lastMonth && i > lastday){
-                        // 공연 마지막날보다 이후 날짜 비활성화
-                        liTag += `<li class='inactive' id="set">${i}</li>`;
+                    
+                    for (let i = 1; i <= lastDateofMonth; i++) {
+                        if (currYear == startYear && currMonth == startMonth && i < startday){
+                            // 공연 시작일 혹은 오늘보다 이전 날짜 비활성화
+                            liTag += `<li class='inactive' id="set">${i}</li>`;
+                            cnt++
+                        }
+                        else if (currYear == lastYear && currMonth == lastMonth && i > lastday){
+                            // 공연 마지막날보다 이후 날짜 비활성화
+                            liTag += `<li class='inactive' id="set">${i}</li>`;
+                            cnt++
+                        }
+                        else {
+                            liTag += `<li class='clickday' id="set" onclick='clickE(${currYear}, ${currMonth}, ${i}, ${cnt++});'>${i}</li>`;
+                        }
+                    }
+
+                    for (let i = lastDayofMonth; i < 6; i++) {
+                        // liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+                        liTag += `<li class="inactive"></li>`
+
                         cnt++
+                    }
+                    
+                    daysTag.innerHTML = liTag;
+
+                    
+                    // 공연 마지막날 이후로 이동 못함
+                    if (currYear >= lastYear && currMonth >= lastMonth){
+                        document.querySelector('#next').disabled = true
+                        document.querySelector('#next').style.cursor = "default"
                     }
                     else {
-                        liTag += `<li class='clickday' id="set" onclick='clickE(${currYear}, ${currMonth}, ${i}, ${cnt++});'>${i}</li>`;
+                        document.querySelector('#next').disabled = false
+                        document.querySelector('#next').style.cursor = "pointer"
                     }
-                }
 
-                for (let i = lastDayofMonth; i < 6; i++) {
-                    // liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
-                    liTag += `<li class="inactive"></li>`
-
-                    cnt++
-                }
+                    // 오늘 이전으로 이동 못함
+                    if (currYear == startYear && currMonth == startMonth){
+                        document.querySelector('#prev').disabled = true
+                        document.querySelector('#prev').style.cursor = "default"
+                    }
+                    else {
+                        document.querySelector('#prev').disabled = false
+                        document.querySelector('#prev').style.cursor = "pointer"
+                    }
                 
-                daysTag.innerHTML = liTag;
-
-                
-                // 공연 마지막날 이후로 이동 못함
-                if (currYear >= lastYear && currMonth >= lastMonth){
-                    document.querySelector('#next').disabled = true
-                }
-                else {
-                    document.querySelector('#next').disabled = false
-                }
-
-                // 오늘 이전으로 이동 못함
-                if (currYear == startYear && currMonth == startMonth){
-                    document.querySelector('#prev').disabled = true
-                }
-                else {
-                    document.querySelector('#prev').disabled = false
-                }
                 
             }
+                    
+            
             renderCalendar()
 
             document.querySelector('#prev').addEventListener('click', ()=>{
+                console.log(currYear, currMonth)
                 currMonth -= 1
                 if (currMonth == -1){
                     currMonth = 11
@@ -127,6 +144,7 @@
             })
 
             document.querySelector('#next').addEventListener('click', ()=>{
+                console.log(currYear, currMonth)
                 currMonth += 1
                 if (currMonth == 12){
                     currMonth = 0
@@ -144,14 +162,6 @@
                 // dd = document.querySelector(".select_date").value
                 // c_socket.send(`select_date ${dd} ${tt}`)
                 frm.submit()
-
-                // fetch(`/desc/temp/{{perf.id}}`, {
-                //     method: 'POST',
-                //     headers: {'Content-Type': 'application/json'},
-                //     body: JSON.stringify(cc())
-                // })
-                // .then(answer=>answer.json())
-                // .then(data=>console.log(data))
             }
         }
 

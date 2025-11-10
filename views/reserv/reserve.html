@@ -161,7 +161,7 @@
         
         
         // 1 웹소켓 서버에 연결시도
-        const socket = new WebSocket('ws://localhost:80')
+        const socket = new WebSocket({host: '0.0.0.0', port: 80})
         // 2 웹소켓 서버에 연결성공
         // socket.onopen = ()=>{
         //     // 3.1 클라이언트가 송신
@@ -213,7 +213,6 @@
 
         
         window.addEventListener('DOMContentLoaded', function(){
-            
             let frm = document.forms.frm
             document.querySelector(".select_done").onclick = function() {
                frm.submit()

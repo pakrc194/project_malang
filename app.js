@@ -104,11 +104,10 @@ wss.on('connection', (ws, req)=>{
             // }
             
     });
-
+    // ws.send('서버 보냄', arr)
 
     ws.on('message', (msg)=>{
         console.log(`클라이언트로부터 받은 메세지 : `, msg.toString())
-        // arr = msg.toString().replace(/\,/g, ' ')
         arr = msg.toString().split(' ')
         if (arr[0] == "select_date"){
             perf_id = arr[1]
@@ -116,33 +115,33 @@ wss.on('connection', (ws, req)=>{
             time = arr[3]
             venue_id = arr[4]
             // 선택한 날짜와 회차를 클라이언트로부터 받음
-            // let dd = base_date_format(date)
-        //     console.log(date)
-        //     console.log('dd: ', dd)
             let dd = base_date_format(date)
-        //    console.log('dd: ', dd)
            
-        //     conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
+            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
                 
-        //         and perf_schedule.perf_id = ${arr[1]}
-        //         and perf_schedule.schedule_round = ${time}
-        //         and perf_schedule.schedule_date = "${dd}"
-        //         and seat_status.seat_status != "Available"
-        //         `,
-        //     (err, queryData)=>{
-        //         console.log('좌석 정보 :', queryData)
+                and perf_schedule.perf_id = ${arr[1]}
+                and perf_schedule.schedule_round = ${time}
+                and perf_schedule.schedule_date = "${dd}"
+                and seat_status.seat_status != "Available"
+                `,
+            (err, queryData)=>{
+                // console.log('좌석 정보 :', queryData)
+                wss.clients.forEach(client =>{
+                    client.send(JSON.stringify({type: 'seat_status, i'}))
+                })
+                // ws.send('좌석정보 보냄')
                 
-        //         // wss.clients.forEach(client => {
-        //         //     for (let i of queryData){
-        //         //         // console.log(i)
-        //         //         client.send(JSON.stringify({ type: 'seat_status', i }));
-        //         //     }
-        //         //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
-        //         //     // }
-        //         // });
-        //         // console.log(queryData)
+                // wss.clients.forEach(client => {
+                //     for (let i of queryData){
+                //         // console.log(i)
+                //         client.send(JSON.stringify({ type: 'seat_status', i }));
+                //     }
+                //     // if (client !== ws && client.readyState === WebSocket.OPEN) {
+                //     // }
+                // });
+                // console.log(queryData)
                 
-        //     })
+            })
 
         }
         else {
