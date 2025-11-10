@@ -259,7 +259,7 @@ router.post('/payment', async (req, res)=>{
     let s_id = await conn.query(`SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
                     AND schedule_round = ${req.body.items[3].split(' ')[3]}
-                    AND schedule.perf_id = ${req.body.items[2]}`)
+                    AND perf_schedule.perf_id = ${req.body.items[2]}`)
 
     let u_id = await conn.query(`SELECT user_id FROM user_info where email = "${email}"`)
     let seat_arr = []
