@@ -126,10 +126,12 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
      join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
      join venue_info on venue_info.venue_id = perf_schedule.venue_id
      join performance_info on performance_info.perf_id = perf_schedule.perf_id
-     where user_info.email = ?
+     where user_info.email = ? AND perf_schedule.schedule_id = reservation_info.schedule_id
+     AND performance_info.perf_id = perf_schedule.perf_id
      ORDER BY ${orderSql}
      `
 
+     //
     conn.query(sql, [email], async (err, rows) => {
         if (err) {
             console.error('예매 내역 조회 에러:', err);
@@ -384,6 +386,7 @@ router.get('/resvCancel', async (req, res) => {
     console.log(sessionuserid)
     console.log(email)
 
+    // reservation_info.schedule_id = perf_schedule.schedule_id
     const sql = ` 
      select
      
@@ -400,12 +403,20 @@ router.get('/resvCancel', async (req, res) => {
      payment_info.payment_method,
      reservation_info.resv_id,
      reservation_info.seat_id_arr,
-     payment_info.payment_date
+     payment_info.payment_date,
+     venue_info.venue_name,
+     performance_info.poster_url,
+     performance_info.perf_name,
+     perf_schedule.schedule_date, 
+     perf_schedule.schedule_time
      
      from reservation_info
 
      join user_info on user_info.user_id = reservation_info.user_id
      join payment_info on payment_info.payment_id = reservation_info.payment_id
+     join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+     join venue_info on venue_info.venue_id = perf_schedule.venue_id
+     join performance_info on performance_info.perf_id = perf_schedule.perf_id
 
      where user_info.email = ? AND reservation_info.resv_id = ?
      `
