@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
     const mainbenner = `
     SELECT * FROM performance_info
     WHERE start_date <= NOW() AND end_date >= NOW()
-    LIMIT 10
+    LIMIT 5
   `;
 
     // 2. 오픈 예정

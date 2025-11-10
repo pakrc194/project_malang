@@ -12,7 +12,7 @@ const port = 80
 const client_id = "9010fbf47377b2f34b0e443ad62a2326"
 const client_secret = "XeIcIaPxVYR4u4ZKhOT8VUDqAxGzuyhc"
 // 이거 리다이렉트 URL이니까 주소마다 바꿔줘야함.
-const domain = "http://192.168.0.22/login/kakao"
+const domain = "http://192.168.200.177/login/kakao"
 const redirect_uri = `${domain}/redirect`
 const token_uri = "https://kauth.kakao.com/oauth/token"
 const api_host = "https://kapi.kakao.com"
@@ -148,28 +148,5 @@ router.get("/redirect", async function (req, res) {
 })
 
 
-// 로그아웃 요청
-// router.get("/logout", async function (req, res) {
-//   const uri = api_host + "/v1/user/logout";
-//   const header = {
-//     Authorization: "Bearer " + req.session.key
-//   };
-
-//   const rtn = await call("POST", uri, null, header);
-//   req.session.destroy();
-//   res.send(rtn);
-// });
-
-// 연결 해제 요청
-router.get("/unlink", async function (req, res) {
-  const uri = api_host + "/v1/user/unlink";
-  const header = {
-    Authorization: "Bearer " + req.session.key
-  };
-
-  const rtn = await call("POST", uri, null, header);
-  req.session.destroy();
-  res.send(rtn);
-});
 
 module.exports = router;

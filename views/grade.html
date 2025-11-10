@@ -4,10 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding : 0px;
+            
+        }
+
+        img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+        }
+
+        table {
+            
+            width: 800px;
+            height: 500px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        td {
+            border: 1px solid #f7e4e4;
+            box-shadow: 1px 1px #d8cbcb;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>GRADE</h1>
-    {{grade_list[0].grade_id}}<br/>
+    <h1>등급 정보</h1>
+    <br><br>
+    <h2>말랑뮤즈 등급이란?</h2>
+    <p>말랑뮤즈는 구매 실적에 따라 포인트가 적립되며 차등화된 혜택을 드리는 등급 제도를 운영하고 있습니다. <br>최근 5개월과 이번 달의 주문 금액을 매월 1일 산정하며, 
+        입문/애호/열정/전문/명예 등급으로 나누어 혜택을 드리고 있습니다.
+    </p>
+    <p style="color: blue;">총 주문금액은 등급에 따른 할인이 적용된 금액을 의미합니다.(결제금액 기준)</p>
+    <br><br>
+    <h2>등급별 혜택 및 기준</h2>
+    <table>
+        <tr>
+            <td>등급</td>
+            <td>등급명</td>
+            <td>등급 및 승급 기준</td>
+            <td>등급 혜택</td>
+        </tr>
+        <tr style="background-color: antiquewhite;">
+            <td><img src="../img/{{grade_list[0].grade_image_url}}" alt=""></td>
+            <td style="color: rgb(68, 68, 175); font-weight: bold;">{{grade_list[0].grade_name}}</td>
+            <td>{{grade_list[0].grade_score}} 포인트</td>
+            <td>{{grade_list[0].discount_rate}}</td>
+        </tr>
+        <tr>
+            <td><img src="../img/{{grade_list[1].grade_image_url}}" alt=""></td>
+            <td style="color: rgb(211, 101, 74); font-weight: bold;">{{grade_list[1].grade_name}}</td>
+            <td>{{grade_list[1].grade_score}} 포인트</td>
+            <td>{{grade_list[1].discount_rate}}% 적용</td>
+        </tr>
+        <tr style="background-color: antiquewhite;">
+            <td><img src="../img/{{grade_list[2].grade_image_url}}" alt=""></td>
+            <td style="color: rgb(104, 207, 94); font-weight: bold;">{{grade_list[2].grade_name}}</td>
+            <td>{{grade_list[2].grade_score}} 포인트</td>
+            <td>{{grade_list[2].discount_rate}}% 적용</td>
+        </tr>
+        <tr>
+            <td><img src="../img/{{grade_list[3].grade_image_url}}" alt=""></td>
+            <td style="color: rgb(135, 69, 179); font-weight: bold;">{{grade_list[3].grade_name}}</td>
+            <td>{{grade_list[3].grade_score}} 포인트</td>
+            <td>{{grade_list[3].discount_rate}}% 적용</td>
+        </tr>
+        <tr style="background-color: antiquewhite;">
+            <td><img src="../img/{{grade_list[4].grade_image_url}}" alt=""></td>
+            <td style="color: rgb(230, 211, 45); font-weight: bold;">{{grade_list[4].grade_name}}</td>
+            <td>{{grade_list[4].grade_score}} 포인트</td>
+            <td>{{grade_list[4].discount_rate}}% 적용</td>
+        </tr>
+    </table>
+    <br><br>
+    <h2>등급 산정</h2>
+    <p>등급변경 후 6개월 이내에 등급이 재조정되는 경우는 다음과 같습니다.</p>
+    <table>
+        <tr>
+            <td>등급 하락</td>
+            <td>최근 5개월과 이번 달 1개월을 산정하여 총 6개월의 결제 누적 금액의 <br>포인트가 해당 등급 기준에 미치지 않을 경우 등급이 하락합니다.</td>
+        </tr>
+        <tr>
+            <td>등급 유지</td>
+            <td>최근 5개월과 이번 달 1개월을 산정하여 총 6개월의 결제 누적 금액의 <br>포인트가 현재 등급 기준에 있을 경우 등급이 유지됩니다.</td>
+        </tr>
+        <tr>
+            <td>등급 상승</td>
+            <td>최근 5개월과 이번 달 1개월을 산정하여 총 6개월의 결제 누적 금액의 <br>포인트가 다음 등급 기준에 충족할 경우 등급이 상승합니다.</td>
+        </tr>
+
+    </table>
+
+
+
+    <!-- {{grade_list[0].grade_id}}<br/>
     {{grade_list[0].grade_name}}<br/>
     {{grade_list[0].grade_score}}<br/>
     {{grade_list[0].discount_rate}}<br/>
@@ -40,7 +135,7 @@
     {{grade_list[4].grade_score}}<br/>
     {{grade_list[4].discount_rate}}<br/>
     <img src="../img/{{grade_list[4].grade_image_url}}" alt=""><hr/>
-    {{grade_list[4].grade_image_url}}<hr/>
+    {{grade_list[4].grade_image_url}}<hr/> -->
 
     <a href="/main">메인페이지로</a>
 </body>
