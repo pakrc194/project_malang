@@ -46,6 +46,7 @@
             height: 150px;
         }
         div {
+            margin: 10px;
             display: flex;
         }
     </style>
@@ -81,12 +82,15 @@
     <header>헤더</header>
     <wrapper>
         <div>
-            <img src=../../img/{{io.poster_url}}>
-            
-        </div>
-        <div>
-            뮤지컬  〈{{io.perf_name}}〉<br/>
-            {{io.schedule_date}} {{schedule_time}}
+
+            <div>
+                <img src=../../img/{{io.poster_url}}>
+            </div>
+            <div>
+                뮤지컬  〈{{io.perf_name}}〉<br/>
+                관람일시 : {{io.schedule_date}}<br/>
+                공연시간 : {{io.schedule_time}}
+            </div>
         </div>
         <section class="ticketprice">
             <input type="hidden" id="resv_id" value="{{io.resv_id}}">
