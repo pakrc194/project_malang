@@ -37,7 +37,14 @@
             })
             let frm = document.forms.frm
             document.querySelector(".total_price_btn").onclick = function() {
-                frm.submit()
+                if (document.querySelector(".card_number").value.length == 16) {
+
+                    frm.submit()
+                }
+                else {
+                    event.preventDefault()
+                    alert('카드 번호를 다시 입력해주세요.')
+                }
             }
             
         })
@@ -75,8 +82,8 @@
 
     </div>
     <form action="/desc/payment" name="frm" method="POST">
-        카드번호 입력
-        <input type="text" name="items" class="card_number">
+        결제 카드번호 입력 ('-'을 제외한 숫자만 입력)
+        <input type="number" name="items" class="card_number">
         <input type="hidden" name="items" class="user_grade" value="{{DC.user_id}} {{DC.grade_name}} {{DC.discount_rate}}">
         <input type="hidden" name="items" value="{{id}}">
         <input type="hidden" name="items" class="date" value="{{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}">

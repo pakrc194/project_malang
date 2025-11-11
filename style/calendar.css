@@ -6,8 +6,6 @@
 
 .big {
     width: 250px;
-
-    border: 1px solid #ff0;
     margin: auto;
 }
 
@@ -18,8 +16,8 @@
     border-radius: 10px;
     padding: 25px;
     /* margin: auto; */
-    /* background-color: #ff7; */
-    border: 1px solid #000;
+    /* background-color: #eee; */
+    border: 1px solid #ccc;
 }
 
 .wrapper > .header > .nav {
@@ -97,9 +95,6 @@
     background: none;
 }
 
-.days > .active::before {
-    background: #f00;
-}
 
 .time > ul > li {
     height: 30px;
@@ -119,9 +114,6 @@
     margin-top: 10px;
 }
 
-.select {
-    border: 1px solid #f00;
-}
 
 label {
     cursor: pointer;

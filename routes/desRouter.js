@@ -82,7 +82,7 @@ router.get('/:id', (req, res)=>{
             if (resPerf && resPerf.length > 0){
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
-                // console.log('resPerf', resPerf[0])
+                console.log('resPerf', resPerf[0])
                 // 스케줄(공연 날짜, 회차)
                 conn.query(`select * from perf_schedule where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, sche)=>{
                     // console.log(sche)

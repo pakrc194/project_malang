@@ -98,27 +98,27 @@ let perf_id = 0
 let schedule_id = 0
 let seat_id = 0
 wss.on('connection', (ws, req)=>{
-    setInterval(()=>{
-        let now = new Date()
-        let mysqlTime = now.toISOString().slice(0, 19).replace('T', ' ')
-        conn.query(`select * from seat_status where temp_resv_time < "${mysqlTime}" and seat_status = "Reserved"`, (err, release)=>{
-            console.log('release: ', release)
-            // seat_layout 정보와 schedule_id 보내야함
-            for (let i of release) {
-                conn.query(`update seat_status set seat_status = "Available", user_id = null, temp_resv_time = null
-                    where schedule_id = ${i.schedule_id} and seat_id = ${i.seat_id}`)
-                conn.query(`select * from seat_layout where seat_id = ${i.seat_id}`, (err, release_res)=>{
-                    wss.clients.forEach((client) => {
-                        if (client != ws){
-                            client.send(JSON.stringify({ type: 'A', result: release_res, schedule_id: i.schedule_id }));
-                        }
-                    });
-                })
+    // setInterval(()=>{
+    //     let now = new Date()
+    //     let mysqlTime = now.toISOString().slice(0, 19).replace('T', ' ')
+    //     conn.query(`select * from seat_status where temp_resv_time < "${mysqlTime}" and seat_status = "Reserved"`, (err, release)=>{
+    //         console.log('release: ', release)
+    //         // seat_layout 정보와 schedule_id 보내야함
+    //         for (let i of release) {
+    //             conn.query(`update seat_status set seat_status = "Available", user_id = null, temp_resv_time = null
+    //                 where schedule_id = ${i.schedule_id} and seat_id = ${i.seat_id}`)
+    //             conn.query(`select * from seat_layout where seat_id = ${i.seat_id}`, (err, release_res)=>{
+    //                 wss.clients.forEach((client) => {
+    //                     if (client != ws){
+    //                         client.send(JSON.stringify({ type: 'A', result: release_res, schedule_id: i.schedule_id }));
+    //                     }
+    //                 });
+    //             })
                 
-            }
-        })
+    //         }
+    //     })
 
-    }, 10000)
+    // }, 10000)
 
     // 5.1 클라이언트로부터 메세지 수신
     ws.on('message', (msg)=>{
