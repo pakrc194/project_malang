@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const nunjucks = require('nunjucks')
 const app = express()
 
@@ -10,12 +11,19 @@ nunjucks.configure('views', {
     express: app
 })
 
+app.use('/style', express.static(path.join(__dirname, 'style')))
+app.use('/img', express.static(path.join(__dirname, 'img')))
+app.use('/js', express.static(path.join(__dirname, 'js')))
+app.use('/views', express.static(path.join(__dirname, 'views')))
 
 const perfRouter = require('./routes/perfRouter')
 const mainRouter = require('./routes/mainRouter')
+const paymentRouter = require('./routes/paymentRouter')
+
 
 app.use('/perf', perfRouter)
 app.use('/main', mainRouter)
+app.use('/payment', paymentRouter)
 
 app.get('/', (req, res)=>{
     res.redirect('/main')
