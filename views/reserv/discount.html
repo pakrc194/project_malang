@@ -10,6 +10,7 @@
         }
     </style>
     <script>
+        const Dsocket = new WebSocket({host: '0.0.0.0', port: 80})
         // document.querySelector(".side_info").innerHTML = ''
         window.addEventListener('DOMContentLoaded', function(){
             let cancle_year = `{{seat.year}}`
@@ -37,6 +38,7 @@
             let frm = document.forms.frm
             document.querySelector(".total_price_btn").onclick = function() {
                 frm.submit()
+                Dsocket.send('결제 완료')
             }
             
         })

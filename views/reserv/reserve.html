@@ -272,7 +272,7 @@
             margin-top: 10px;
         }
 
-        .section > input:disabled {
+        .section > .Sold {
             border-color: #555;
             background-color: #555;
             cursor: default;
@@ -295,6 +295,7 @@
 
             // let data = e.data
             const data = JSON.parse(e.data);
+            let result = data.result
             console.log(`reserve에서 수신: `, data)
 
             if (data.type == 'temp') {
@@ -333,59 +334,147 @@
                 }
             }
             else if (data.type == "seat_status") {
-                for (let i of data.result){
-                    console.log(i)
-                }
+
+                // let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+                // let row = ["first", "second", "third"]
+                // let grade = ["R", "S", "A"]
+                // let seat_id = 1
+                
+                // document.querySelector(`.first > .section`).innerHTML = ''
+                // document.querySelector(`.first > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.first > .section ~ .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.second > .section`).innerHTML = ''
+                // document.querySelector(`.second > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.second > .section ~ .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.third > .section`).innerHTML = ''
+                // document.querySelector(`.third > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.third > .section ~ .section ~ .section`).innerHTML = ''
+                
+                // for(let aa = 0; aa < 3; aa++) {
+                
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 1; j < 11; j++) {
+                //             document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 0; j < 10; j++) {
+                //             document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 0; j < 10; j++) {
+                //             document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+                // }
+
+
+                document.querySelectorAll("#indiseat").forEach(seat =>{
+                    for (let i of data.result){
+                        if (i.user_id != "{{user_id}}"){
+                            arr = seat.value.split(' ')
+                            // console.log('좌석: ', arr)
+                            if (arr[0] == i.grade && arr[1] == i.area && arr[2] == i.s_row && arr[3] == i.s_col){
+                                seat.className = `${i.seat_status}`
+                                if (i.seat_status == "Sold"){
+                                    seat.style.borderColor = "#555"
+                                    seat.style.backgroundColor= "#555"
+                                    seat.style.cursor= "default";
+                                }
+                                else {
+                                    // 예약 상태일 때
+                                    seat.style.borderColor = "#555"
+                                    seat.style.backgroundColor= "#fff"
+                                    seat.style.cursor= "default";
+                                }
+                            }
+                            // else {
+                            //     seat.className = "Available"
+                            //     if (arr[0] == "R") {
+                            //         seat.style.cursor="pointer";
+                            //         seat.style.backgroundColor= "yellowgreen";
+                            //         seat.style.borderColor="yellowgreen";
+                            //     }
+                            //     else if (arr[0] == "S") {
+                            //         seat.style.cursor="pointer";
+                            //         seat.style.backgroundColor= "violet";
+                            //         seat.style.borderColor="violet";
+                            //     }
+                            //     else {
+                            //         seat.style.cursor="pointer";
+                            //         seat.style.backgroundColor= "skyblue";
+                            //         seat.style.borderColor="skyblue";
+                            //     }
+
+                            // }
+                            
+                        }
+                    }
+                })
+                                                
+
+                // document.querySelectorAll("#indiseat").forEach(seat =>{
+                //     if (seat.className == "Sold") {
+                //         seat.style.borderColor = "#555"
+                //         seat.style.backgroundColor= "#555"
+                //         seat.style.cursor= "default";
+                //     }
+                //     else if (seat.className == "Reserved"){
+                //         seat.style.borderColor = "#555"
+                //         seat.style.backgroundColor= "#fff"
+                //         seat.style.cursor= "default";
+                //     }
+                // })
             }
+            else if (data.type == "A") {
+                console.log(result[0])
+                document.querySelectorAll("#indiseat").forEach(seat =>{
+                    arr = seat.value.split(' ')
+                    console.log(arr)
+                    // console.log('좌석: ', arr)
+                    if (arr[1] == result[0].area && arr[2] == result[0].seat_row && arr[3] == result[0].seat_number){
+                        seat.className = `Available`
+                        if (arr[0] == "R") {
+                            seat.style.cursor="pointer";
+                            seat.style.backgroundColor= "yellowgreen";
+                            seat.style.borderColor="yellowgreen";
+                        }
+                        else if (arr[0] == "S") {
+                            seat.style.cursor="pointer";
+                            seat.style.backgroundColor= "violet";
+                            seat.style.borderColor="violet";
+                        }
+                        else {
+                            seat.style.cursor="pointer";
+                            seat.style.backgroundColor= "skyblue";
+                            seat.style.borderColor="skyblue";
+                        }
+                    }
+                })
+            }
+
+            
                     
         }
 
         
         window.addEventListener('DOMContentLoaded', function(){
 
-            let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
-            let row = ["first", "second", "third"]
-            let grade = ["R", "S", "A"]
-            let seat_id = 1
             
-            
-            // for(let aa = 0; aa < 3; aa++) {
-            
-            //     for (let i = 0; i < 3; i++) {
-            //         for (let j = 1; j < 11; j++) {
-            //             document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
-            //         }
-            //     }
-            //     for (let i = 1; i < 3*10+1; i++) {
-            //         document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
-            //     }
 
-            //     for (let i = 0; i < 3; i++) {
-            //         for (let j = 0; j < 10; j++) {
-            //             document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
-            //         }
-            //     }
-            //     for (let i = 1; i < 3*10+1; i++) {
-            //         document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
-            //     }
-
-            //     for (let i = 0; i < 3; i++) {
-            //         for (let j = 0; j < 10; j++) {
-            //             document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
-            //         }
-            //     }
-            //     for (let i = 1; i < 3*10+1; i++) {
-            //         document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
-            //     }
-            // }
-
-            
-            // forEach로 선택된 좌석이 있다면 비활성화(disabled=true)
-            // document.querySelectorAll(".indiseat").forEach(seats=>{
-            //     console.log(seats.classList)
-            // })
-
-            document.querySelectorAll("input").forEach(seat =>{
+            document.querySelectorAll("#indiseat").forEach(seat =>{
                 if (seat.className == "Sold") {
                     seat.style.borderColor = "#555"
                     seat.style.backgroundColor= "#555"
@@ -449,13 +538,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id <= 10 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R A 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R A 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 10 and ii.seat_id <= 20 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R A 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R A 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 20 and ii.seat_id <= 30 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R A 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R A 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -470,13 +559,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 30 and ii.seat_id <= 40 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R B 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R B 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 40 and ii.seat_id <= 50 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R B 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R B 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 50 and ii.seat_id <= 60 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R B 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R B 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -491,13 +580,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 60 and ii.seat_id <= 70 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R C 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R C 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 70 and ii.seat_id <= 80 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R C 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R C 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 80 and ii.seat_id <= 90 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="R C 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="R C 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -512,13 +601,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 90 and ii.seat_id <= 100 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S D 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S D 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 100 and ii.seat_id <= 110 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S D 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S D 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 110 and ii.seat_id <= 120 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S D 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S D 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -533,13 +622,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 120 and ii.seat_id <= 130 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S E 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S E 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 130 and ii.seat_id <= 140 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S E 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S E 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 140 and ii.seat_id <= 150 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S E 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S E 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -554,13 +643,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 150 and ii.seat_id <= 160 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S F 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S F 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 160 and ii.seat_id <= 170 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S F 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S F 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 170 and ii.seat_id <= 180 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="S F 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="S F 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -575,13 +664,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 180 and ii.seat_id <= 190 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A G 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A G 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 190 and ii.seat_id <= 200 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A G 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A G 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 200 and ii.seat_id <= 210 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A G 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A G 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             
@@ -596,13 +685,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 210 and ii.seat_id <= 220 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A H 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A H 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 220 and ii.seat_id <= 230 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A H 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A H 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 230 and ii.seat_id <= 240 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A H 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A H 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}  
                             
@@ -617,13 +706,13 @@
                             {% for ii in avoid %}
                                 {% if ii.seat_id > 240 and ii.seat_id <= 250 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A I 1 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A I 1 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 250 and ii.seat_id <= 260 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A I 2 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A I 2 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% elif ii.seat_id > 260 and ii.seat_id <= 270 %}
                                     {% set number = ((ii.seat_id-1)%10)+1 %}
-                                    <input type="checkbox" value="A I 3 {{number}}" id="id_{{ii.seat_id}}" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
+                                    <input type="checkbox" value="A I 3 {{number}}" id="indiseat" class="{{ii.seat_status}}" onclick="ck_cnt(this)">
                                 {% endif %}
                             {% endfor %}
                             

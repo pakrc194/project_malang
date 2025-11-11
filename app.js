@@ -158,7 +158,7 @@ wss.on('connection', (ws, req)=>{
                 AND area = "${arr[1]}" AND seat_row = ${arr[2]} AND seat_number = ${arr[3]}`, (err, seat) =>{
                     seat_id = seat[0].seat_id
 
-                    let find_seat_status = `SELECT seat_status FROM seat_status 
+                    let find_seat_status = `SELECT seat_status, seat_id FROM seat_status 
                             WHERE schedule_id = ${schedule_id}
                             AND seat_id = ${seat_id}`
 
@@ -218,11 +218,17 @@ wss.on('connection', (ws, req)=>{
                                 conn.query(send_seat_status, (err, send_s1)=>{
                                     console.log('send_s1: ', send_s1[0])
                                     ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
-                                    // wss.clients.forEach((client) => {
-                                    //     client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
-                                    //     if (client.readyState == websocket.OPEN){
-                                    //     }
-                                    // });
+
+                                    // Available로 변경된 좌석정보 전송
+                                    conn.query(`select * from seat_layout where seat_id = ${s_s_up[0].seat_id}`, (err, a_up)=>{
+
+                                        wss.clients.forEach((client) => {
+                                            if (client != ws){
+
+                                                client.send(JSON.stringify({ type: 'A', result: a_up }));
+                                            }
+                                        });
+                                    })
                                 })
                             })
                         }
@@ -234,29 +240,29 @@ wss.on('connection', (ws, req)=>{
                                 seat_layout.seat_number AS s_col,
                                 perf_price.price AS price,
                                 seat_status.seat_id AS seat_id,
-                                seat_status.user_id AS user_id
+                                seat_status.user_id AS user_id,
+                                seat_status.seat_status AS seat_status
 
                                 FROM seat_status 
                                 JOIN seat_layout ON seat_status.seat_id = seat_layout.seat_id
                                 JOIN perf_price ON seat_layout.venue_id = perf_price.venue_id
-                                WHERE seat_status.seat_status = "Reserved"
+                                WHERE seat_status.seat_status != "Available"
                                 AND perf_price.perf_id = ${arr[5]}
                                 AND seat_layout.grade_code = perf_price.grade_code
                                 AND seat_status.schedule_id = ${schedule_id}
                                 `
                         
-                        conn.query(send_seat_status_not_me, (err, send_s1)=>{
-                            console.log('send_s1, Reserved_not_me: ', send_s1[0])
+                        conn.query(send_seat_status_not_me, (err, send_s2)=>{
+                            console.log('send_s2: ', send_s2.length)
                             wss.clients.forEach((client) => {
                                 if (client.readyState == websocket.OPEN){
-                                    client.send(JSON.stringify({ type: 'seat_status', result: send_s1 }));
+                                    client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));
                                 }
                                 
                             });
                         })
                     })
                 })
-
         }
 
     })
