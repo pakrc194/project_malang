@@ -48,6 +48,7 @@ const myGradeRouter = require('./routes/gradeRouter')
 const interestRouter = require('./routes/interestRouter')
 const actorInfoRouter = require('./routes/actorInfoRouter')
 const castInfoRouter = require('./routes/castInfoRouter')
+const myactorRouter = require('./routes/myactorRouter')
 const { base_date_format } = require('./func/date')
 const { isLoggedIn } = require('./func/ck_login')
 
@@ -69,6 +70,7 @@ app.use('/desc', desRouter)
 app.use('/actor', actorInfoRouter)
 app.use('/cast', castInfoRouter)
 app.use('/payment', paymentRouter)
+app.use('/myactor', myactorRouter)
 
 
 app.get('/', (req, res)=>{    

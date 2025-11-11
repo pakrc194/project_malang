@@ -93,10 +93,22 @@ ORDER BY
 
 
 router.get('/grade', (req, res) => {
-    
+    let gradeSql = `select * from user_grade`
+   
+    conn.query(gradeSql, (err, resQuery)=>{
+        if(err) {
+            console.log('sql 실패', err.message)
+            res.render('../views/grade.html')
+        } else {
+            console.log('sql 성공', resQuery)
+            res.render('../views/grade.html', {res : resQuery})
+        }
+    })
 
-    res.render('../views/grade.html', {aaa:111, bbb:'2등급'})
+    // res.render('../views/grade.html', {aaa:111, bbb:'2등급'})
     //nunjucks 모듈 <<< html에 데이터를 전달을 쉽게하게 돕는 모듈
+
+    
 })
 
 

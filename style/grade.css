@@ -1,0 +1,42 @@
+img {
+    width: 70px;
+}
+
+
+/* 테이블 전체 스타일 */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse; 
+    border: 2px solid #333; 
+    margin-bottom: 50px;    /*메인페이지로 가는 a태그와 간격 준 것*/
+    
+}
+
+
+.styled-table th, .styled-table td {
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    text-align: center; 
+}
+
+
+.styled-table thead th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.styled-table > tbody tr:last-child td,
+.styled-table > tbody tr:last-child th {
+    height: 130px;
+    text-align: left;
+    font-size: 0.9rem;
+    padding-left: 30px;
+}
+
+b{
+    font-size: 1rem;
+}
+
+span{
+    color: lightcoral;
+}

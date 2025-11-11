@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761830225502@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;
@@ -203,3 +203,5 @@ where perf_cast.cast_id = 1 and perf_cast.perf_id = 1
 
 select * from performance_info join venue_info 
 where performance_info.perf_id = venue_info.venue_id 
+
+select * from user_grade
