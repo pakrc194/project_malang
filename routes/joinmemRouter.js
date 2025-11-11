@@ -17,7 +17,10 @@ router.use(express.json());
 
 // 화면
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/mypage/joinmem.html'))
+const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+  res.render('../views/mypage/joinmem.html', loginout, name)
+    // res.sendFile(path.join(__dirname, '../views/mypage/joinmem.html'))
 })
 
 // 이메일 중복 확인(joinmemRouter.js) => 아직 중복 확인 안함(베타)
@@ -29,15 +32,15 @@ router.post('/emailoverlap', (req, res) => {
     const email = email1 + email2;
 
     if (!email1 || !email2) {
-        return res.json({ success: false, message: '이메일을 입력하세요.' }); // ✅ 수정
+        return res.json({ success: false, message: '이메일을 입력하세요.' });
     }
 
-    const sql = `SELECT COUNT(*) AS cnt FROM user_info WHERE email = ?`; // ✅ 수정
+    const sql = `SELECT COUNT(*) AS cnt FROM user_info WHERE email = ?`;
 
     conn.query(sql, [email], (err, rows) => {
         if (err) {
             console.error('이메일 중복확인 DB 에러:', err.message);
-            return res.json({ success: false, message: 'DB 오류가 발생했습니다.' }); // ✅ 수정
+            return res.json({ success: false, message: 'DB 오류가 발생했습니다.' });
         }
 
         const count = rows[0].cnt;
@@ -104,7 +107,7 @@ router.post('/verifyCode', (req, res) => {
   if (record.code.toString() === code.toString()) {
     req.session.verifiedEmail = email;
     delete emailCodes[email];
-    return res.json({ success: true, message: '이메일 인증 성공' });
+    return res.json({ success: true, message: '이메일 인증이 성공하였습니다.' });
   } else {
     return res.json({ success: false, message: '인증코드가 일치하지 않습니다.' });
   }

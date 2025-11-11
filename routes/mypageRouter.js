@@ -68,6 +68,7 @@ router.get('/myInfo', (req, res) => {
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
@@ -87,7 +88,7 @@ router.get('/myInfo', (req, res) => {
             console.log(sessionuserid)
         }
 
-        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout })
+        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout, name })
     })
     //res.render("../views/list.html")
 })
@@ -100,6 +101,7 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     const sort = req.query.sort || 'latest';
 
@@ -184,13 +186,14 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
 
        
 
-        res.render('../views/mypage/mypage.html', {
+        res.render('mypage/mypage.html', {
             title: data.title,
             aside: data.aside,
             mainUrl: data.mainUrl,    
             resvList: rows,    
             sort,
-            loginout
+            loginout,
+            name
         })
 
     })
@@ -205,20 +208,22 @@ router.get('/pwChange', isLoggedIn, (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     console.log(sessionuserid)
     console.log(loginout)
     console.log(email)
 
-    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout })
+    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout, name })
 })
 
 router.get('/memberOut', isLoggedIn, (req, res) => {
 
     data.mainUrl = 'memberOut'
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
-    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout })
+    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout, name })
 })
 
 // ------------------------------------------------------------------------------------------
@@ -277,7 +282,7 @@ router.post("/changepw", isLoggedIn, (req, res) => {
         if (result.affectedRows > 0) {
             res.json({ success: true, message: "비밀번호가 성공적으로 변경되었습니다." });
         } else {
-            res.json({ success: false, message: "비밀번호 변경 실패" });
+            res.json({ success: false, message: "비밀번호 변경에 실패하였습니다." });
         }
     });
 });
@@ -291,7 +296,7 @@ router.post('/pwout', isLoggedIn, (req, res) => {
     const { pwout } = req.body
 
     if (!email) return res.json({ success: false, message: "로그인이 필요합니다." });
-    if (!pwout) return res.json({ success: false, message: "비밀번호 입력하세요." });
+    if (!pwout) return res.json({ success: false, message: "비밀번호를 입력하세요." });
 
     console.log(pwout)
     console.log(email)
@@ -302,9 +307,9 @@ router.post('/pwout', isLoggedIn, (req, res) => {
     const sql = 'SELECT password FROM user_info WHERE email = ?'
     conn.query(sql, [email], (err, rows) => {
         if (err) { return res.status(500).json({ success: false, message: "DB 오류" }) }
-        if (!rows.length) return res.json({ success: false, message: '회원 정보 찾을 수 없음' })
+        if (!rows.length) return res.json({ success: false, message: '회원 정보 찾을 수 없습니다.' })
 
-        if (rows[0].password !== pwout) { return res.json({ success: false, message: '비밀번호 일치하지 않습니다.' }) }
+        if (rows[0].password !== pwout) { return res.json({ success: false, message: '비밀번호가 일치하지 않습니다.' }) }
     })
 
     const updateSql = "UPDATE USER_INFO SET account_status = 'WITHDRAWAL' WHERE email = ?"
@@ -324,6 +329,7 @@ router.get('/resvDetail', (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     console.log(sessionuserid)
     console.log(email)
@@ -384,7 +390,7 @@ router.get('/resvDetail', (req, res) => {
             }
         }
         console.log(cancelresv)
-            res.render("../views/ticketinfo.html", { io : cancelresv[0], loginout })
+            res.render("../views/ticketinfo.html", { io : cancelresv[0], loginout, name })
 
         }
 })
@@ -396,6 +402,7 @@ router.get('/resvCancel', async (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     console.log(sessionuserid)
     console.log(email)
@@ -463,7 +470,7 @@ router.get('/resvCancel', async (req, res) => {
         }
 
         console.log(cancelresv)
-            res.render("../views/ticketcancel.html", { io : cancelresv[0], loginout })
+            res.render("../views/ticketcancel.html", { io : cancelresv[0], loginout, name })
 
         }
     })

@@ -11,34 +11,64 @@
             padding: 0px;
         }
 
-        header {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
-        }
-
+        
         footer {
             width: 100%;
-            height: 100px;
+            height: 80px;
             background-color: #ff0;
-            border: 1px solid #000;
         }
 
         wrapper {
-            width: 1200px;
-            background-color: #fa0;
-            border: 1px solid #000;
-            margin: auto;
-            display: block;
+            display: flex;
+            justify-content: space-around;
+            width: 800px;
+            height: 500px;
+            margin: 40px auto;
+            gap: 40px;
         }
 
         section {
-            border: 1px solid #000;
-            width: 400px;
-            margin: auto;
-            display: block;
-            height: 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            text-align: center;
+        }
+
+
+
+        section:first-of-type input[type="text"],
+        section:first-of-type select,
+        section:first-of-type input[type="submit"] {
+            width: 80%;
+            height: 40px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            /* 이름, 질문, 답변, 버튼 동일 너비 */
+        }
+
+        section:first-of-type select {
+            text-align: center;
+        }
+
+        section:first-of-type input[type="submit"] {
+            height: 35px;
+            background-color: #0d47a1;
+            color: #fff;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+
+        section:first-of-type input[type="submit"]:hover {
+            background-color: #1565c0;
         }
     </style>
     <script>
@@ -61,7 +91,7 @@
                 };
 
                 if (!params.name || !params.question || !params.answer) {
-                    consLog("모든 항목 입력")
+                    consLog("모든 항목을 입력하세요")
                     return;
                 }
 
@@ -91,7 +121,7 @@
 
                             consLog("이메일: <br>" + maskedEmails.join("<br>"));
                         } else {
-                            consLog("일치하는 정보 없습니다");
+                            consLog("일치하는 정보가 없습니다");
                         }
                     })
                     .catch(err => consLog("서버 오류"))
@@ -138,7 +168,7 @@
                     .catch(err => console.error("에러:", err));
             });
 
-            // 2️⃣ 인증번호 확인 버튼 클릭 시 (새로 추가된 부분)
+            // 인증번호 확인 버튼 클릭 시 (새로 추가된 부분)
             checkCodeBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 const inputCode = codeInput.value.trim();
@@ -152,8 +182,12 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.valid) {
-                            alert("이메일 인증이 완료되었습니다!");
+                            alert("이메일 인증이 완료되었습니다");
                             newPwArea.style.display = "block"; // 새 비밀번호 입력칸 표시
+                            emailInput.readOnly = true;
+                            confirmBtn.disabled = true;
+                            codeInput.readOnly = true;
+                            checkCodeBtn.disabled = true;
                         } else {
                             alert("인증번호가 올바르지 않습니다.");
                         }
@@ -236,7 +270,8 @@
 </head>
 
 <body>
-    <header>아이디/비밀번호 찾기</header>
+    {% include '../header.html' %}
+    
     <wrapper>
         <section>
             아이디찾기
@@ -274,18 +309,18 @@
         </section>
         <section>
             비밀번호찾기
-            <form action="" method="post">
+            <form action="" method="post" onsubmit="return false">
                 <!--이메일 입력란-->
+                <div class="row">
                 <input type="email" name="email" id="email" placeholder="아이디(이메일)">
-                <br>
                 <!--인증번호 받기 버튼-->
-                <input type="button" id="confirmcode" value="인증번호 받기">
+                <input type="button" id="confirmcode" value="인증번호" class="btn flex btn small">
+                </div>
                 <br>
                 <!--인증번호 입력란-->
-                <div id="verifyArea" style="display: none;">
+                <div id="verifyArea" class="row" style="display: none;">
                     <input type="text" id="code" placeholder="인증번호 입력">
-                    <br>
-                    <input type="button" id="checkCodeBtn" value="인증번호 확인">
+                    <input type="button" id="checkCodeBtn" value="인증 확인">
                     <br>
                 </div>
                 <br>

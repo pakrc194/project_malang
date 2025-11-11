@@ -29,7 +29,7 @@
             const oldpw = oldpwConfirm
 
             if (!oldpw) {
-                return alert('현재 비밀번호 입력')
+                return alert('현재 비밀번호를 입력해주세요.')
             }
 
             let ttt = JSON.stringify({ oldpw })
@@ -46,12 +46,12 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.exists) {
-                        alert('비밀번호 확인 완료')
+                        alert('비밀번호가 확인되었습니다.')
                         newpw1.style.display = 'block'
                         newpw2.style.display = 'block'
                         submit2.style.display = 'block'
                     } else {
-                        alert('없는 비밀번호')
+                        alert('없는 비밀번호입니다.')
                     }
                 })
                 .catch(err => console.log('에러 :', err.message))
@@ -70,8 +70,8 @@
 
             console.log(newpw1, newpw2)
 
-            if (!newpw1 || !newpw2) { return alert('비밀번호 입력') }
-            if (newpw1 !== newpw2) { return alert('비밀번호 불일치') }
+            if (!newpw1 || !newpw2) { return alert('비밀번호를 입력해주세요.') }
+            if (newpw1 !== newpw2) { return alert('비밀번호가 일치하지 않습니다.') }
 
             fetch(`/mypage/changepw`, {
                 method: 'POST',

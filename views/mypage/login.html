@@ -1,126 +1,176 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>로그인화면</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인</title>
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-  <link rel="stylesheet" href="https://kakao-tam.github.io/developers-static/style.css" />
-  <link rel="icon" type="image/png"
-    href="https://devtalk.kakao.com/uploads/default/optimized/2X/9/9b7b5d9cbbe2e8d6a5410c2d28926804cd8b0bb1_2_32x32.png" />
   <style>
     * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
-    header,
     footer {
       width: 100%;
-      height: 100px;
-      background-color: #ff0;
-      border: 1px solid #000;
+      height: 80px;
+      background-color: #fff200;
+      border: 1px solid #ccc;
     }
 
     wrapper {
-      width: 1200px;
-      background-color: #fa0;
-      border: 1px solid #000;
-      margin: auto;
       display: block;
+      width: 800px;
+      height: 700px;
+      margin: 40px auto;
+      background-color: rgb(255, 255, 255);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 30px 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .formdata {
+      text-align: center;
+    }
+
+    .formdata input {
+      width: 60%;
+      height: 50px;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .kakaoLoginLogo {
+      width: 60%;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .formdata button {
+      width: 60%;
+      height: 60px;
+      padding: 10px;
+      background-color: #1a2b44;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .formdata button:hover {
+      background-color: #2d3b55;
+    }
+
+    .links {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .links a {
+      color: #333;
+      text-decoration: none;
+      margin: 0 8px;
+      font-size: 20px;
+    }
+
+    .links a:hover {
+      text-decoration: none;
+    }
+
+    .kakao-login {
+      width: 60%;
+      text-align: center;
+      margin: 20px auto;
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+    }
+
+    .kakaoLoginLogo {
+      width: 60%;
+      height: 50px;
+      max-width: 350px;
+      /* 로그인 버튼 크기 제한 */
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .kakaoLoginLogo > img {
+      width: 60%;
+      height: 50px;
+      max-width: 350px;
+      /* 로그인 버튼 크기 제한 */
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .kakao-btn:hover {
+      background-color: #f0d900;
+    }
+
+    .loginLogo {
+      width: 100px;
+      height: 100px;
+      display: block;
+      margin: auto;
+    }
+
+    .logo {
+      text-align: center;
+      text-decoration: none;
+      color: black;
     }
   </style>
 </head>
 
 <body>
-  <header>header</header>
+  
+  {% include '../header.html' %}
 
   <wrapper>
-    <section class="login">
-      <div>
+    <h2><a href="/main" class="logo" style="font-weight: bold;"><img src="../../img/malang_logo.png" alt="" class="loginLogo">말랑뮤즈</a></h2>
 
-        <div class="formdata">
-          <input type="text" id="email" placeholder="아이디(이메일)">
-          <br>
-          <input type="password" id="pw" placeholder="비밀번호">
-          <br>
-          <button type="button" id="submit">로그인</button>
-        </div>
-      </div>
+    <div class="formdata">
+      <input type="text" id="email" placeholder="아이디(이메일)">
+      <input type="password" id="pw" placeholder="비밀번호">
+      <button type="button" id="submit">로그인</button>
+    </div>
 
-      <div>
-        <a href="/login/idpwsearch">아이디/비밀번호 찾기</a>
-        <a href="/login/joinmem">회원가입</a>
-      </div>
-    </section>
+    <div class="links">
+      <a href="/login/idpwsearch">아이디/비밀번호 찾기</a> |
+      <a href="/login/clauseagree">회원가입</a>
+    </div>
 
-    <section>
-      <div class="main-container">
-        <div class="container">
-          <div class="vertical-layout">
-
-
-            <script>
-              const domain = window.location.origin;
-
-              function kakaoLogin() {
-                Kakao.Auth.authorize({
-                  redirectUri: `${domain}/login/kakao/redirect`,
-                });
-              }
-
-              function REST_Call(path) {
-                fetch(domain + path)
-                  .then(response => response.text())
-                  .then(data => {
-                    try {
-                      const jsonData = JSON.parse(data);
-                      setContents(JSON.stringify(jsonData, null, 2));
-                    } catch (e) {
-                      setContents(data);
-                    }
-                  })
-                  .catch(error => {
-                    console.error("Fetch 에러:", error);
-                  });
-              }
-
-              function setContents(data) {
-                document.getElementById("contents").value = data;
-              }
-            </script>
-
-            <div class="login-container">
-              <div class="login-buttons">
-                <a href="/login/kakao/authorize">
-                  <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" alt="카카오 로그인" />
-                </a>
-              </div>
-            </div>
-
-            <div class="api-container">
-              <div class="button-group">
-                <button onclick="REST_Call('/login/kakao/profile')">사용자 정보 조회</button>
-                <button onclick="REST_Call('/login/kakao/logout')">
-                  로그아웃
-                </button>
-                <button onclick="REST_Call('/login/kakao/unlink')">
-                  연결 해제
-                </button>
-              </div>
-            </div>
-
-            <textarea id="contents" placeholder="이곳에 API 응답 결과가 표시됩니다."></textarea>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div class="kakao-login">
+      <a href="/login/kakao/authorize" class="kakaoLoginLogo">
+        <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" alt="카카오 로그인" />
+      </a>
+    </div>
   </wrapper>
 
-  <footer>footer</footer>
+  <footer>푸터</footer>
 
   <script>
+    const domain = window.location.origin;
+
+    function kakaoLogin() {
+      Kakao.Auth.authorize({
+        redirectUri: `${domain}/login/kakao/redirect`,
+      });
+    }
+
     window.addEventListener('load', () => {
       document.querySelector("#submit").addEventListener("click", (e) => {
         e.preventDefault();
@@ -129,7 +179,7 @@
         const pw = document.querySelector("#pw").value.trim();
 
         if (!email || !pw) {
-          alert("이메일, 비밀번호 입력");
+          alert("이메일 또는 비밀번호를 입력해주세요.");
           return;
         }
 
@@ -142,15 +192,12 @@
           .then(data => {
             if (data.success) {
               alert(data.message);
-
               if (data.redirect) {
-                location.href = data.redirect
+                location.href = data.redirect;
               } else {
                 location.href = "/main";
               }
-            }
-
-            else {
+            } else {
               alert(data.message);
             }
           })
@@ -158,7 +205,6 @@
       });
     });
   </script>
-
 </body>
 
 </html>

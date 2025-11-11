@@ -23,6 +23,9 @@ router.get('/:id', (req, res)=>{
         email = req.session.kakao_email
     }
 
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
         console.log('상세페이지 세션 이메일 확인: ', email)
 
     let venue_id = 0
@@ -87,7 +90,7 @@ router.get('/:id', (req, res)=>{
             if (resPerf && resPerf.length > 0){
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
-                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
+                res.render("reserv/description.html", {perf: resPerf[0], musical: resP, loginout, name})
             }
 
         })
@@ -99,6 +102,8 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // console.log(req.body.items[0])
     // console.log(req.params.id)
     console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
     conn.query(`select * from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${req.params.id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
@@ -133,7 +138,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 
             // })
             if (resPf && resPf.length > 0){
-                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id})
+                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, loginout, name})
             }
         })
     })
@@ -151,6 +156,9 @@ router.post('/discount/:id', (req, res)=>{
         email = req.session.kakao_email
     }
     console.log('items : ',req.body.items[0])
+
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     let temp_data = [] // grade, area, s_row, s_col, price
     for (let i of JSON.parse(req.body.items[0])){
@@ -182,7 +190,7 @@ router.post('/discount/:id', (req, res)=>{
             conn.query(discountQuery, (err, resDC)=>{
                 console.log(resDC)
                 // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id, loginout, name})
             })
         })
     })
@@ -192,9 +200,12 @@ router.post('/discount/:id', (req, res)=>{
 router.get('/actor/:id', (req, res)=>{
     console.log('배우 상세정보 페이지로 이동')
 
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
     conn.query(`select * from actor_info where actor_id = ${req.params.id}`, (err, resActor)=>{
         console.log(resActor[0])
-        res.render("../views/actorInfo.html", {id: req.params.id, actor: resActor[0]})
+        res.render("../views/actorInfo.html", {id: req.params.id, actor: resActor[0], loginout, name})
     })
 
 })
@@ -208,6 +219,10 @@ router.post('/payment', (req, res)=>{
     else {
         email = req.session.kakao_email
     }
+
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
     // let dd = base_date_format(arr.date)
     console.log('정보: ', req.body.items)
     console.log('카드번호: ', req.body.items[0])
@@ -270,7 +285,7 @@ router.post('/payment', (req, res)=>{
     }
     
     //res.send('hello')
-    res.render('../views/reserv/payment.html', {info: req.body.items})
+    res.render('../views/reserv/payment.html', {info: req.body.items, loginout, name})
 })
 
 

@@ -17,105 +17,121 @@
       margin: 40px 0;
     }
 
-    /* 메인 배너 (현재 상영중) */
-    .main_banner h2 {
-      margin-bottom: 20px;
-      text-align: center;
+    .main_banner {
+      position: relative;
+      width: 100%;
     }
 
     .banner_list {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
+      flex-wrap: nowrap;
       gap: 20px;
-    }
-
-    img {
-      width: 300px;
-      height: 400px;
+      overflow: hidden;
     }
 
     .banner_item {
-      width: 230px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      width: 32%;
+      flex-shrink: 0;
       text-align: center;
     }
 
     .banner_item img {
       width: 100%;
-      height: auto;
+      height: 450px;
+      /* object-fit: cover; */
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .banner_info {
       margin-top: 8px;
+      font-size: 15px;
     }
 
-    /* 공연 오픈 예정 */
-    .main_poster h2 {
-      margin-bottom: 20px;
-      text-align: center;
+    .banner_btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      background-color: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+    }
+
+    .banner_btn.left {
+      left: -50px;
+    }
+
+    .banner_btn.right {
+      right: -50px;
     }
 
     .poster_list {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
-      gap: 20px;
+      flex-wrap: nowrap;
+      gap: 15px;
+      overflow: hidden;
     }
 
     .poster_item {
-      width: 230px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex: 0 0 18%;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
+      transition-duration: 0.3s; 
+    }
+
+    .poster_item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
     }
 
     .poster_item img {
       width: 100%;
-      height: auto;
+      border-radius: 8px;
     }
 
     .poster_info {
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .allview {
-      margin-top: 20px;
-      text-align: right;
-    }
-
-    .allview a {
-      font-weight: bold;
-      margin: auto;
-    }
-
-    /* 배우 추천 */
-    .recommendActor h2 {
-      margin-bottom: 20px;
-      text-align: center;
+      line-height: 1.5;
     }
 
     .actor_list {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 30px;
     }
 
     .actor_item {
-      width: 200px;
+      width: 180px;
       text-align: center;
     }
 
     .actor_item img {
-      width: 100%;
-      height: auto;
-      
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #ccc;
+      transition-duration: 0.3s;
+    }
+
+    .actor_item img:hover {
+      transition-duration: 0.5s;
+      border-color: #ff9900;
+    }
+
+    h2 {
+      text-align: center;
     }
 
     footer {
@@ -125,32 +141,39 @@
       line-height: 100px;
       background-color: #fa0;
     }
+
   </style>
 </head>
 
 <body>
   {% include './header.html' %}
-
   <wrapper>
+    <br>
     <section class="main_banner">
-      <h2>메인배너</h2>
-      <div class="banner_list">
+      <button class="banner_btn left" onclick="moveSlide(-1)">&#10094;</button>
+
+      <div class="banner_list" id="bannerList">
         {% for visual in main_bennr %}
         <div class="banner_item">
           <a href="/desc/{{visual.perf_id}}">
-          <img src="../img/{{ visual.poster_url }}" alt="{{ visual.name }}">
+            <img src="../img/{{ visual.poster_url }}" alt="{{ visual.name }}">
           </a>
           <div class="banner_info">
-            <div>{{ visual.perf_name }}</div>
-            <div>{{ visual.start_date }} ~ {{ visual.end_date }}</div>
+            <h3>{{ visual.perf_name }}</h3><p style="color: rgb(245, 70, 70); font-weight: 700;">{{ visual.running_time }}분</p>
+            <p style="color: #655b5b;">{{ visual.start_date }} ~ {{ visual.end_date }}</p>
           </div>
         </div>
         {% endfor %}
       </div>
-    </section>
+      <div class="allview" style="text-align:right; margin-top:10px;" class="entiresee">
+        <a href="/list" style="font-size: 20px; text-decoration: none; font-weight: bold;">전체보기</a>
+      </div>
 
+      <button class="banner_btn right" onclick="moveSlide(1)">&#10095;</button>
+    </section>
+<br>
     <section class="main_poster">
-      <h2>공연 오픈 예정</h2>
+      <h2>공연 오픈 예정</h2><br>
       <div class="poster_list">
         {% for musical in coming_benner %}
         <div class="poster_item">
@@ -158,38 +181,66 @@
             <img src="../img/{{ musical.poster_url }}" alt="{{ musical.name }}">
           </a>
           <div class="poster_info">
-            <div>{{ musical.perf_name }}</div>
-            <div>{{ musical.start_date }} ~ {{ musical.end_date }}</div>
-            <div>러닝타임: {{ musical.running_time }}분</div>
-            <div>예매 가능일: {{ musical.start_date }}</div>
+            <div>
+              <h3>{{ musical.perf_name }}</h3><p style="color: rgb(245, 70, 70); font-weight: 700;">{{ musical.running_time }}분</p>
+            </div>
+            <br>
+            <div><p style="color: #655b5b;">{{ musical.start_date }} ~ {{ musical.end_date }}</p></div>
+            <div style="font-size: 13px;">({{ musical.start_date }}부터 예매 가능)</div>
+            <br>
           </div>
         </div>
         {% endfor %}
       </div>
-      <div class="allview">
-        <a href="/list">전체보기</a>
-      </div>
+      
     </section>
-
-    <!-- 배우 추천 -->
+<br>
     <section class="recommendActor">
-      <h2>배우 추천</h2>
+      <h2>배우 추천</h2><br>
       <div class="actor_list">
         {% for actor in actor_benner %}
         <div class="actor_item">
-          <a href="actor/{{actor.actor_id}}">
-          <img src="../img/{{ actor.actor_profile_url }}" alt="">
+          <a href="/actor/{{actor.actor_id}}">
+            <img src="../img/{{ actor.actor_profile_url }}" alt="{{ actor.actor_name }}">
           </a>
-          <div>{{ actor.actor_name }}</div>
+          <div><strong>{{ actor.actor_name }}</strong></div>
         </div>
         {% endfor %}
       </div>
     </section>
   </wrapper>
 
-  <footer>
-    푸터
-  </footer>
+  <footer>푸터</footer>
+
+  <script>
+    const bannerItems = document.querySelectorAll('.banner_item')
+    const itemsPerPage = 3
+    let currentIndex = 0
+
+    function showItems() {
+      bannerItems.forEach((item, index) => {
+        if (index >= currentIndex && index < currentIndex + itemsPerPage) {
+          item.style.display = 'block'
+        } else {
+          item.style.display = 'none'
+        }
+      })
+    }
+
+    function moveSlide(direction) {
+      const totalItems = bannerItems.length;
+      const maxIndex = totalItems - itemsPerPage;
+
+      currentIndex += direction * itemsPerPage;
+      if (currentIndex < 0) currentIndex = maxIndex;
+      if (currentIndex > maxIndex) currentIndex = 0;
+
+      showItems();
+    }
+
+
+    showItems();
+  </script>
 </body>
 
 </html>

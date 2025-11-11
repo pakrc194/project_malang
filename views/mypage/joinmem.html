@@ -7,47 +7,213 @@
     <title>회원가입</title>
     <style>
         * {
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        header {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
-        }
-
+        header,
         footer {
-            width: 100%;
-            height: 100px;
+            width: 1200px;
             background-color: #ff0;
-            border: 1px solid #000;
         }
 
         wrapper {
-            width: 1200px;
-            background-color: #fa0;
-            border: 1px solid #000;
-            margin: auto;
+            width: 800px;
+            height: 700px;
+
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 40px auto;
+            padding: 30px 25px;
             display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+
+        }
+
+        select {
+            text-align: center;
+
         }
 
         .joinmem {
-            border: 1px solid #000;
-            width: 400px;
+            width: 50%;
             margin: auto;
-            display: block;
         }
 
-        #pwEqChk {
+        /* 공통 입력창 스타일 */
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            height: 40px;
+            margin: 8px 0;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* 이메일 영역 */
+        .email-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+
+        #email1 {
+            flex: 1.2;
+            /* 약간 넓게 */
+            height: 38px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+
+        #email2 {
+            flex: 0.9;
+            height: 38px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 0 6px;
+            font-size: 14px;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .logo>a>img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: auto;
+        }
+
+        /* 중복확인 버튼 */
+        #emailoverlap {
+            flex: 0.7;
+            height: 35px;
+            background-color: #0d47a1;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #emailoverlap:hover {
+            background-color: #1565c0;
+        }
+
+        /* 인증번호 받기 버튼 */
+        #confirmcode {
+            width: 100%;
+            height: 35px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+
+        #confirmcode:hover {
+            background-color: #1565c0;
+        }
+
+        #authSection {
+            margin-top: 10px;
             display: none;
         }
+
+        #code {
+            width: 100%;
+            height: 38px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 0 10px;
+        }
+
+        #checkCodeBtn {
+            width: 100%;
+            height: 35px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .verify-finish {
+            width: 100%;
+            height: 45px;
+            background-color: #0d47a1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* 비밀번호 일치 확인 */
+        #pwEqChk {
+            color: red;
+            font-size: 13px;
+            display: none;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* 가입 완료 버튼 */
+        #submit {
+            width: 100%;
+            height: 45px;
+            margin-top: 15px;
+            background-color: #0d47a1;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #1565c0;
+        }
+
+        .loginLogo {
+      width: 100px;
+      height: 100px;
+      display: block;
+      margin: auto;
+    }
+
+    .logo {
+      text-align: center;
+      text-decoration: none;
+      color: black;
+    }
     </style>
 
     <script>
         window.onload = function () {
 
+            let emailChecked = false
             //----------------------------------------------------------------------------------------------- 이메일 중복확인
             document.querySelector("#emailoverlap").onclick = function () {
 
@@ -83,6 +249,10 @@
 
                         if (data.success) {
                             emailChecked = true
+
+                            document.querySelector('#email1').readOnly = true
+                            document.querySelector('#email2').disabled = true
+                            document.querySelector('#emailoverlap').disabled = true
                         } else {
                             emailChecked = false
                         }
@@ -130,7 +300,14 @@
                     body: JSON.stringify({ email, code })
                 })
                     .then(res => res.json())
-                    .then(data => alert(data.message))
+                    .then(data => {
+                        alert(data.message)
+                        if (data.success) {
+                            document.querySelector('#code').readOnly = true
+                            document.querySelector('#confirmcode').disabled = true
+                            document.querySelector('#checkCodeBtn').disabled = true
+                        }
+                    })
                     .catch(err => console.log('에러 :', err.message));
             };
 
@@ -266,32 +443,31 @@
 
 <body>
     <!--헤더-->
-    <header>header</header>
+     {% include '../header.html' %}
 
     <wrapper>
         <!--회원가입-->
         <section class="joinmem">
-            <div>
+             <h2><a href="/main" class="logo" style="font-weight: bold;"><img src="../../img/malang_logo.png" alt="" class="loginLogo">회원가입</a></h2>
+            <div><br>
                 <form action="/" method="post" name="myFrm">
                     <!--이메일-->
-                    <input type="text" id="email1" placeholder="아이디(이메일)">@
-                    <select id="email2">
-                        <option value="@naver.com">naver.com</option>
-                        <option value="@gmail.com">gmail.com</option>
-                    </select>
-                    <br>
-                    <!--중복확인 버튼-->
-                    <input type="button" id="emailoverlap" value="중복확인">
-                    <br>
+                    <div class="email-row">
+                        <input type="text" id="email1" placeholder="아이디(이메일)">
+                        <select id="email2">
+                            <option value="@naver.com">@naver.com</option>
+                            <option value="@gmail.com">@gmail.com</option>
+                        </select>
+                        <button type="button" id="emailoverlap">중복확인</button>
+                    </div>
                     <!--인증번호 받기 버튼-->
                     <input type="button" id="confirmcode" value="인증번호 받기">
-                    <br>
                     <!--인증번호 입력란-->
                     <div id="authSection" style="display: none;">
-                    <input type="text" id="code" placeholder="인증번호 입력">
-                    <br>
-                    <input type="button" id="checkCodeBtn" value="인증 확인">
-                    <br>
+                        <input type="text" id="code" placeholder="인증번호 입력">
+
+                        <input type="button" id="checkCodeBtn" value="인증 확인">
+                        <br>
                     </div>
                     <!--비밀번호-->
                     <input type="password" name="pw" id="pw1" placeholder="비밀번호(8~16자, 영문, 숫자, 특수문자(!@#&*))">
@@ -301,7 +477,6 @@
                     <br>
                     <!--비밀번호 일치 확인-->
                     <div id="pwEqChk">비밀번호가 일치하지 않습니다.</div>
-                    <br>
                     <input type="text" name="name" id="name" placeholder="이름">
                     <br>
                     <div>

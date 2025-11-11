@@ -10,6 +10,7 @@ router.get('/:id', async (req, res) => {
     console.log('email', req.session?.email, req.params.id)
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     let userId = 7
     let isInterest = false
@@ -29,7 +30,7 @@ router.get('/:id', async (req, res) => {
         
         conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
             console.log(perfListQuery)
-            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery, loginout})
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery, loginout, name})
         })
     })
 })

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>등급 정보</title>
     <style>
         * {
             margin: 0px;
@@ -102,7 +102,7 @@
 
 
 
-    <!-- {{grade_list[0].grade_id}}<br/>
+     {{grade_list[0].grade_id}}<br/>
     {{grade_list[0].grade_name}}<br/>
     {{grade_list[0].grade_score}}<br/>
     {{grade_list[0].discount_rate}}<br/>
@@ -135,8 +135,218 @@
     {{grade_list[4].grade_score}}<br/>
     {{grade_list[4].discount_rate}}<br/>
     <img src="../img/{{grade_list[4].grade_image_url}}" alt=""><hr/>
-    {{grade_list[4].grade_image_url}}<hr/> -->
+    {{grade_list[4].grade_image_url}}<hr/>
 
     <a href="/main">메인페이지로</a>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>말랑뮤즈 등급 정보</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            padding: 40px 0;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5a3e36;
+        }
+
+        h1 {
+            font-size: 32px;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 50px;
+        }
+
+        p {
+            width: 90%;
+            max-width: 900px;
+            margin: 10px auto;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        p.blue {
+            color: #0056ff;
+            font-weight: 500;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #f0e0e0;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8e6de;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff9f6;
+        }
+
+        tr:hover {
+            background-color: #fdf2ec;
+            transition: 0.2s;
+        }
+
+        td img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin: auto;
+            display: block;
+        }
+
+        .gradename {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btnhome {
+            width: 40%;
+            display: inline-block;
+            background-color: rgb(40, 19, 224);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            margin: 40px auto;
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            transition-duration: 0.3s;
+        }
+
+        .btnhome:hover {
+            background-color: rgb(76, 59, 235);
+        }
+
+        .malanggrade {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>말랑뮤즈 등급이란?</h2>
+    <p class="malanggrade">
+        말랑뮤즈는 구매 실적에 따라 포인트가 적립되며 <br> 차등화된 혜택을 드리는 등급 제도를 운영하고 있습니다.<br><br>
+        최근 5개월과 이번 달의 주문 금액을 매월 1일 산정하며, <br> 입문 / 애호 / 열정 / 전문 / 명예 등급으로 나누어 혜택을 드리고 있습니다.
+    <p class="blue">총 주문금액은 등급에 따른 할인이 적용된 금액을 의미합니다. (결제금액 기준)</p>
+    </p>
+    <br>
+
+
+    <h2>등급별 혜택 및 기준</h2>
+    <table>
+        <tr>
+            <th>등급</th>
+            <th>등급명</th>
+            <th>승급 기준</th>
+            <th>등급 혜택</th>
+        </tr>
+
+        <tr>
+            <td><img src="../img/{{grade_list[0].grade_image_url}}" alt=""></td>
+            <td class="gradename" style="color: #4a68d8;">{{grade_list[0].grade_name}}</td>
+            <td>{{grade_list[0].grade_score}} 포인트</td>
+            <td>{{grade_list[0].discount_rate}}% 할인</td>
+        </tr>
+
+        <tr>
+            <td><img src="../img/{{grade_list[1].grade_image_url}}" alt=""></td>
+            <td class="gradename" style="color: #e06a50;">{{grade_list[1].grade_name}}</td>
+            <td>{{grade_list[1].grade_score}} 포인트</td>
+            <td>{{grade_list[1].discount_rate}}% 할인</td>
+        </tr>
+
+        <tr>
+            <td><img src="../img/{{grade_list[2].grade_image_url}}" alt=""></td>
+            <td class="gradename" style="color: #34c46a;">{{grade_list[2].grade_name}}</td>
+            <td>{{grade_list[2].grade_score}} 포인트</td>
+            <td>{{grade_list[2].discount_rate}}% 할인</td>
+        </tr>
+
+        <tr>
+            <td><img src="../img/{{grade_list[3].grade_image_url}}" alt=""></td>
+            <td class="gradename" style="color: #7a4dd3;">{{grade_list[3].grade_name}}</td>
+            <td>{{grade_list[3].grade_score}} 포인트</td>
+            <td>{{grade_list[3].discount_rate}}% 할인</td>
+        </tr>
+
+        <tr>
+            <td><img src="../img/{{grade_list[4].grade_image_url}}" alt=""></td>
+            <td class="gradename" style="color: #d3b41f;">{{grade_list[4].grade_name}}</td>
+            <td>{{grade_list[4].grade_score}} 포인트</td>
+            <td>{{grade_list[4].discount_rate}}% 할인</td>
+        </tr>
+    </table>
+
+    <h2>등급 산정</h2>
+    <p>등급 변경 후 6개월 이내에 등급이 재조정되는 경우는 다음과 같습니다.</p>
+
+    <table>
+        <tr>
+            <th>구분</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>등급 하락</td>
+            <td>최근 6개월의 결제 누적 금액이 해당 등급 기준에 미치지 못할 경우 등급이 하락합니다.</td>
+        </tr>
+        <tr>
+            <td>등급 유지</td>
+            <td>최근 6개월의 결제 누적 금액이 현재 등급 기준에 부합하면 등급이 유지됩니다.</td>
+        </tr>
+        <tr>
+            <td>등급 상승</td>
+            <td>최근 6개월의 결제 누적 금액이 다음 등급 기준을 충족하면 등급이 상승합니다.</td>
+        </tr>
+    </table>
+    <br>
+    <a href="/main" class="btnhome">메인페이지로 돌아가기</a>
+
+</body>
+
 </html>

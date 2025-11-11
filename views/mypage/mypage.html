@@ -15,23 +15,39 @@
 
     wrapper {
       width: 1200px;
-      background-color: rgb(211, 197, 171);
-      border: 1px solid #000;
-      margin: auto;
+      background-color: #fff;
+      margin: 0 auto;
       display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      min-height: 700px;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     aside {
       width: 400px;
-      border: 1px solid #000;
-      background-color: #faa;
+      height: 600px;
+      border-radius: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      box-shadow: 1px 1px 10px #d1cdcd;
     }
 
     section {
       width: 800px;
-      height: 500px;
-      border: 1px solid #000;
-      background-color: #fa4;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      max-height: 600px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
     }
   </style>
   <script>
@@ -43,12 +59,11 @@
 
   <wrapper>
     <aside>
-      사이드바 <br>
       {% include '../mypage/aside.html' %}
     </aside>
     <section id="content">
       {% include '../mypage/'+mainUrl+'.html' %}
-      
+
     </section>
 
   </wrapper>
@@ -56,5 +71,5 @@
   <footer>푸터</footer>
 
 </body>
-</html>
 
+</html>

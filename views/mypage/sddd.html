@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>약관 동의</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    form {
+      width: 300px;
+      margin: 40px auto;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: white;
+      font-size: 14px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    a {
+      font-size: 12px;
+      color: #ff6600;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #nextBtn {
+      width: 100%;
+      height: 40px;
+      background-color: #14213d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #nextBtn:hover {
+      background-color: #0f1a30;
+    }
+
+    /* 팝업 스타일 */
+    .popup {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .popup-content {
+      background: #fff;
+      width: 280px;
+      margin: 150px auto;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .popup-content button {
+      margin-top: 10px;
+      padding: 5px 15px;
+      border: none;
+      background-color: #14213d;
+      color: white;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="userForm">
+    <label>
+      <span><input type="checkbox" name="chk" value="1">서비스 이용 약관</span>
+      <a href="#" class="view" data-popup="popup1">자세히보기</a>
+    </label>
+
+    <label>
+      <span><input type="checkbox" name="chk" value="2">개인정보 수집 동의</span>
+      <a href="#" class="view" data-popup="popup2">자세히보기</a>
+    </label>
+
+    <label>
+      <span><input type="checkbox" name="chk" value="3">마케팅 정보 수신 동의</span>
+      <a href="#" class="view" data-popup="popup3">자세히보기</a>
+    </label>
+
+    <label>
+      <span><input type="checkbox" id="checkAll">전체 동의하기</span>
+    </label>
+
+    <button type="button" id="nextBtn">다음</button>
+  </form>
+
+  <!-- 팝업 1 -->
+  <div id="popup1" class="popup">
+    <div class="popup-content">
+      <p><b>서비스 이용 약관</b><br>서비스 이용 시 따라야 할 규정입니다.</p>
+      <button class="closeBtn">닫기</button>
+    </div>
+  </div>
+
+  <!-- 팝업 2 -->
+  <div id="popup2" class="popup">
+    <div class="popup-content">
+      <p><b>개인정보 수집 동의</b><br>회원가입 시 필요한 개인정보를 수집합니다.</p>
+      <button class="closeBtn">닫기</button>
+    </div>
+  </div>
+
+  <!-- 팝업 3 -->
+  <div id="popup3" class="popup">
+    <div class="popup-content">
+      <p><b>마케팅 정보 수신 동의</b><br>이벤트, 광고 등 정보를 받아볼 수 있습니다.</p>
+      <button class="closeBtn">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    const checkAll = document.getElementById("checkAll");
+    const items = document.querySelectorAll('input[name="chk"]');
+
+    // 전체 선택
+    checkAll.addEventListener("change", function() {
+      items.forEach(chk => chk.checked = checkAll.checked);
+    });
+
+    // 개별 선택 시 전체 선택 상태 변경
+    items.forEach(chk => {
+      chk.addEventListener("change", function() {
+        checkAll.checked = Array.from(items).every(item => item.checked);
+      });
+    });
+
+    // 다음 버튼
+    document.getElementById("nextBtn").addEventListener("click", function() {
+      const required = Array.from(items).slice(0, 2);
+      const allChecked = required.every(chk => chk.checked);
+      if (!allChecked) {
+        alert("필수 항목에 동의해주세요!");
+        return;
+      }
+      location.href = 'joinmem.html';
+    });
+
+    // 자세히보기 -> 팝업 열기
+    const viewLinks = document.querySelectorAll(".view");
+    const popups = document.querySelectorAll(".popup");
+    const closeBtns = document.querySelectorAll(".closeBtn");
+
+    viewLinks.forEach(link => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        const target = link.getAttribute("data-popup");
+        document.getElementById(target).style.display = "block";
+      });
+    });
+
+    // 닫기 버튼 클릭 시 팝업 닫기
+    closeBtns.forEach(btn => {
+      btn.addEventListener("click", function() {
+        btn.closest(".popup").style.display = "none";
+      });
+    });
+
+    // 바깥 클릭 시 팝업 닫기
+    window.addEventListener("click", function(e) {
+      if (e.target.classList.contains("popup")) {
+        e.target.style.display = "none";
+      }
+    });
+  </script>
+
+</body>
+</html>
