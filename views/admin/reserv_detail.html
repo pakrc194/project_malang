@@ -13,22 +13,28 @@
 <body>
     <h1>예매 상세</h1>
     <h2>회원정보</h2>
-    {{reservList[0].email}}<br/>
+    {{userInfo[0].email}}<br/>
     <hr>
     <h2>예매 정보</h2>
-    {% for reserv in reservList %}
-        {{reserv.resv_number}}<br/>
-        {{reserv.perf_name}}<br/>
-        <img id="resv_detail_img" src="/img/{{reserv.poster_url}}" alt="{{reserv.poster_url}}"><br/>
-        {{reserv.schedule_date}}<br/>
-        {{reserv.schedule_time}}<br/>
-        {{reserv.schedule_round}}<br/>
-        {{reserv.total_amount}}<br/>
-        {{reserv.discount_rate}}<br/>
-        {{reserv.final_amount}}<br/>
-        {{reserv.resv_date}}<br/>
-        {{reserv.resv_status}}<hr/>
-    {% endfor %}
+    {% if reservList.length == 0%}
+        예매 내역이 없습니다.<br/>
+    {% else %}
+        {% for reserv in reservList %}
+            {{reserv.resv_number}}<br/>
+            {{reserv.perf_name}}<br/>
+            <img id="resv_detail_img" src="/img/{{reserv.poster_url}}" alt="{{reserv.poster_url}}"><br/>
+            {{reserv.schedule_date}}<br/>
+            {{reserv.schedule_time}}<br/>
+            {{reserv.schedule_round}}<br/>
+            {{reserv.total_amount}}<br/>
+            {{reserv.discount_rate}}<br/>
+            {{reserv.final_amount}}<br/>
+            {{reserv.resv_date}}<br/>
+            {{reserv.resv_status}}<hr/>
+        {% endfor %}
+    {% endif %}
+
+
     <a href="/admin/user/list">뒤로</a>
 </body>
 </html>

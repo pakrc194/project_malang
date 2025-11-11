@@ -520,34 +520,31 @@ router.get('/reserv/detail', (req, res)=>{
     let userId = req.query.userId
     console.log(userId)
     
-    let reservSQL = `
-        select 
-        R.resv_id, R.resv_number, R.total_amount, R.discount_rate, R.final_amount,
-        R.resv_date, R.resv_status,
-        user_info.*, P.perf_name, P.poster_url,
-        PS.schedule_date, PS.schedule_time, PS.schedule_round
-        from reservation_info as R
-        join user_info on user_info.user_id = R.user_id
-        join perf_schedule as PS on PS.schedule_id = R.schedule_id
-        join performance_info as P on P.perf_id = PS.schedule_id
-        where user_info.user_id = ?
-    `
+    let userSQL = `select * from user_info where user_info.user_id = ?`
 
-    reservSQL = `select * from reservation_info 
+    let reservSQL = `
+        select * from reservation_info 
         join user_info on user_info.user_id = reservation_info.user_id
         join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
         join performance_info on performance_info.perf_id = perf_schedule.perf_id
         where user_info.user_id = ?`
 
-    conn.query(reservSQL, [userId], (err, reservQuery)=>{
-        if(err)
-            console.log('err : ', err.message)
-        else {
-            console.log(reservQuery)
-            res.render('../views/admin/reserv_detail.html', {reservList : reservQuery})
-        }
-        
+    conn.query(userSQL, [userId], (err, userQuery)=>{
+        conn.query(reservSQL, [userId], (resrvErr, reservQuery)=>{
+            if(resrvErr)
+                console.log('resrvErr : ', resrvErr.message)
+            else {
+                console.log(reservQuery)
+                res.render('../views/admin/reserv_detail.html', {userInfo: userQuery, reservList : reservQuery})
+            }
+            
+        })
     })
+
+        
+
+
+
 })
 
 
