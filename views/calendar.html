@@ -81,7 +81,7 @@
                     }
                     
                     for (let i = 1; i <= lastDateofMonth; i++) {
-                        if (currYear == startYear && currMonth == startMonth && i < startday){
+                        if (currYear == startYear && currMonth == startMonth && i <= startday){
                             // 공연 시작일 혹은 오늘보다 이전 날짜 비활성화
                             liTag += `<li class='inactive' id="set">${i}</li>`;
                             cnt++
