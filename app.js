@@ -207,7 +207,7 @@ wss.on('connection', (ws, req)=>{
                                     //     client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
                                     //     if (client.readyState == websocket.OPEN){
                                     //     }
-                                        
+                                    
                                     // });
                                 })
                             })        
@@ -223,9 +223,9 @@ wss.on('connection', (ws, req)=>{
                                     conn.query(`select * from seat_layout where seat_id = ${s_s_up[0].seat_id}`, (err, a_up)=>{
 
                                         wss.clients.forEach((client) => {
+                                            client.send(JSON.stringify({ type: 'A', result: a_up, schedule_id: schedule_id }));
                                             if (client != ws){
 
-                                                client.send(JSON.stringify({ type: 'A', result: a_up }));
                                             }
                                         });
                                     })
@@ -241,7 +241,8 @@ wss.on('connection', (ws, req)=>{
                                 perf_price.price AS price,
                                 seat_status.seat_id AS seat_id,
                                 seat_status.user_id AS user_id,
-                                seat_status.seat_status AS seat_status
+                                seat_status.seat_status AS seat_status,
+                                seat_status.schedule_id AS schedule_id
 
                                 FROM seat_status 
                                 JOIN seat_layout ON seat_status.seat_id = seat_layout.seat_id
@@ -253,7 +254,7 @@ wss.on('connection', (ws, req)=>{
                                 `
                         
                         conn.query(send_seat_status_not_me, (err, send_s2)=>{
-                            console.log('send_s2: ', send_s2.length)
+                            console.log('send_s2: ', send_s2)
                             wss.clients.forEach((client) => {
                                 if (client.readyState == websocket.OPEN){
                                     client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));

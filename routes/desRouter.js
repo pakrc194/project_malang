@@ -106,6 +106,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     else {
         email = req.session.kakao_email
     }
+    console.log(`예약화면 세션 확인: `, email)
     // 회원 id
     conn.query(`select user_id FROM user_info where email = "${email}"`, (err, req_id)=>{
         user_id = req_id[0].user_id
@@ -139,7 +140,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 `, (err, resSold)=>{
                     // console.log('resSold: ', resSold)
                     if (resPf && resPf.length > 0){
-                        res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold, user_id: user_id})
+                        res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold, user_id: user_id, email: email})
                     }
                 })
             
@@ -176,28 +177,34 @@ router.post('/discount/:id', (req, res)=>{
     let ptot = req.body.items[1]
     let cnt = JSON.parse(req.body.items[0]).length
 
-    let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
-    where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
+    conn.query(`select user_id from user_info where email = "${email}"`, (err, Uid)=>{
+        user_id = Uid[0].user_id
 
-    conn.query(`SELECT * FROM seat_status WHERE user_id = ${user_id} AND seat_status = "Reserved"`, (err, resS)=>{
-        conn.query(`SELECT * FROM perf_schedule WHERE schedule_id = ${resS[0].schedule_id}`, (err, resSche)=>{
-            console.log(resSche)
-            let date = new Date(resSche[0].schedule_date)
-            let arr1 = {
-                choice_time: resSche[0].schedule_round, 
-                year: date.getFullYear(), 
-                month: date.getMonth() +1,
-                day: date.getDate()
-            }
-            console.log(arr1)
-            conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
-                conn.query(discountQuery, (err, resDC)=>{
-                    // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                    res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+        let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
+        where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
+    
+        conn.query(`SELECT * FROM seat_status WHERE user_id = ${user_id} AND seat_status = "Reserved"`, (err, resS)=>{
+            console.log('resS: ', resS)
+            conn.query(`SELECT * FROM perf_schedule WHERE schedule_id = ${resS[0].schedule_id}`, (err, resSche)=>{
+                console.log(resSche)
+                let date = new Date(resSche[0].schedule_date)
+                let arr1 = {
+                    choice_time: resSche[0].schedule_round, 
+                    year: date.getFullYear(), 
+                    month: date.getMonth() +1,
+                    day: date.getDate()
+                }
+                console.log(arr1)
+                conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
+                    conn.query(discountQuery, (err, resDC)=>{
+                        // resDC = 회원 등급 이름, 등급 할인률, 회원id
+                        res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                    })
                 })
             })
         })
     })
+
 })
 
 

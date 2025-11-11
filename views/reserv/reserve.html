@@ -333,7 +333,7 @@
                     }
                 }
             }
-            else if (data.type == "seat_status") {
+            else if (data.type == "seat_status" && data.result.length > 0) {
 
                 // let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
                 // let row = ["first", "second", "third"]
@@ -380,8 +380,10 @@
                 //     }
                 // }
 
+                console.log('스케쥴 아이디: ', "{{avoid[0].schedule_id}}", data.result[0])
+                if ("{{avoid[0].schedule_id}}" == data.result[0].schedule_id){
 
-                document.querySelectorAll("#indiseat").forEach(seat =>{
+                    document.querySelectorAll("#indiseat").forEach(seat =>{
                     for (let i of data.result){
                         if (i.user_id != "{{user_id}}"){
                             arr = seat.value.split(' ')
@@ -423,6 +425,10 @@
                         }
                     }
                 })
+
+                }
+
+                
                                                 
 
                 // document.querySelectorAll("#indiseat").forEach(seat =>{
@@ -438,31 +444,35 @@
                 //     }
                 // })
             }
-            else if (data.type == "A") {
-                console.log(result[0])
-                document.querySelectorAll("#indiseat").forEach(seat =>{
-                    arr = seat.value.split(' ')
-                    console.log(arr)
-                    // console.log('좌석: ', arr)
-                    if (arr[1] == result[0].area && arr[2] == result[0].seat_row && arr[3] == result[0].seat_number){
-                        seat.className = `Available`
-                        if (arr[0] == "R") {
-                            seat.style.cursor="pointer";
-                            seat.style.backgroundColor= "yellowgreen";
-                            seat.style.borderColor="yellowgreen";
+            else if (data.type == "A" && data.result.length > 0) {
+                console.log('A 스케쥴 아이디: ', data.schedule_id, "{{avoid[0].schedule_id}}")
+                if (data.schedule_id == "{{avoid[0].schedule_id}}"){
+
+                    document.querySelectorAll("#indiseat").forEach(seat =>{
+                        arr = seat.value.split(' ')
+                        console.log(arr)
+                        // console.log('좌석: ', arr)
+                        if (arr[1] == result[0].area && arr[2] == result[0].seat_row && arr[3] == result[0].seat_number){
+                            seat.className = `Available`
+                            if (arr[0] == "R") {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "yellowgreen";
+                                seat.style.borderColor="yellowgreen";
+                            }
+                            else if (arr[0] == "S") {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "violet";
+                                seat.style.borderColor="violet";
+                            }
+                            else {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "skyblue";
+                                seat.style.borderColor="skyblue";
+                            }
                         }
-                        else if (arr[0] == "S") {
-                            seat.style.cursor="pointer";
-                            seat.style.backgroundColor= "violet";
-                            seat.style.borderColor="violet";
-                        }
-                        else {
-                            seat.style.cursor="pointer";
-                            seat.style.backgroundColor= "skyblue";
-                            seat.style.borderColor="skyblue";
-                        }
-                    }
-                })
+                    })
+
+                }
             }
 
             
