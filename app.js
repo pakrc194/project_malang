@@ -70,6 +70,7 @@ app.use('/actor', actorInfoRouter)
 app.use('/cast', castInfoRouter)
 app.use('/payment', paymentRouter)
 
+
 app.get('/', (req, res)=>{    
     res.redirect('/main')
 })
