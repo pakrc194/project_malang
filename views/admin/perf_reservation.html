@@ -4,24 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .resv_list_header {
+            width: 1200px;
+            height: 50px;
+            margin: auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .resv_list_header > table {
+            height: 100%;
+            text-align: center;
+        }
+        .resv_list {
+            width: 1200px;
+            height: 500px;
+            margin: auto;
+            overflow: auto;
+            text-align: center;
+        }
+        .resv_list_no {
+            width: 200px;
+        }
+        .resv_list_name {
+            width: 100px;
+        }
+        .resv_list_perf {
+            width: 200px;
+        }
+        .resv_list_resv_date {
+            width: 200px;
+        }
+        .resv_list_count {
+            width: 100px;
+        }
+        .resv_list_discount {
+            width: 100px;
+        }
+        .resv_list_price {
+            width: 100px;
+        }
+        .resv_list_status {
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>예매 목록</h1>
-    {% for reserv in reservList %}
-        {{reserv.resv_number}}<br/>
-        {{reserv.user_name}}<br/>
-        {{reserv.perf_name}}<br/>
-        {{reserv.poster_url}}<br/>
-        {{reserv.schedule_date}}<br/>
-        {{reserv.schedule_time}}<br/>
-        {{reserv.schedule_round}}<br/>
-        {{reserv.seat_id_arr}}<br/>
-        {{reserv.total_amount}}<br/>
-        {{reserv.discount_rate}}<br/>
-        {{reserv.final_amount}}<br/>
-        {{reserv.resv_date}}<br/>
-        {{reserv.resv_status}}<hr/>
-    {% endfor %}
+    <div class="resv_list_header">
+        <table border="">
+            <td class="resv_list_no">번호</td>
+            <td class="resv_list_name">예매자</td>
+            <td class="resv_list_perf">공연이름</td>
+            <td class="resv_list_resv_date">예매일</td>
+            <td class="resv_list_count">예매 수</td>
+            <td class="resv_list_discount">할인</td>
+            <td class="resv_list_price">금액</td>
+            <td class="resv_list_status">예매상태</td>
+        </table>
+    </div>
+    <div class="resv_list">
+        <table border="">
+            {% for reserv in reservList %}
+            <tr>
+                <td class="resv_list_no">{{reserv.resv_number}}</td>
+                <td class="resv_list_name">{{reserv.user_name}}</td>
+                <td class="resv_list_perf">{{reserv.perf_name}}</td>
+                <td class="resv_list_resv_date">{{reserv.resv_date}}</td>
+                <td class="resv_list_count">{{reserv.seat_id_arr}}</td>
+                <td class="resv_list_discount">
+                    {% set rate = reserv.discount_rate*100%}
+                    {{rate}}%
+                </td>
+                <td class="resv_list_price">{{reserv.final_amount}}</td>
+                <td class="resv_list_status">
+                    {% if reserv.resv_status == 'PAID'%}
+                    예매
+                    {% else %}
+                    취소
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+
 </body>
 </html>

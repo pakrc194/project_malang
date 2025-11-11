@@ -4,18 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원목록</title>
+    <style>
+        wrapper {
+            width: 1200px;
+            margin:auto;
+            display: block;
+        }
+        .user_list_header {
+            width: 1200px;
+            height: 50px;
+            margin: auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .user_list_header > table {
+            height: 100%;
+            text-align: center;
+        }
+        .user_list {
+            width: 1200px;
+            height: 500px;
+            text-align: center;
+            overflow: auto;
+        }
+        .user_list_no {
+            width: 100px;
+        }
+        .user_list_email {
+            width: 200px;
+        }
+        .user_list_name {
+            width: 100px;
+        }
+        .user_list_sign {
+            width: 100px;
+        }
+        .user_list_grade {
+            width: 100px;
+        }
+        .user_list_point {
+            width: 100px;
+        }
+        .user_list_resv_count {
+            width: 100px;
+        }
+        .user_list_status {
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>회원 목록</h1>
-    {% for user in userlist %}
-        <a href="/admin/reserv/detail?userId={{user.user_id}}">{{user.email}}</a><br/>
-        {{user.user_name}}<br/>
-        {{user.sign_method}}<br/>
-        {{user.account_status}}<br/>
-        {{user.score}}<br/>
-        {{user.grade_id}}<br/>
-        예매 수 {{user.resv_cnt}}<hr/>
-    {% endfor %}
+    <div class="user_list_header">
+    <table border="">
+        <tr>
+            <td class="user_list_no">번호</td>
+            <td class="user_list_email">이메일</td>
+            <td class="user_list_name">이름</td>
+            <td class="user_list_sign">가입방식</td>
+            <td class="user_list_grade">등급</td>
+            <td class="user_list_point">포인트</td>
+            <td class="user_list_resv_count">예매 수</td>
+            <td class="user_list_status">탈퇴여부</td>
+        </tr>
+    </table>
+    </div>
+    <wrapper>
+        <div class="user_list">
+            <table border="">
+                {% for user in userlist %}
+                <tr>
+                    <td class="user_list_no">{{loop.index}}</td>
+                    <td class="user_list_email"><a href="/admin/reserv/detail?userId={{user.user_id}}">{{user.email}}</a></td>
+                    <td class="user_list_name">{{user.user_name}}</td>
+                    <td class="user_list_sign">{{user.sign_method}}</td>
+                    <td class="user_list_grade">{{user.grade_name}}</td>
+                    <td class="user_list_point">{{user.score}}</td>
+                    <td class="user_list_resv_count">{{user.resv_cnt}}</td>
+                    <td class="user_list_status">
+                        {%if user.account_status == 'ACTIVE'%}
+                            N
+                        {% else %}
+                            Y
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </wrapper>
 </body>
 </html>

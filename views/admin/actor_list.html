@@ -6,39 +6,82 @@
     <title>배우 목록</title>
     <style>
         img {
-            width: 50px;
+            width: 100px;
+        }
+        wrapper {
+            width: 1200px;
+            margin:auto;
+            display: block;
+        }
+        .actor_list_header {
+            width: 1200px;
+            height: 50px;
+            margin: auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .actor_list_header > table {
+            height: 100%;
+            text-align: center;
         }
         .actor_list {
-            width: 1000px;
+            width: 1200px;
             height: 500px;
+            text-align: center;
             overflow: auto;
+        }
+        .actor_list_no {
+            width: 100px;
+        }
+        .actor_list_name {
+            width: 200px;
+        }
+        .actor_list_profile {
+            width: 100px;
+        }
+        .actor_list_birth {
+            width: 100px;
+        }
+        .actor_list_gender {
+            width: 100px;
         }
     </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>배우 목록</h1>
-    <div class="actor_list">
-        <table border="">
-            <tr>
-                <td>번호</td>
-                <td>이름</td>
-                <td>사진</td>
-                <td>출생년도</td>
-                <td>성별</td>
-            </tr>
-            {%for actor in res%}
+    <wrapper>
+        <div class="actor_list_header">
+            <table border="">
                 <tr>
-                    <td>{{loop.index}}</td>
-                    <td>{{actor.actor_name}}</td>
-                    <td><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
-                    <td>{{actor.actor_birth_year}}</td>
-                    <td>{{actor.actor_gender}}</td>
-                </tr>    
-            {%endfor%}
-        </table>
-    </div>
-     
+                    <td class="actor_list_no">번호</td>
+                    <td class="actor_list_name">이름</td>
+                    <td class="actor_list_profile">사진</td>
+                    <td class="actor_list_birth">출생년도</td>
+                    <td class="actor_list_gender">성별</td>
+                </tr>
+            </table>
+        </div>
+        <div class="actor_list">
+            <table border="">
+                {%for actor in res%}
+                    <tr>
+                        <td class="actor_list_no">{{loop.index}}</td>
+                        <td class="actor_list_name">{{actor.actor_name}}</td>
+                        <td class="actor_list_profile"><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
+                        <td class="actor_list_birth">{{actor.actor_birth_year}}</td>
+                        <td class="actor_list_gender">
+                            {% if actor.actor_gender == "M" %}
+                                남자
+                            {% else %}
+                                여자
+                            {% endif %}
+                            
+                        </td>
+                    </tr>    
+                {%endfor%}
+            </table>
+        </div>
+    </wrapper>
     <a href="/admin/actor/upload">배우등록</a>
 </body>
 </html>

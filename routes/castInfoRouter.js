@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const conn = require('../db/db')
-const { base_date_format } = require('../func/date')
+const { base_date_format, base_time_format } = require('../func/date')
 
 
 router.get('/info', async (req, res) => {
@@ -39,20 +39,44 @@ router.get('/info', async (req, res) => {
             CAST_INFO AS CI ON schedule_cast.cast_id = CI.cast_id
         JOIN
             ACTOR_INFO AS AI ON schedule_cast.actor_id = AI.actor_id
+        where ps.perf_id = ?
         ORDER BY
             schedule_cast.schedule_id, CI.cast_id
-        limit 0, 100;`
-    tasks.push(conn.query(scheduleCastSQL, [castId]))
+        `
+    tasks.push(conn.query(scheduleCastSQL, [perfId]))
 
     let [perfInfoQuery, castActorQuery, scheduleCastQuery] = await Promise.all(tasks)
     console.log('perfInfoQuery-------\n', perfInfoQuery)
     console.log('castActorQuery-------\n', castActorQuery)
     console.log('scheduleCastQuery-------\n', scheduleCastQuery[0])
+    
+    let scheduleList = []
+    let scheduleData = {}
+
+    let scheduleIdx = 0
     for(let scheduleCast of scheduleCastQuery) {
-        scheduleCast.schedule_date = base_date_format(scheduleCast.schedule_date)
+        if (scheduleIdx != scheduleCast.schedule_id) {
+            if (scheduleIdx != 0) {
+                scheduleList.push(scheduleData)
+            }
+            scheduleData = {
+                schedule_date: base_date_format(scheduleCast.schedule_date),
+                schedule_time: base_time_format(scheduleCast.schedule_time),
+                schedule_round: scheduleCast.schedule_round,
+                casting: {} // casting 객체를 빈 객체로 초기화
+            };
+            scheduleIdx = scheduleCast.schedule_id;
+        }
+        scheduleData.casting[scheduleCast.cast_name] = scheduleCast.actor_name     
+    }
+    if (Object.keys(scheduleData).length > 0) {
+        scheduleList.push(scheduleData);
     }
 
-    res.render("../views/castInfo.html",{perfInfo : perfInfoQuery[0], castInfo: castInfoQuery[0], castActorList: castActorQuery, scheduleCastList : scheduleCastQuery})
+    console.log(scheduleList[0])
+    console.log(scheduleList[1])
+
+    res.render("../views/castInfo.html",{perfInfo : perfInfoQuery[0], castInfo: castInfoQuery[0], castActorList: castActorQuery, scheduleCastList : scheduleList})
 
     //res.render("../views/list.html"
 })

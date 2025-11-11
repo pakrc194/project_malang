@@ -8,47 +8,92 @@
         img {
             width: 100px;
         }
+        wrapper {
+            display: block;
+            width: 1200px;
+            margin: auto;
+        }
+        .perf_list_header {
+            width: 1200px;
+            height: 50px;
+            margin: auto;
+            margin-top: 10px;
+        }
+        .perf_list_header > table {
+            height: 100%;
+            text-align: center;
+        }
         .perf_list {
-            width: 1000px;
+            width: 1200px;
             height: 500px;
+            margin: auto;
             overflow: auto;
+            text-align: center;
+        }
+        .perf_list_no {
+            width: 100px;
+        }
+        .perf_list_poster {
+            width: 200px;
+        }
+        .perf_list_name {
+            width: 300px;
+        }
+        .perf_list_reg_date {
+            width: 150px;
+        }
+        .perf_list_resv_status {
+            width: 150px;
+        }
+        .perf_list_hidden {
+            width: 100px;
         }
     </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>공연 목록</h1>
-    <div class="perf_list">
-        <table border="">
-            <tr>
-                <td>번호</td>
-                <td>공연이름</td>
-                <td>포스터</td>
-                <td>장르</td>
-                <td>러닝타임</td>
-                <td>시작날짜</td>
-                <td>종료날짜</td>
-                <td>예매상태</td>
-                <td>등록일</td>
-                <td>숨김 여부</td>
-            </tr>  
-            {%for perf in res%}
+    <wrapper>
+        <div class="perf_list_header">
+            <table border="">
                 <tr>
-                    <td>{{loop.index}}</td>
-                    <td><a href="/admin/perf/detail/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
-                    <td><img src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"></td>
-                    <td>{{perf.genre}}</td>
-                    <td>{{perf.running_time}}</td>
-                    <td>{{perf.start_date}}</td>
-                    <td>{{perf.end_date}}</td>
-                    <td>{{perf.resv_status}}</td>
-                    <td>{{perf.reg_date}}</td>
-                    <td>{{perf.is_hidden}}</td>
-                </tr>    
-            {%endfor%}
-        </table>
-    </div>
-
+                    <td class="perf_list_no">번호</td>
+                    <td class="perf_list_poster">포스터</td>
+                    <td class="perf_list_name">공연이름</td>
+                    <td class="perf_list_reg_date">등록일</td>
+                    <td class="perf_list_resv_status">예매상태</td>
+                    <td class="perf_list_hidden">숨김 여부</td>
+                </tr>  
+            </table>
+        </div>
+        <div class="perf_list">
+            <table border="">
+                {%for perf in res%}
+                    <tr>
+                        <td class="perf_list_no">{{loop.index}}</td>
+                        <td class="perf_list_poster"><img src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"></td>
+                        <td class="perf_list_name"><a href="/admin/perf/detail/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
+                        <td class="perf_list_reg_date">{{perf.reg_date}}</td>
+                        <td class="perf_list_resv_status">
+                            {% if perf.resv_status == 'PREPARING'%}
+                                D-
+                            {% elif perf.resv_status == 'OPEN'%}
+                                예매중
+                            {% else %}
+                                종료
+                            {% endif%}
+                        </td>
+                        <td class="perf_list_hidden">
+                            {% if perf.is_hidden == 0 %}
+                                X
+                            {% else %}
+                                O
+                            {% endif %}
+                        </td>
+                    </tr>    
+                {%endfor%}
+            </table>
+        </div>
+    </wrapper>
     <a href="/admin/perf/upload">등록</a>
 </body>
 </html>

@@ -18,6 +18,7 @@
     .admin_actor_list, .admin_upload_actor {
         width: 1200px;
         height: 150px;
+        overflow: auto;
     }
     .admin_actor_list > .admin_actor_info, .admin_upload_actor > .admin_actor_info {
         width:100px;
@@ -34,6 +35,23 @@
         var castArr = []
         var actArr = []
         var perfCastArr = []
+
+        let divUploadActor = document.querySelector(".admin_upload_actor")
+        let divActorList = document.querySelector(".admin_actor_list")
+        let divActorInfoList = document.querySelectorAll('.admin_actor_info')
+        for(let divActorInfo of divActorInfoList) {
+            let actorInfoId = divActorInfo.id.split('actor')[1]
+            divActorInfo.dataset.id = actorInfoId
+            if(divActorInfo.parentNode===divActorList) {
+                let pActorName = document.querySelector(`#actorName${actorInfoId}`)
+                let actorName = pActorName.innerHTML
+                let actorData = {id:`actor${actorInfoId}`, name:actorName}
+                actArr.push(actorData)
+                castArrIdx++;
+            }       
+        }
+
+
 
         document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
             const newCastData = {
@@ -142,9 +160,7 @@
             perfCastArr.push(prefCastData)
         }
 
-        let divUploadActor = document.querySelector(".admin_upload_actor")
-        let divActorList = document.querySelector(".admin_actor_list")
-        let divActorInfoList = document.querySelectorAll('.admin_actor_info')
+
         
         
         for(const divActorInfo of divActorInfoList) {
@@ -222,39 +238,48 @@
 <body>
     <h1>modify</h1>
     <form action="/admin/perf/modify" method="POST" enctype="multipart/form-data" name="modifyFrm">
-        공연이름 <input type="text" name="fname" value="{{perfInfo.name}}" readonly><br/>
+        공연이름 <input type="text" name="fname" value="{{perfInfo.perf_name}}" readonly><br/>
         포스터 <input type="file" name="fposter" id="fposter"><br/>
         시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
         공연장르 <select name="fgenre" id="fgenre">
-            <option value="오리지널">오리지널</option>
-            <option value="창작">창작</option>
-            <option value="라이선스">라이선스</option>
-            <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
+            <option value="오리지널"{%if perfInfo.genre=='오리지널'%}selected{%endif%}>오리지널</option>
+            <option value="창작"{%if perfInfo.genre=='창작'%}selected{%endif%}>창작</option>
+            <option value="라이선스"{%if perfInfo.genre=='라이선스'%}selected{%endif%}>라이선스</option>
+            <option value="넌버벌퍼포먼스"{%if perfInfo.genre=='넌버벌퍼포먼스'%}selected{%endif%}>넌버벌퍼포먼스</option>
         </select><br/>
         러닝타임 <input type="text" name="frunning" value="{{perfInfo.running_time}}"><br/>
-        공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
+        공연기간 <input type="text" name="fstart" value="{{perfInfo.start_date}}" readonly>~<input type="text" name="fend" value="{{perfInfo.end_date}}" readonly><br/>
         공연장 <select name="ftheator" id="ftheator">
-            <option value="1">샤롯데씨어터</option>
-            <option value="2">드림씨어터</option>
-            <option value="3">대학로예술극장</option>
-            <option value="4">창원성산아트홀</option>
+            <option value="1"{%if perfInfo.venue_id==1%}selected{%endif%}>샤롯데씨어터</option>
+            <option value="2"{%if perfInfo.venue_id==2%}selected{%endif%}>드림씨어터</option>
+            <option value="3"{%if perfInfo.venue_id==3%}selected{%endif%}>대학로예술극장</option>
+            <option value="4"{%if perfInfo.venue_id==4%}selected{%endif%}>창원성산아트홀</option>
         </select><br/>
         좌석별 가격<br/>
-        R<input type="text" name="fclassR" id="seatR"><br/>
-        S<input type="text" name="fclassS" id="seatS"><br/>
-        A<input type="text" name="fclassA" id="seatA"><br/>
+        {% for price in perfPriceArr %}
+            {{price.grade_code}}  <input type="text" value='{{price.price}}' readonly>  <br/>
+        {% endfor %}
 
         <hr/>
         출연 배우
         <div class="admin_upload_actor">
-
+            {%for actor in castActorArr%}
+                <div class="admin_actor_info" id="actor{{actor.actor_id}}">
+                    <div>
+                        <img src="/img/{{actor.actor_profile_url}}" width="50px" alt="">
+                    </div>
+                    <p id="actorName{{actor.actor_id}}">
+                        {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
+                    </p>
+                </div>
+            {%endfor%}
         </div>
         출연 목록
         <div class="admin_actor_list">
-            {%for actor in res%}
+            {%for actor in actorList%}
                 <div class="admin_actor_info" id="actor{{actor.actor_id}}">
                     <div>
-                        <img src="../../img/{{actor.actor_profile_url}}" width="50px" alt="">
+                        <img src="/img/{{actor.actor_profile_url}}" width="50px" alt="">
                     </div>
                     <p id="actorName{{actor.actor_id}}">
                         {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
@@ -269,15 +294,33 @@
                 <td>배역</td>
                 <td>줄거리</td>
                 <td>삭제</td>
+                <td colspan="4">배정</td>
             </tr>
+            {% for cast in castArr %}
+                <tr>
+                    <td>{{cast.cast_name}}</td>
+                    <td>{{cast.cast_story}}</td>
+                    <td><input type="button" value="-" id="removeBtn{{cast_id}}"></td>
+                    <td>
+                        <select id="selectActor{{cast_id}}">
+                            {% for actor in castActorArr %}
+                                <option value = 'actor{{actor.actor_id}}'>{{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="button" value="지정" id="castBtn{{cast_id}}"></td>
+                    <td><span id="castList{{cast_id}}"></span></td>
+                    <td><input type="button" value="초기화" id="initCastBtn{{cast_id}}"></td>
+                </tr>    
+            {%endfor%}
         </table>
         <hr/>
         배역 <input type="text" id="admin_tb_add_cast"/>
         줄거리 <input type="text" id="admin_tb_add_bg"/>
-        <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
-        
+        <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/><br/>
+        예매 허용 Y<input type="radio" name="fstatus" value="y"> N<input type="radio" name="fstatus" value="n">
         <hr/>
-        <input type="button" value="업로드" id="btn_upload">
+        <input type="button" value="수정" id="btn_modify">
         <a href="/admin/perf">뒤로</a>
         <hr/>
     </form>

@@ -289,18 +289,59 @@ router.get('/perf/modify/:id', (req, res)=> {
             res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', perfInfoQuery)
-            perfInfoQuery.start_date = base_date_format(perfInfoQuery.start_date)
-            perfInfoQuery.end_date = base_date_format(perfInfoQuery.end_date)
-            perfInfoQuery.reg_date = base_date_format(perfInfoQuery.reg_date)
+            perfInfoQuery[0].start_date = base_date_format(perfInfoQuery[0].start_date)
+            perfInfoQuery[0].end_date = base_date_format(perfInfoQuery[0].end_date)
+            perfInfoQuery[0].reg_date = base_date_format(perfInfoQuery[0].reg_date)
             
-        
-            conn.query(sPrefCastWpid, [req.params.id], (perfCastErr, perfCastQuery)=>{
+            let perfCastSql = `select * 
+                        from perf_cast
+                        join actor_info on perf_cast.actor_id = actor_info.actor_id
+                        join cast_info on perf_cast.cast_id = cast_info.cast_id
+                        where perf_cast.perf_id = ?`
+
+            conn.query(perfCastSql, [req.params.id], async (perfCastErr, perfCastQuery)=>{
                 if(perfCastErr) {
                     console.log('sql 실패', perfCastErr.message)
                     res.render('../views/admin/perf_list.html')
                 } else {
                     console.log('prefCast : ', perfCastQuery)
-                    res.render('../views/admin/perf_modify.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery})
+                    let castArr = []
+                    let castingArr = {}
+                    let castActorArr = []
+                    for(let perfCast of perfCastQuery) {
+                        castArr.push({cast_id: perfCast.cast_id, cast_name: perfCast.cast_name, cast_story: perfCast.cast_story})
+                        castActorArr.push({actor_id: perfCast.actor_id, actor_name: perfCast.actor_name, 
+                            actor_birth_year: perfCast.actor_birth_year, actor_gender: perfCast.actor_gender, actor_profile_url: perfCast.actor_profile_url})
+                        if(castingArr[perfCast.cast_id]) {
+                            castingArr[perfCast.cast_id] += ','+perfCast.actor_id
+                        } else {
+                            castingArr[perfCast.cast_id] = perfCast.actor_id+''
+                        }
+                    }
+
+                    let perfPriceArr = await conn.query('select * from perf_price where perf_id = ? and venue_id = ?', [req.params.id, perfInfoQuery[0].venue_id])
+
+                    console.log(castArr)
+                    console.log(castingArr)
+                    console.log(castActorArr)
+                    console.log(perfPriceArr)
+                    let actorListQuery = await conn.query('select * from actor_info')
+                    let actorList = []
+                    for(let actor of actorListQuery) {
+                        let flag_include = false
+                        for(let castActor of castActorArr) {
+                            if(castActor.actor_id == actor.actor_id) {
+                                flag_include = true
+                                break;
+                            }
+                        }
+                        if(!flag_include) {
+                            actorList.push(actor)
+                        }
+                    }
+                    
+
+                    res.render('../views/admin/perf_modify.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, actorList, castArr, castingArr, castActorArr, perfPriceArr})
                 }
             })
         }
@@ -412,10 +453,11 @@ router.get('/user', (req, res)=> {
 })
 router.get('/user/list', (req, res)=> {
     let tasks = []
-    let userQuery = 'select * from user_info'
+    let userQuery = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id'
     conn.query(userQuery, async (err, ret)=> {
         let countSQL = `select count(*) from reservation_info where user_id = ?`
         for(let user of ret) {
+            user.score = Number(user.score).toLocaleString()
             tasks.push(conn.query(countSQL, user.user_id))
         }
         let [...users] = await Promise.all(tasks)
@@ -438,7 +480,10 @@ router.get('/reserv', (req, res)=>{
     res.redirect('/admin/reserv/list')
 })
 router.get('/reserv/list', (req, res)=>{
-    let reservSQL = `select * from reservation_info 
+    let reservSQL = `select 
+        reservation_info.*, user_info.user_id, user_info.user_name,
+        performance_info.perf_name
+        from reservation_info 
         join user_info on user_info.user_id = reservation_info.user_id
         join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
         join performance_info on performance_info.perf_id = perf_schedule.perf_id`
@@ -458,9 +503,17 @@ router.get('/reserv/list', (req, res)=>{
     conn.query(reservSQL, (err, reservQuery)=>{
         if(err)
             console.log('err : ', err.message)
-        else 
+        else {
             console.log(reservQuery)
-        res.render('../views/admin/perf_reservation.html', {reservList : reservQuery})
+            for(let resv of reservQuery) {
+                resv.resv_date = base_date_format(resv.resv_date)
+                resv.schedule_date = base_date_format(resv.schedule_date)
+                resv.seat_id_arr = (resv.seat_id_arr).toString().split(',').length
+                resv.final_amount = Number(resv.final_amount).toLocaleString()
+            }
+            
+            res.render('../views/admin/perf_reservation.html', {reservList : reservQuery})
+        }
     })
 })
 router.get('/reserv/detail', (req, res)=>{
@@ -489,9 +542,11 @@ router.get('/reserv/detail', (req, res)=>{
     conn.query(reservSQL, [userId], (err, reservQuery)=>{
         if(err)
             console.log('err : ', err.message)
-        else 
+        else {
             console.log(reservQuery)
-        res.render('../views/admin/reserv_detail.html', {reservList : reservQuery})
+            res.render('../views/admin/reserv_detail.html', {reservList : reservQuery})
+        }
+        
     })
 })
 

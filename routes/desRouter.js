@@ -221,7 +221,7 @@ router.post('/payment', async (req, res)=>{
                 WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
                     AND schedule_round = ${req.body.items[3].split(' ')[3]}
-                    AND perf_id = ${req.body.items[2]}
+                    AND perf_id = ${req.body.items[2]}  
                     )
                     
                 AND seat_id = (SELECT seat_id FROM seat_layout 
