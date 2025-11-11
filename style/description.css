@@ -1,0 +1,181 @@
+.site_header {
+    height: 100px;
+    background-color: #ff0;
+}
+.big_poster {
+    position: absolute;
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 10;
+    /* margin: calc(100%/2-1200); */
+    /* left: -600px; */
+
+}
+.big_poster > img{
+    margin-top: 10px;
+}
+
+.b_p_tx {
+    color: #fff;
+    margin-left: calc(100%/3);
+
+}
+.big_poster > img {
+    height: 800px;
+    width: 600px;
+    margin-left: calc(100%/3);
+}
+.Big {
+    width: 1200px;
+    margin: auto;
+}
+.musical_name {
+    height: 70px;
+    /* text-align: center; */
+    font-size: 40px;
+    line-height: 70px;
+}
+.des_main {
+    border: 1px solid #f00;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.musical_info {
+    border: 1px solid #000;
+    display: flex;
+    width: 800px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.musical_description {
+    display: flex;
+    justify-content: space-between;
+    /* border: 1px solid #000; */
+    width: 400px;
+    font-size: 20px;
+    line-height: 50px;
+}
+.choiceDate {
+    width: 400px;
+}
+
+.musical_info > img{
+    width: 250px;
+    height: 350px;
+    z-index: 1;
+}
+
+.actor {
+    /* height: 300px; */
+    margin-bottom: 15px;
+    background-color: #faa;
+}
+
+.story {
+    /* height: 200px; */
+    background-color: #afa;
+    align-items: center;
+    text-align: center;
+}
+.story > img {
+    width: 1200px;
+}
+
+.seat {
+    /* height: 200px; */
+    background-color: #dbf;
+}
+.seat > img {
+    width: 1200px;
+}
+
+.review {
+    /* height: 200px; */
+    background-color: #3cf;
+}
+.review > img {
+    width: 1200px;
+}
+
+.footer {
+    /* height: 200px; */
+    background-color: #f77;
+}
+.footer > img {
+    width: 1200px;
+}
+
+
+
+
+
+.act_wrapper {
+    width: 1200px;
+    height: 300px;
+}
+.view_casting {
+    position: relative;
+    width: 1200px;
+    height: 90px;
+    background-color: beige;
+}
+
+
+.casting_schedule {
+    width: 120px;
+    height: 40px;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+}
+
+.letter_casting {
+    height: 50px;
+    line-height: 90px;
+    font-size: 30px;
+    margin-left: 30px;
+}
+
+.actor_box{
+    display: flex;
+    /* height: 150px; */
+    width: 1200px;
+    justify-content: space-evenly;
+    /* flex-wrap: wrap; */
+    overflow-x: auto;
+    
+}
+
+.ind_actor {
+    /* width: 150px; */
+    width: 200px;
+    height: 210px;
+    background-color: pink;
+    text-align: center;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.ind_actor > img{
+    width: 100px;
+    height: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 20px;
+}
+
+.fav_act {
+    margin-top: 5px;
+}
+
+.actor_name{
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.cast_name {
+    font-size: 10px;
+}

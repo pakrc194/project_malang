@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제정보</title>
+</head>
+<body>
+    <h1>결제하기</h1>
+
+    {% for i in info %}
+    {{i}}<br/>
+    {% endfor %}
+
+    
+    <div class="total"></div>
+    <!-- <form action="/desc/{{info[2]}}"> -->
+    <input type="submit" onclick="window.close()" value="결제 완료">
+    <!-- </form> -->
+</body>
+</html>

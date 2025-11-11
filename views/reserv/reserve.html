@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌석선택하기</title>
+    <!-- <link rel="stylesheet" href="../style/reserve.css"> -->
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .Big {
+            width: 1200px;
+            margin: auto;
+        }
+        .musical_name {
+            height: 70px;
+            /* text-align: center; */
+            font-size: 40px;
+            line-height: 70px;
+        }
+        .des_main {
+            border: 1px solid #f00;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .musical_info {
+            border: 1px solid #000;
+            display: flex;
+            width: 1200px;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .musical_seat {
+            width: 800px;
+        }
+
+        .musical_info > img{
+            width: 250px;
+            height: 350px;
+        }
+
+        .actor {
+            /* height: 200px; */
+            background-color: #faa;
+        }
+
+        .actor > img {
+            /* height: 200px; */
+            width: 1200px;
+        }
+
+        .story {
+            /* height: 200px; */
+            background-color: #afa;
+            align-items: center;
+            text-align: center;
+        }
+        .story > img {
+            width: 1200px;
+        }
+
+        .seat {
+            /* height: 200px; */
+            background-color: #dbf;
+        }
+        .seat > img {
+            width: 1200px;
+        }
+
+        .casting {
+            /* height: 200px; */
+            background-color: #aaf;
+        }
+        .casting > img {
+            width: 1200px;
+        }
+
+        .review {
+            /* height: 200px; */
+            background-color: #3cf;
+        }
+        .review > img {
+            width: 1200px;
+        }
+
+        .footer {
+            /* height: 200px; */
+            background-color: #f77;
+        }
+        .footer > img {
+            width: 1200px;
+        }
+
+        .seat_aside {
+            position: relative;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #000;
+            width: 400px;
+            height: 800px;
+        }
+
+        .seat_aside > .m_title > div:first-of-type {
+            font-size: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            height: 70px;
+            line-height: 30px;
+        }
+
+        .show_th {
+            height: 30px;
+        }
+
+        .m_title {
+            height: 100px;
+            background-color: #dbf;
+        }
+
+        .seatG {
+            height: 80px;
+            /* line-height: 100px; */
+            background-color: #3cf;
+        }
+
+        .seatC {
+            height: 120px;
+            /* line-height: 100px; */
+            /* background-color: #aaf; */
+        }
+
+        .doneBtn {
+            height: 100px;
+            /* line-height: 100px; */
+            background-color: #afa;
+            bottom: 0;
+        }
+
+        .doneBtn > .seat_tot_price {
+            line-height: 30px;
+            height: 30px;
+        }
+
+        .select_done {
+            height: 50px;
+            width: 300px;
+            
+        }
+        .choiceDate > img{
+            height: 350px;
+            width: 200px;
+        }
+
+    </style>
+
+    <script>
+        
+        
+        // 1 웹소켓 서버에 연결시도
+        const socket = new WebSocket({host: '0.0.0.0', port: 80})
+        // 2 웹소켓 서버에 연결성공
+        // socket.onopen = ()=>{
+        //     // 3.1 클라이언트가 송신
+        //     socket.send('reserve')
+        // }
+        // 3.2 클라이언트가 수신
+        socket.onmessage = (e)=>{
+
+            // let data = e.data
+            const data = JSON.parse(e.data);
+            console.log(`reserve에서 수신: `, data)
+
+            if (data.type == 'temp') {
+                if (data.error) {
+                    console.log('데이터 받아오기 실패: ', data.error)
+                }
+                else {
+                    document.querySelector(".seatC").innerHTML = ``
+                    let arr = []
+                    
+                    let totprice = 0
+                    for (let i = 0; i < data.result.length; i++) {
+                        let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
+                        let area = JSON.stringify(data.result[i].area).replace(/\"/g, '')
+                        let s_row = JSON.stringify(data.result[i].s_row).replace(/\"/g, '')
+                        let s_col = JSON.stringify(data.result[i].s_col).replace(/\"/g, '')
+                        let price = JSON.stringify(data.result[i].price).replace(/\"/g, '')
+                        document.querySelector(".seatC").innerHTML += `좌석등급 ${grade} ${area}구역 ${s_row}열 ${s_col} ${price}원<br/>`
+                        totprice += eval(price)
+                        
+                        arr.push(`${grade} ${area} ${s_row} ${s_col} ${price}`)
+                        
+                    }
+                    
+                    
+                    document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                    document.querySelector(".itemsInput").value = JSON.stringify(arr)
+                    document.querySelector(".Total").value = totprice
+                    if (totprice != 0) {
+                        document.querySelector(".select_done").disabled = false
+                    }
+                    else {
+                        document.querySelector(".select_done").disabled = true
+                    }
+                }
+            }
+                    
+        }
+
+        
+        window.addEventListener('DOMContentLoaded', function(){
+            let frm = document.forms.frm
+            document.querySelector(".select_done").onclick = function() {
+               frm.submit()
+            }
+        })
+
+    </script>
+
+</head>
+<body>
+     <form action="/desc/discount/{{id}}" name="frm"  method="POST">
+    <!-- <h1>좌석선택하기</h1> -->
+    <div class="Big">
+        <!-- <div class="musical_name">뮤지컬 〈MAD HATTER〉</div> -->
+        <div class="musical_info">
+            <div class="musical_seat">
+
+                {%  include 'reserv/seatB1.html' %} 
+
+            </div>
+            <div class="seat_aside">
+                <div class="m_title">
+                    <div>뮤지컬 〈{{perf.perf_name}}〉</div>
+                    <div>{{arr.name}}</div>
+                </div>
+                
+                <div  class="choiceDate">
+                    <img src="../../img/{{perf.poster_url}}">
+                    {{arr.date}} {{arr.time}}회차
+                </div>
+                <div class="seatG">
+                    {% for i in seat %}
+                    {{i.grade_code}}석 {{i.price}}원<br/>
+                    {% endfor %}
+                    <!-- [yellowgreen] R석 160,000원<br/>
+                    [violet] S석 130,000원<br/>
+                    [skyblue] A석 90,000원<br/> -->
+                </div>
+                선택한 좌석
+                <div class="seatC"></div>
+                <div class="doneBtn">
+                    <!-- <div class="seat_tot_price">좌석의 가격 합산 정보</div> -->
+                        <input type="hidden" name="items" class="itemsInput">
+                        <input type="hidden" name="items" class="Total">
+                        <input type="submit" class="select_done" name="seat_select" value="좌석을 선택해주세요" disabled>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

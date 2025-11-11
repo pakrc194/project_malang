@@ -4,19 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>list</title>
+    <style>
+        img {
+            width: 100px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            let genreSelect = document.querySelector('#selectGenre')
+            genreSelect.addEventListener('change', (e)=>{
+                console.log(genreSelect.options[genreSelect.selectedIndex].value)
+                location.href = `/list/${genreSelect.options[genreSelect.selectedIndex].value}`
+            })
+        }
+    </script>
 </head>
 <body>
-    <h1>list</h1>
-     <table border="">
-        {%for perf in res%}
-            <tr>
-                <td>{{perf.id}}</td>
-                <td>{{perf.name}}</td>
-                <td>{{perf.location}}</td>
-                <td>{{perf.seat_class}}</td>
-            </tr>    
-        {%endfor%}
-    </table>
-    <a href="/perf/upload">등록</a>
+    {% include './header.html' %}
+    <h1>전체 보기</h1>
+    장르
+    <select id="selectGenre">
+        <option value="all" {%if genre=='all'%}selected{%endif%}>전체보기</option>
+        <option value="origin" {%if genre=='origin'%}selected{%endif%}>오리지널</option>
+        <option value="creative" {%if genre=='creative'%}selected{%endif%}>창작</option>
+        <option value="license" {%if genre=='license'%}selected{%endif%}>라이선스</option>
+        <option value="nonVerbal" {%if genre=='nonVerbal'%}selected{%endif%}>넌버벌퍼포먼스</option>
+    </select>
+
+    <a href="?order=1">최신순</a>/<a href="?order=2">지역순</a>
+    <section class="perfList">
+        <table border="">
+             <tr>
+                <td>공연 이름</td>
+                <td>포스터</td>
+                <td>장르</td>
+                <td>러닝타임</td>
+                <td>공연 시작 날짜</td>
+                <td>공연장 이름</td>
+                <td>지역</td>
+            </tr>   
+            {%for perf in perfList%}
+                <tr>
+                    <td><a href="/desc/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
+                    <td><img src="/img/{{perf.poster_url}}" alt=""></td>
+                    <td calss="perf_genre">{%if genre=='all'%}{{perf.genre}}{%else%}<b>{{perf.genre}}</b>{%endif%}</td>
+                    <td>{{perf.running_time}}</td>
+                    <td>{{perf.start_date}}</td>
+                    <td>{{perf.venue_name}}</td>
+                    <td>{{perf.venue_region}}</td>
+                </tr>    
+            {%endfor%}
+        </table>
+    </section>
+    
+    {# <a href="/perf/upload">등록</a> #}
 </body>
 </html>

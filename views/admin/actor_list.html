@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배우 목록</title>
+    <style>
+        img {
+            width: 50px;
+        }
+        .actor_list {
+            width: 1000px;
+            height: 500px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    {% include './admin_header.html' %}
+    <h1>배우 목록</h1>
+    <div class="actor_list">
+        <table border="">
+            <tr>
+                <td>번호</td>
+                <td>이름</td>
+                <td>사진</td>
+                <td>출생년도</td>
+                <td>성별</td>
+            </tr>
+            {%for actor in res%}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{actor.actor_name}}</td>
+                    <td><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
+                    <td>{{actor.actor_birth_year}}</td>
+                    <td>{{actor.actor_gender}}</td>
+                </tr>    
+            {%endfor%}
+        </table>
+    </div>
+     
+    <a href="/admin/actor/upload">배우등록</a>
+</body>
+</html>

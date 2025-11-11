@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 할인</title>
+    <style>
+        img {
+            width: 200px;
+        }
+    </style>
+    <script>
+        // document.querySelector(".side_info").innerHTML = ''
+        window.addEventListener('DOMContentLoaded', function(){
+            let cancle_year = `{{seat.year}}`
+            let cancle_month = `{{seat.month}}`
+            let cancle_date = "{{seat.day}}"-1
+            let cancle_ticket = new Date(`${cancle_year}-${cancle_month}-${cancle_date}`)
+            console.log(cancle_ticket)
+            document.querySelector(".cancle_time").innerHTML += `${cancle_ticket.getFullYear()}년 ${cancle_ticket.getMonth()+1}월 ${cancle_ticket.getDate()}일`
+            
+            
+            let totprice = "{{ptot}}" - ("{{ptot}}" * "{{DC.discount_rate}}")
+            let hidden = document.querySelector(".hidden")
+            
+            document.querySelector(".total_price_btn").value = totprice+"원 결제하기"
+            document.querySelector(".dc_price").value = totprice
+            document.querySelector(".card_number").addEventListener('input', ()=>{
+                if (document.querySelector(".card_number").value.trim() !== ''){
+                    document.querySelector(".total_price_btn").disabled = false
+                }
+                else {
+                    document.querySelector(".total_price_btn").disabled = true
+
+                }
+            })
+            let frm = document.forms.frm
+            document.querySelector(".total_price_btn").onclick = function() {
+                frm.submit()
+            }
+            
+        })
+
+        
+    </script>
+</head>
+<body>
+    <h1>할인</h1>
+    <div class="user_discount">
+        회원등급 : {{DC.grade_name}}<br/>
+        할인률 : {{DC.discount_rate}}
+    </div>
+    <div class="side_info">
+        <div calss="perf_info">
+            뮤지컬〈{{perf.perf_name}}〉<br/>
+            <img src="../../img/{{perf.poster_url}}"><br/>
+            공연기간 {{perf.start_date}} ~ {{perf.end_date}} <br/>
+            장르 {{perf.genre}} <br/>
+            러닝타임 {{perf.running_time}}분
+        </div>
+        <div class="ticket_info">
+            {{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}회차
+            <br/>
+            {% for i in temp_data %}
+            좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
+            {% endfor %}
+            
+        </div>
+        취소시간<br/>
+        <div class="cancle_time">
+        </div>
+
+    </div>
+    <form action="/desc/payment" name="frm" method="POST">
+        카드번호 입력
+        <input type="text" name="items" class="card_number">
+        <input type="hidden" name="items" class="user_grade" value="{{DC.user_id}} {{DC.grade_name}} {{DC.discount_rate}}">
+        <input type="hidden" name="items" value="{{id}}">
+        <input type="hidden" name="items" class="date" value="{{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}">
+        <input type="hidden" name="items" class="total_price" value="{{ptot}}">
+        <input type="hidden" name="items" class="dc_price">
+        {% for i in temp_data %}
+            <input type="hidden" name="items" class="seat" value="{{i.grade}} {{i.area}} {{i.s_row}} {{i.s_col}} {{i.price}}">
+        {% endfor %}
+        <input type="submit" class="total_price_btn" value="{{ptot}}원 결제하기" disabled>
+    </form>
+</body>
+</html>

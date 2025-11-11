@@ -1,0 +1,20 @@
+<style>
+    #imgGrade {
+        width: 100px;
+    }
+</style>
+<div class="myGrade">
+    {{myGrade.email}}<br/>
+    {{myGrade.user_name}}<br/>
+    {{myGrade.score}}<br/>
+    {{myGrade.grade_name}}<br/>
+    {{myGrade.discount_rate}}<br/>
+    {{myGrade.grade_score}}<br/>
+    <img id="imgGrade" src="../../img/{{myGrade.grade_image_url}}" alt="{{myGrade.grade_image_url}}"><hr/>
+    {{nextGrade.grade_name}}<br/>
+    {{nextGrade.grade_score}}<br/>
+    {{nextGrade.discount_rate}}<br/>
+    <img id="imgGrade" src="../../img/{{nextGrade.grade_image_url}}" alt="{{nextGrade.grade_image_url}}"><hr/>
+    <a href="/mypage/reserveSelect">등급 이력</a>
+    <hr>
+</div>

@@ -1,0 +1,116 @@
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .reservLists {
+        width: 800px;
+        border: 1px solid #000;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        box-sizing: border-box;
+        
+    }
+
+    img {
+        width: 120px;
+        height: 100px;
+        float: left;
+        border-radius: 10px;
+        margin: 10px;
+    }
+
+    .reserveMenu {
+        width: 800px;
+        border: 1px solid #000;
+        box-sizing: border-box;
+        
+    }
+
+    .sortList{
+        width: 800px;
+        overflow: auto;
+        box-sizing: border-box;
+    }
+</style>
+<script>
+    window.onload = function () {
+
+        const sortSelect = document.querySelector('#sortSelect');
+        sortSelect.addEventListener('change', function () {
+            const selected = this.value;
+            location.href = `/mypage/reserveSelect?sort=${selected}`;
+        });
+    };
+</script>
+<section class="sortList">
+    <select id="sortSelect">
+        <option value="latest" {% if sort=='latest' %}selected{% endif %}>날짜순</option>
+        <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
+    </select>
+    <div class="reservLists">
+        <!-- {% if resvList and resvList.length > 0 %} -->
+        {% for i in resvList %}
+        <div class="reserveMenu">
+            {{i.d_day}} / 예매일 : {{i.resv_date}}
+        </div>
+        <div>
+            <img src='../../img/{{i.poster_url}}' alt="">
+            <br>
+            공연 이름 : {{i.perf_name}}
+            <br>
+            공연 날짜 : {{ i.schedule_date }}({{ i.schedule_time }})
+            <br>
+            공연장 이름 : {{i.venue_name}}
+            <br>
+            예매자 : {{i.user_name}}
+            <br>
+            예매 수량 : {{i.resv_count}}매
+            <br>
+            예매 번호 : {{i.resv_number}}
+            <br>
+            예매 좌석 :
+            {% for seat in i.seats %}
+            {{ seat.area }}{{ seat.seat_row }}{{seat.seat_number}}번({{ seat.grade_code }})
+            {% endfor %}
+            <br>
+            결제 금액 : {{i.final_amount}}원
+        </div>
+        {% if i.resv_status == 'CANCELLED' %}
+        예매 상태 : 환불 완료
+        {% elif i.resv_status == 'PAID' %}
+        {% if i.cancelable %}
+        예매 상태 : 예매 완료
+        {% else %}
+        예매 상태 : 예매 완료(취소 불가)
+        {% endif %}
+        {% endif %}
+
+        <div class="btn-group">
+            <input type="button" value="상세내역" onclick="resvDetail('{{i.resv_id}}')">
+            <input type="button" value="취소하기" onclick="resvCancel('{{i.resv_id}}')">
+        </div>
+
+        {% endfor %}
+
+        {% else %}
+        예매 내역이 없습니다.
+        {% endif %}
+
+    </div>
+</section>
+
+<script>
+    function resvDetail(resvid) {
+        // 상세내역 페이지 이동
+        location.href = `/mypage/resvDetail?resv_id=${resvid}`;
+    }
+
+    function resvCancel(resvid) {
+        // 취소 페이지 이동
+        location.href = `/mypage/resvCancel?resv_id=${resvid}`;
+    }
+</script>

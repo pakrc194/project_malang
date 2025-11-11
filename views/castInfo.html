@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #img_cast, #img_poster {
+            width:100px;
+        }
+        #div_casting, #div_other {
+            width: 1000px;
+            height: 300px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>배역 정보</h1>
+    <a href="/desc/{{perfInfo.perf_id}}">
+        <img id="img_poster" src="/img/{{perfInfo.poster_url}}" alt=""><br/>
+        {{perfInfo.perf_name}}<hr/>
+    </a>
+    
+    <a href="/actor/{{castInfo.actor_id}}">
+        <img id="img_cast" src="/img/{{castInfo.actor_profile_url}}" alt=""><br/>
+    </a>
+    {{castInfo.cast_name}}<br/>
+    {{castInfo.cast_story}}<br/>
+    {{castInfo.actor_name}}({{castInfo.actor_gender}})<hr/>
+    <h2>다른 배우 추천</h2>
+    <div id="div_casting">
+        {% for castActor in castActorList %}
+            {% if castActor.actor_id != castInfo.actor_id %}
+                <a href="/actor/{{castActor.actor_id}}">
+                    <img id="img_cast" src="/img/{{castActor.actor_profile_url}}" alt=""><br/>
+                </a>
+                {{castActor.actor_name}}<br/>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <hr>
+    <div id="div_other">
+        {% for sc in scheduleCastList %}
+            {{sc.schedule_date}}/{{sc.schedule_time}}({{sc.schedule_round}})<br/>
+            <a href="/actor/{{sc.actor_id}}">
+                {{sc.cast_name}} = {{sc.actor_name}}<br/>
+            </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

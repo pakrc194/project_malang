@@ -1,14 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>main</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main</title>
+  <style>
+    wrapper {
+      width: 1200px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    section {
+      width: 100%;
+      margin: 40px 0;
+    }
+
+    /* 메인 배너 (현재 상영중) */
+    .main_banner h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .banner_list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .banner_item {
+      width: 230px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .banner_item img {
+      width: 100%;
+      height: auto;
+    }
+
+    .banner_info {
+      margin-top: 8px;
+    }
+
+    /* 공연 오픈 예정 */
+    .main_poster h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .poster_list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .poster_item {
+      width: 230px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .poster_item img {
+      width: 100%;
+      height: auto;
+    }
+
+    .poster_info {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .allview {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .allview a {
+      font-weight: bold;
+      margin: auto;
+    }
+
+    /* 배우 추천 */
+    .recommendActor h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .actor_list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .actor_item {
+      width: 200px;
+      text-align: center;
+    }
+
+    .actor_item img {
+      width: 100%;
+      height: auto;
+      
+    }
+
+    footer {
+      width: 100%;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      background-color: #fa0;
+    }
+  </style>
 </head>
+
 <body>
     <h1>main</h1>
     <a href="/admin">admin</a>
     <a href="/perf">perflist</a>
     <a href="/payment">payment</a>
+
+    
+  {% include './header.html' %}
+
+  <a href="desc/resv/cancle">1번 취소</a>
+  <wrapper>
+    <section class="main_banner">
+      <h2>메인배너</h2>
+      <div class="banner_list">
+        {% for visual in main_bennr %}
+        <div class="banner_item">
+          <a href="/desc/{{visual.perf_id}}">
+          <img src="../img/{{ visual.poster_url }}" alt="{{ visual.name }}">
+          </a>
+          <div class="banner_info">
+            <div>{{ visual.perf_name }}</div>
+            <div>{{ visual.start_date }} ~ {{ visual.end_date }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="main_poster">
+      <h2>공연 오픈 예정</h2>
+      <div class="poster_list">
+        {% for musical in coming_benner %}
+        <div class="poster_item">
+          <a href="/desc/{{musical.perf_id}}">
+            <img src="../img/{{ musical.poster_url }}" alt="{{ musical.name }}">
+          </a>
+          <div class="poster_info">
+            <div>{{ musical.perf_name }}</div>
+            <div>{{ musical.start_date }} ~ {{ musical.end_date }}</div>
+            <div>러닝타임: {{ musical.running_time }}분</div>
+            <div>예매 가능일: {{ musical.start_date }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="allview">
+        <a href="/list">전체보기</a>
+      </div>
+    </section>
+
+    <!-- 배우 추천 -->
+    <section class="recommendActor">
+      <h2>배우 추천</h2>
+      <div class="actor_list">
+        {% for actor in actor_benner %}
+        <div class="actor_item">
+          <a href="actor/{{actor.actor_id}}">
+          <img src="../img/{{ actor.actor_profile_url }}" alt="">
+          </a>
+          <div>{{ actor.actor_name }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </wrapper>
+
+  <footer>
+    푸터
+  </footer>
 </body>
+
 </html>
