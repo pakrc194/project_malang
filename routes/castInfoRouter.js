@@ -54,10 +54,14 @@ router.get('/info', async (req, res) => {
     let scheduleData = {}
 
     let scheduleIdx = 0
+    const TARGET_ROLE = castInfoQuery[0].cast_name;
+    const TARGET_ACTOR = castInfoQuery[0].actor_name;
     for(let scheduleCast of scheduleCastQuery) {
         if (scheduleIdx != scheduleCast.schedule_id) {
             if (scheduleIdx != 0) {
-                scheduleList.push(scheduleData)
+                if (scheduleData.casting[TARGET_ROLE] === TARGET_ACTOR) {
+                    scheduleList.push(scheduleData)
+                }
             }
             scheduleData = {
                 schedule_date: base_date_format(scheduleCast.schedule_date),
@@ -70,7 +74,9 @@ router.get('/info', async (req, res) => {
         scheduleData.casting[scheduleCast.cast_name] = scheduleCast.actor_name     
     }
     if (Object.keys(scheduleData).length > 0) {
-        scheduleList.push(scheduleData);
+        if (scheduleData.casting[TARGET_ROLE] === TARGET_ACTOR) {
+            scheduleList.push(scheduleData);
+        }
     }
 
     console.log(scheduleList[0])

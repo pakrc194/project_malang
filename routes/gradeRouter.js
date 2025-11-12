@@ -54,7 +54,7 @@ router.get('/', (req, res) => {
         console.log(nextMonthTotal)
 
         let needNextGrade = 0
-        if(nextGradeQuery)
+        if(nextGradeQuery.length>0)
             needNextGrade = nextGradeQuery[0].grade_score-curMonthTotal
         let total = {
             curMonthTotal : Number(curMonthTotal).toLocaleString(),

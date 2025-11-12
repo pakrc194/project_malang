@@ -38,7 +38,7 @@ WITH RECURSIVE r AS (
 )
 SELECT n FROM r;
 
--- 🔹 2. 1~450까지 temp_s 생성
+-- 🔹 2. 1~270까지 temp_s 생성
 DROP TEMPORARY TABLE IF EXISTS temp_s;
 CREATE TEMPORARY TABLE temp_s AS
 WITH RECURSIVE s AS (

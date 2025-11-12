@@ -271,6 +271,40 @@
         padding: 5px 10px;
         cursor: pointer;
     }    
+
+
+    /* 1. 셀렉트 필드 그룹에 Flexbox 적용 */
+    .venue_select_group {
+        display: flex;
+        gap: 10px; /* Select와 버튼 사이 간격 */
+        align-items: center;
+        width: 100%; /* 부모 컨테이너 너비 채우기 */
+    }
+
+    /* 2. Select 필드가 남은 공간을 채우도록 설정 */
+    .venue_select_group select {
+        flex-grow: 1; /* Select가 최대한 넓게 확장 */
+        /* 💡 여기서 기존 input-grid-section 스타일을 상속받습니다. */
+    }
+
+    /* 3. 조회 버튼 스타일 */
+    #search_venue_btn {
+        flex-shrink: 0; /* 버튼 크기 유지 */
+        padding: 8px 15px;
+        background-color: #1f3f6e; /* 관리자 UI 파란색 계열 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        
+        /* 💡 Select와 높이를 맞추기 위해 box-sizing 속성 추가 */
+        box-sizing: border-box; 
+    }
+
+    #search_venue_btn:hover {
+        background-color: #2a528a;
+    }
 </style>
 <script>
     window.onload = function() {
@@ -429,14 +463,73 @@
 
         let selectorTh = document.querySelector('#ftheator')
         let seatR = document.querySelector('#seatR')
+        let selectedVenueId = 1
         selectorTh.addEventListener('change', (e)=>{
             console.log('theator change', e.target.value)
-            if(e.target.value=="1" || e.target.value=="2") {
-                seatR.disabled = false
-            } else {
-                seatR.disabled = true
-            }
+            selectedVenueId = e.target.value
+            flag_search_venue = false
+            // if(e.target.value=="1" || e.target.value=="2") {
+            //     seatR.disabled = false
+            // } else {
+            //     seatR.disabled = true
+            // }
         })
+
+
+        let flag_search_venue = false
+        let btn_search_venue = document.querySelector('#search_venue_btn')
+
+        btn_search_venue.addEventListener('click', (e)=>{
+            let iStartVal = document.querySelector('#iStart').value.trim()
+            let iEndVal = document.querySelector('#iEnd').value.trim()
+            let iVenueVal = document.querySelector('#iEnd').value.trim()
+
+            if (iStartVal == '') {
+                alert('조회할 공연 시작 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            if (iEndVal == '') {
+                alert('조회할 공연 종료 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            if (new Date(iStartVal) > new Date(iEndVal)) {
+                alert('공연 시작 날짜는 종료 날짜보다 늦을 수 없습니다.');
+                event.preventDefault();
+                return;
+            }
+
+            let search_data = {
+                start_date : iStartVal,
+                end_date : iEndVal,
+                venue_id : selectedVenueId
+            }
+            console.log(search_data)
+            fetch(`/admin/upload/check`,{
+                    method:'POST',
+                    headers : {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(search_data)
+                })     
+            .then(answer=> answer.json())
+            .then(data=> {
+                    console.log(data)
+                    if(data.msg=='success') {
+                        alert('공연장 이용이 가능합니다')
+                        flag_search_venue = true
+                        document.querySelector('#iStart').readOnly = true
+                        document.querySelector('#iEnd').readOnly = true
+                    } else {
+                        alert(`선택기간내에 다른 공연이 있습니다.\n${data.start_date}~${data.end_date}외 기간이나 다른 공연장을 선택해주세요`)
+                    }
+            })
+            .catch(err=>console.log('에러 : ',err.message))
+        })
+
+
 
         let btn_upload = document.querySelector('#btn_upload')
 
@@ -486,6 +579,12 @@
             
             if (iEndVal === '') {
                 alert('공연 종료 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+
+            if(!flag_search_venue) {
+                alert('조회로 공연 기간을 확인하세요');
                 event.preventDefault(); // 제출 중단
                 return;
             }
@@ -546,7 +645,7 @@
 <body>
 
 <div class="admin-form-wrapper">
-    <h1>insert</h1>
+    <h1>공연 등록</h1>
     <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data" name="uploadFrm">
         
         <div class="input-grid-section">
@@ -579,12 +678,15 @@
             </div>
 
             <label for="ftheator">공연장</label> 
-            <select name="ftheator" id="ftheator">
-                <option value="1">샤롯데씨어터</option>
-                <option value="2">드림씨어터</option>
-                <option value="3">대학로예술극장</option>
-                <option value="4">창원성산아트홀</option>
-            </select>
+            <div class="venue_select_group">
+                <select name="ftheator" id="ftheator">
+                    <option value="1">샤롯데씨어터</option>
+                    <option value="2">드림씨어터</option>
+                    <option value="3">대학로예술극장</option>
+                    <option value="4">창원성산아트홀</option>
+                </select>
+                <input type="button" id="search_venue_btn" value="조회"/>
+            </div>
             
             <label class="seat-price-label">좌석별 가격</label>
             <div class="seat-price-container">

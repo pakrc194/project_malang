@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
         return res.json({ success: false, message: '이메일 또는 비밀번호를 입력하세요' })
     }
     // DB 조회(이메일, 비밀번호, 회원주소, 활성화 상태)
-    const sql = 'SELECT user_id, user_name, email, password, sign_method, account_status FROM USER_INFO WHERE email = ?';
+    const sql = 'SELECT user_id, user_name, email, password, score, sign_method, account_status FROM USER_INFO WHERE email = ?';
     conn.query(sql, [email], (err, results) => {
         if (err) {
             console.error('DB 에러 발생:', err);
@@ -92,17 +92,23 @@ router.post('/login', (req, res) => {
             WHERE user_id = ?;` 
 
         conn.query(resvCurMonthSQL, [user.user_id], (scoreErr, scoreQuery)=>{
-            let nowScore = scoreQuery[0].total_amount_last_6_months;
-            console.log(nowScore)
-            
-            if(eval(user.score) != eval(nowScore)) {
-                conn.query(updateGradeSQL, [nowScore, nowGrade(nowScore), user.user_id], (updateErr, updateQuery)=>{
-                    if(updateErr)
-                        console.log(updateErr.message)
-                    else {
-                        console.log(updateQuery)
-                    }
-                })
+            if(scoreErr) {
+                console.log(scoreErr.message)
+            } else {
+                console.log('scoreQuery', scoreQuery)
+                console.log(user)
+                let nowScore = scoreQuery[0].total_amount_last_6_months | 0;
+                console.log('비교', user.score, nowScore)
+                
+                if(eval(user.score) != eval(nowScore)) {
+                    conn.query(updateGradeSQL, [nowScore, nowGrade(nowScore), user.user_id], (updateErr, updateQuery)=>{
+                        if(updateErr)
+                            console.log(updateErr.message)
+                        else {
+                            console.log(updateQuery)
+                        }
+                    })
+                }
             }
         })
         
