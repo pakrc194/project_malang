@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761830225502@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;
@@ -252,3 +252,5 @@ WHERE
     -- (즉, 최근 6개월 기간에 해당되는지 필터링합니다.)
     AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
     and user_id = 7;
+
+select * from user_grade

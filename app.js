@@ -31,6 +31,10 @@ nunjucks.configure('views', {
     express: app
 })
 
+app.use('/style', express.static(path.join(__dirname, 'style')))
+app.use('/img', express.static(path.join(__dirname, 'img')))
+app.use('/js', express.static(path.join(__dirname, 'js')))
+app.use('/views', express.static(path.join(__dirname, 'views')))
 
 const perfRouter = require('./routes/perfRouter')
 const mainRouter = require('./routes/mainRouter')
@@ -46,8 +50,11 @@ const myGradeRouter = require('./routes/gradeRouter')
 const interestRouter = require('./routes/interestRouter')
 const actorInfoRouter = require('./routes/actorInfoRouter')
 const castInfoRouter = require('./routes/castInfoRouter')
+const myactorRouter = require('./routes/myactorRouter')
 const { base_date_format } = require('./func/date')
 const { isLoggedIn } = require('./func/ck_login')
+
+const paymentRouter = require('./routes/paymentRouter')
 
 
 app.use('/perf', perfRouter)
@@ -64,6 +71,9 @@ app.use('/mypage/interest', interestRouter)
 app.use('/desc', desRouter)
 app.use('/actor', actorInfoRouter)
 app.use('/cast', castInfoRouter)
+app.use('/payment', paymentRouter)
+app.use('/myactor', myactorRouter)
+
 
 app.get('/', (req, res) => {
     res.redirect('/main')

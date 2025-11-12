@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{actorInfo.actor_name}}</title>
-    <style>
-        #actor_profile, #perf_poster {
-            width : 100px;
-        }
-    </style>
+    <title> {{actorInfo.actor_name}}</title>
+    <link rel="stylesheet" href="/style/actor_info.css">
     <script>
         window.onload = function() {
-            let toggleInterest = document.querySelector('#toggleInterest')
+            let toggleInterest = document.querySelector('#btnFavor')
 
             toggleInterest.addEventListener('click', (e)=>{
                 let actorId =  document.querySelector('#actor_id').value
@@ -28,10 +24,10 @@
                 .then(data => {
                     if(data.msg=='delete') {
                         alert('관심 취소')
-                        toggleInterest.value='+'
+                        toggleInterest.value='관심배우등록 +'
                     } else if(data.msg=='insert') {
                         alert('관심 등록')
-                        toggleInterest.value='-'
+                        toggleInterest.value='관심배우등록 -'
                     } else {
                         alert('실패')
                     }
@@ -39,27 +35,41 @@
                 })
                 .catch(err => console.log('에러 :', err.message))
             })
-        }
+        }        
     </script>
 </head>
 <body>
-    <h1>배우 상세정보</h1>
-    <input type="hidden" id="actor_id" value="{{actorInfo.actor_id}}">
-    {{actorInfo.actor_name}}<br/>
-    <img id="actor_profile" src="/img/{{actorInfo.actor_profile_url}}" alt="{{actorInfo.actor_profile_url}}"><br/>
-    {{actorInfo.actor_birth_year}}<br/>
-    {{actorInfo.actor_gender}}<hr/>
-    {{actorInfo.actor_history}}<hr>
-    <input type="button" id="toggleInterest" value="{% if isInterest == true %}-{% else %}+{% endif %}"><hr>
-    <h2>상영작</h2>
-    {% for perf in perfList %}
-    
-    {{perf.perf_name}}<br/>
-    <a href="/desc/{{perf.perf_id}}">
-        <img id="perf_poster" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
-    </a>
-    {{perf.start_date}}~{{perf.end_date}}<hr/>
-    {% endfor %}
-    <a href="javascript:history.back()">뒤로</a>
+    <h1>배우 상세 정보</h1>
+    <div class="actor_container">
+        <div class="actor_profile">
+            <img src="/img/{{res[0].actor_profile_url}}" alt=""><br/>
+            <div class="text_info">
+                <b>배우명  </b> {{res[0].actor_name}}<br/>
+                <b>출생연도  </b>{{res[0].actor_birth_year}}<br/>
+                <b>성별  </b>{{res[0].actor_gender}}<br/>
+                <b>이력  </b>{{res[0].actor_history}}<br/>
+            </div>
+        </div>
+
+        <div class="favor_button">
+            <input type="button" id='btnFavor' value="관심 배우 등록{% if isInterest == true %}-{% else %}+{% endif %}">
+        </div>
+
+        <hr>
+
+        <h4>상영작품</h4>
+        <div class = "perf_now">
+            <img src="/img/{{res[0].poster_url}}" alt=""><br/>
+            <div class="perf_text">
+                <b>출연작품  </b> {{res[0].perf_name}}<br/>
+                <b>공연 시작일  </b> {{res[0].start_date}}<br/>
+                <b>공연 종료일  </b> {{res[0].end_date}}<br/>
+                <b>러닝타임  </b> {{res[0].running_time}}분<br/>
+                <b>장르  </b> {{res[0].genre}}<br/>
+            </div>
+        </div>
+        <input type="hidden" id="actor_id" value="{{res[0].actor_id}}">
+    </div>
+
 </body>
 </html>
