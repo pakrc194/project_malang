@@ -11,23 +11,18 @@
     /* left: -600px; */
 
 }
-.big_poster > img{
-    /* position: fixed;
-    top: 10%;
-    left: 10%; */
-    margin-top: 100px;
-}
 
 .b_p_tx {
 
     color: #fff;
-    margin-left: calc(100%/3);
+    margin-left: calc(50% - 300px);
 
 }
 .big_poster > img {
     height: 800px;
     width: 600px;
-    margin-left: calc(100%/3);
+    margin-left: calc(50% - 300px);
+    margin-top: 3%;
 }
 .Big {
     width: 1200px;
