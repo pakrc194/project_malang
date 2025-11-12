@@ -4,18 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제정보</title>
+    <style>
+        .pay_wrapper{
+            width: 1200px;
+            margin: auto;
+        }
+        .perf_info{
+            height: 300px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+        .musical_name{
+            height: 100px;
+            font-size: 40px;
+            line-height: 100px;
+        }
+        img {
+            width: 200px;
+            height: 300px;
+            /* float: left; */
+        }
+        .poster{
+            float: left;
+            margin-right: 50px;
+            margin-left: 50px;
+        }
+        hr {
+            height: 3px;
+            background-color: #555;
+            border: none;
+        }
+        .seat {
+            margin-left: 10px;
+            line-height: 30px;
+            display: flex;
+            width: 1200px;
+            flex-wrap: wrap;
+
+        }
+
+        .pay_info {
+            margin-left: 10px;
+        }
+        .total {
+            height: 50px;
+            line-height: 50px;
+        }
+        .grade {
+            width: 250px;
+            height: 50px;
+            line-height: 50px;
+        }
+        .pseat {
+            width: 950px;
+            height: 50px;
+            line-height: 50px;
+        }
+    </style>
 </head>
 <body>
-    <h1>결제하기</h1>
+    <div class="pay_wrapper">
+    <div class="perf_info">
+        <div class="poster">
+            <img src="../../img/hook_poster.jpg">
+            <!-- <img src="../../img/{{perf.poster_url}}"><br/> -->
+        </div>
+        <div class="musical_name">뮤지컬〈{{perf.perf_name}}〉</div>
+        공연일시 {{seat.year}}년 {{seat.month}}월 {{seat.day}}일 {{seat.choice_time}}회차 {{seat.time}}
+        
+    </div>
+    <hr/>
+    <div class="seat">
+        {% for i in info %}
+        <div class="grade">좌석등급{{i[0]}}</div><div class="pseat">{{i[1]}}구역 {{i[2]}}열 {{i[3]}} {{i[4]}}원</div>
+        {% endfor %}
+    </div>
+    <hr/>
 
-    {% for i in info %}
-    {{i}}<br/>
-    {% endfor %}
-
-    
-    <div class="total"></div>
-    <!-- <form action="/desc/{{info[2]}}"> -->
-    <input type="submit" onclick="window.close()" value="결제 완료">
-    <!-- </form> -->
+    <div class="pay_info">
+        <div class="total">결제금액 {{amount}}</div>
+        <!-- <form action="/desc/{{info[2]}}"> -->
+        <input type="submit" onclick="window.close()" value="결제 완료">
+        <!-- </form> -->
+    </div>
+    </div>
 </body>
 </html>

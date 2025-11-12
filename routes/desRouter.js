@@ -76,6 +76,10 @@ router.get('/:id', (req, res)=>{
         venue_id = resPerf[0].venue_id
         // 공연장에 해당하는 좌석 가격 가져오기
         conn.query(`select * from perf_price where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, resP)=>{
+            console.log('resP', resP)
+            resP[0].price = Number(resP[0].price).toLocaleString()
+            resP[1].price = Number(resP[1].price).toLocaleString()
+            resP[2].price = Number(resP[2].price).toLocaleString()
             if (!resPerf || resPerf.length === 0) {
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
@@ -120,7 +124,10 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
         console.log('reserve_venue_id', venue_id)
         // conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
         conn.query(`select grade_code, price FROM perf_price where perf_price.venue_id="${venue_id}" AND perf_price.perf_id=${init_perf_id}`, (err, resP)=>{
-            
+            resP[0].price = Number(resP[0].price).toLocaleString()
+            resP[1].price = Number(resP[1].price).toLocaleString()
+            resP[2].price = Number(resP[2].price).toLocaleString()
+
             let arr={
                 date: req.body.items[0],  // 선택 날짜
                 time: req.body.items[1],  // 선택 회차
@@ -138,7 +145,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
                 and perf_schedule.schedule_date = "${base_date_format(req.body.items[0])}"
                 
                 `, (err, resSold)=>{
-                    // console.log('resSold: ', resSold)
+                    console.log('resSold: ', resSold, init_perf_id)
                     if (resPf && resPf.length > 0){
                         res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold, user_id: user_id, email: email})
                     }
@@ -174,7 +181,9 @@ router.post('/discount/:id', (req, res)=>{
             }
         )
     }
+    let pp = Number(req.body.items[1]).toLocaleString()
     let ptot = req.body.items[1]
+            
     let cnt = JSON.parse(req.body.items[0]).length
 
     conn.query(`select user_id from user_info where email = "${email}"`, (err, Uid)=>{
@@ -198,7 +207,7 @@ router.post('/discount/:id', (req, res)=>{
                 conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
                     conn.query(discountQuery, (err, resDC)=>{
                         // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                        res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                        res.render('reserv/discount.html', {ptot: ptot, pp: pp, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
                     })
                 })
             })
@@ -288,13 +297,48 @@ router.post('/payment', async (req, res)=>{
 
         seat_arr.push(seat_id[0].seat_id)
     }
+    
     let s_arr = seat_arr.join(',')
     console.log(seat_arr)
     let pay_id = await conn.query(`SELECT payment_id FROM payment_info where transaction_id = "${t_id}"`)
+    // user_id, schedule_id, resv_number, total_amount, discount_rate, final_amount, resv_date, resv_status, resv_count, seat_id_arr, payment_id
     let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-6, `${s_arr}`, `${pay_id[0].payment_id}`]
     conn.query(reservQ, reservI)
     // s_id, u_id, seat_arr, pay_id
-    res.render('../views/reserv/payment.html', {info: req.body.items})
+    // 뮤지컬 포스터, 이름, 공연 일시, 회차
+
+    // user_id : u_id[0].user_id
+    // schedule_id : s_id[0].schedule_id -> schedule_date, schedule_round, schedule_time
+    conn.query(`select * from performance_info where perf_id = ${req.body.items[2]}`, (err, perf_info)=>{
+        conn.query(`select * from perf_schedule where schedule_id = ${s_id[0].schedule_id}`, (err, perf_sche)=>{
+            let date = new Date(perf_sche[0].schedule_date)
+            let arr1 = {
+                choice_time: perf_sche[0].schedule_round, 
+                year: date.getFullYear(), 
+                month: date.getMonth() +1,
+                day: date.getDate(), 
+                time: perf_sche[0].schedule_time
+            }
+            let amount = Number(req.body.items[5]).toLocaleString() 
+            /**
+            console.log('정보: ', req.body.items)
+            console.log('카드번호: ', req.body.items[0])
+            console.log('유저id, 등급, 할인율: ', req.body.items[1].split(' '))
+            console.log('작품id: ', req.body.items[2])
+            console.log('작품 선택 날짜, 회차: ', req.body.items[3].split(' '))
+            console.log('총 금액: ', req.body.items[4])
+            console.log('할인 금액: ', req.body.items[5])
+            
+             */
+            let ticket = []
+            for (let i = 6; i < req.body.items.length; i++) {
+                // console.log('티켓 정보: ', req.body.items[i].split(' '))
+                ticket.push(req.body.items[i].split(' '))
+            }
+            console.log('ticket: ', ticket)
+            res.render('../views/reserv/payment.html', {info: ticket, perf: perf_info[0], seat: arr1, amount: amount})
+        })
+    })
 })
 
 router.post('/payment/cancel', async (req, res)=>{

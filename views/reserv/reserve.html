@@ -79,14 +79,6 @@
             width: 1200px;
         }
 
-        .review {
-            /* height: 200px; */
-            background-color: #3cf;
-        }
-        .review > img {
-            width: 1200px;
-        }
-
         .footer {
             /* height: 200px; */
             background-color: #f77;
@@ -101,7 +93,7 @@
             text-align: center;
             border: 1px solid #000;
             width: 400px;
-            height: 800px;
+            height: 900px;
         }
 
         .seat_aside > .m_title > div:first-of-type {
@@ -110,21 +102,25 @@
             flex-wrap: wrap;
             height: 70px;
             line-height: 30px;
+            /* align-items: center; */
+            margin-top: 10px;
         }
 
-        .show_th {
-            height: 30px;
-        }
 
         .m_title {
             height: 100px;
-            background-color: #dbf;
+            /* background-color: #dbf; */
+            /* border-bottom: 1px solid #000; */
         }
 
         .seatG {
-            height: 80px;
+            height: 150px;
             /* line-height: 100px; */
-            background-color: #3cf;
+            /* background-color: #3cf; */
+            /* border-bottom: 1px solid #000; */
+            font-size: 20px;
+            text-align: left;
+            padding-left: 30px;
         }
 
         .seatC {
@@ -136,7 +132,7 @@
         .doneBtn {
             height: 100px;
             /* line-height: 100px; */
-            background-color: #afa;
+            /* background-color: #afa; */
             bottom: 0;
         }
 
@@ -148,11 +144,17 @@
         .select_done {
             height: 50px;
             width: 300px;
+            /* margin-top: 30px; */
             
         }
+        .choiceDate {
+            height: 400px;
+        }
         .choiceDate > img{
-            height: 350px;
+            height: 300px;
             width: 200px;
+            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
         .first > .section > input{
@@ -167,6 +169,18 @@
             background-color: yellowgreen;
             border: 3px solid yellowgreen;
             /* margin-left: 8px; */
+        }
+        .R{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: yellowgreen;
+            border: 3px solid yellowgreen;
+            margin-right: 10px;
         }
         .first > .section > input:checked {
             border-color: #f00;
@@ -184,6 +198,17 @@
             border: 3px solid violet;
             margin-left: 5px;
         }
+        .S{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: violet;
+            border: 3px solid violet;
+            margin-right: 10px;
+        }
         .second > .section > input:checked {
             border-color: #f00;
             /* background-color: yellowgreen; */
@@ -200,6 +225,17 @@
             border: 3px solid skyblue;
             margin-left: 5px;
         }
+        .A{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: skyblue;
+            border: 3px solid skyblue;
+            margin-right: 10px;
+        }
         .third > .section > input:checked {
             border-color: #f00;
             /* background-color: yellowgreen; */
@@ -215,23 +251,23 @@
         }
         .first {
             width: 800px;
-            height: 200px;
+            height: 100px;
             display: flex;
         }
         .second {
             width: 800px;
-            height: 200px;
+            height: 100px;
             display: flex;
         }
         .third {
             width: 800px;
-            height: 200px;
+            height: 100px;
             display: flex;
         }
 
         .stair {
             width: 25px;
-            height: 20px;
+            height: 100px;
             text-align: center;
             font-size: 13px;
             /* background-color: #ff0; */
@@ -244,14 +280,16 @@
             text-align: center;
             font-size: 100px;
             font-weight: 600;
+            margin-bottom: 100px;
         }
 
         .section {
             width: 250px;
-            height: 200px;
+            height: 100px;
             border: 1px solid #000;
             box-sizing: border-box;
             padding: 5px;
+            padding-top: 10px;
         }
 
         .hallway {
@@ -260,14 +298,7 @@
             /* background-color: #ff0; */
         }
 
-        .seat_ {
-            width: 15px;
-            height: 15px;
-            margin: 2px;
-            background-color: #ccc;
-            border: 3px solid #000;
-            box-sizing: border-box;
-        }
+        
 
         /* .second > .section:nth-of-type(1) {
             display: flex;
@@ -330,8 +361,10 @@
                         
                     }
                     
-                    
-                    document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                    let bot = totprice%1000
+                    let top = (totprice - (totprice%1000))/1000
+
+                    document.querySelector(".select_done").value = `${top},000원     좌석 선택 완료`
                     document.querySelector(".itemsInput").value = JSON.stringify(arr)
                     document.querySelector(".Total").value = totprice
                     if (totprice != 0) {
@@ -755,10 +788,12 @@
                 
                 <div  class="choiceDate">
                     <img src="../../img/{{perf.poster_url}}">
+                    <br/>
                     {{arr.date}} {{arr.time}}회차
                 </div>
                 <div class="seatG">
                     {% for i in seat %}
+                    <input type="checkbox" class="{{i.grade_code}}" disabled>
                     {{i.grade_code}}석 {{i.price}}원<br/>
                     {% endfor %}
                     <!-- [yellowgreen] R석 160,000원<br/>

@@ -3,28 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원 할인</title>
+    <title>할인</title>
     <style>
+        .dis_wrapper{
+            width: 1200px;
+            margin: auto;
+        }
+        .perf_info{
+            height: 300px;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        .musical_name{
+            height: 100px;
+            font-size: 40px;
+            line-height: 100px;
+        }
         img {
             width: 200px;
+            /* float: left; */
         }
+        .poster{
+            float: left;
+            margin-right: 50px;
+            margin-left: 50px;
+        }
+        
+        hr {
+            height: 3px;
+            background-color: #555;
+            border: none;
+        }
+
+        .user_discount {
+            display: inline-flex;
+        }
+        .user_discount > div {
+            width: 600px;
+            height: 50px;
+            line-height: 50px;
+            margin-left: 10px;
+        }
+        .ticket_info {
+            display: flex;
+            width: 1200px;
+            /* height: 50px; */
+            margin-left: 10px;
+            flex-wrap: wrap;
+        }
+        .grade {
+            width: 250px;
+            height: 50px;
+        }
+        .pseat {
+            width: 950px;
+            height: 50px;
+        }
+
+        .before_dc {
+            height: 50px;
+            margin-left: 10px;
+        }
+
+        .dc_price_write {
+            margin-left: 10px;
+            height: 50px;
+        }
+
+        .cancel {
+            margin-left: 10px;
+            height: 50px;
+            display: inline-flex;
+        }
+        .cancel > div:first-of-type {
+            width: 250px;
+        }
+
+
+        form {
+            margin-left: 10px;
+        }
+        
     </style>
     <script>
         const Dsocket = new WebSocket({host: '0.0.0.0', port: 80})
         // document.querySelector(".side_info").innerHTML = ''
         window.addEventListener('DOMContentLoaded', function(){
-            let cancle_year = `{{seat.year}}`
-            let cancle_month = `{{seat.month}}`
-            let cancle_date = "{{seat.day}}"-1
-            let cancle_ticket = new Date(`${cancle_year}-${cancle_month}-${cancle_date}`)
-            console.log(cancle_ticket)
-            document.querySelector(".cancle_time").innerHTML += `${cancle_ticket.getFullYear()}년 ${cancle_ticket.getMonth()+1}월 ${cancle_ticket.getDate()}일`
+            let cancel_year = `{{seat.year}}`
+            let cancel_month = `{{seat.month}}`
+            let cancel_date = "{{seat.day}}"-1
+            let cancel_ticket = new Date(`${cancel_year}-${cancel_month}-${cancel_date}`)
+            console.log(cancel_ticket)
+            document.querySelector(".cancel_time").innerHTML += `${cancel_ticket.getFullYear()}년 ${cancel_ticket.getMonth()+1}월 ${cancel_ticket.getDate()}일`
             
             
             let totprice = "{{ptot}}" - ("{{ptot}}" * "{{DC.discount_rate}}")
+            let bot = totprice%1000
+            let top = (totprice - bot)/1000
             let hidden = document.querySelector(".hidden")
-            
-            document.querySelector(".dc_price_write").innerHTML = `최종결제금액 ` + totprice+"원"
+            if (bot == 0){
+                document.querySelector(".dc_price_write").innerHTML = `최종결제금액 ` + top+",000원"
+
+            }
+            else {
+
+                document.querySelector(".dc_price_write").innerHTML = `최종결제금액 ` + top+','+bot+"원"
+            }
             document.querySelector(".dc_price").value = totprice
             document.querySelector(".card_number").addEventListener('input', ()=>{
                 if (document.querySelector(".card_number").value.trim() !== ''){
@@ -53,36 +137,53 @@
     </script>
 </head>
 <body>
-    <h1>할인</h1>
-    <div class="user_discount">
-        회원등급 : {{DC.grade_name}}<br/>
-        할인률 : {{DC.discount_rate}}
-    </div>
+    <div class="dis_wrapper">
+    
     <div class="side_info">
-        <div calss="perf_info">
-            뮤지컬〈{{perf.perf_name}}〉<br/>
-            <img src="../../img/{{perf.poster_url}}"><br/>
+        <div class="perf_info">
+            <div class="poster">
+                <!-- <img src="../../img/hook_poster.jpg"> -->
+                <img src="../../img/{{perf.poster_url}}"><br/>
+            </div>
+            <div class="musical_name">뮤지컬〈{{perf.perf_name}}〉</div>
+            {% if seat.choice_time == 1 %}
+            공연일시 {{seat.year}}년 {{seat.month}}월 {{seat.day}}일 {{seat.choice_time}}회차 14:00
+            {% else %}
+            공연일시 {{seat.year}}년 {{seat.month}}월 {{seat.day}}일 {{seat.choice_time}}회차 19:00
+            {% endif %}
+            
+            <!-- {#
             공연기간 {{perf.start_date}} ~ {{perf.end_date}} <br/>
             장르 {{perf.genre}} <br/>
             러닝타임 {{perf.running_time}}분
+            #} -->
         </div>
+        <hr/>
+        <div class="user_discount">
+            <div>
+                회원등급 : {{DC.grade_name}}
+            </div>
+            <div>
+                할인률 : {{DC.discount_rate}}
+            </div>
+        </div>
+        <hr/>
         <div class="ticket_info">
-            {{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}회차
-            <br/>
             {% for i in temp_data %}
-            좌석등급 {{i.grade}} {{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원<br/>
+            <div class="grade">좌석등급 {{i.grade}}</div>
+            <div class="pseat">{{i.area}}구역 {{i.s_row}}열 {{i.s_col}} {{i.price}}원</div>
             {% endfor %}
-            
         </div>
-        총 금액 {{ptot}}
-        <div class="dc_price_write"></div>
-        취소시간<br/>
-        <div class="cancle_time">
+        <div class="before_dc">총 금액 {{pp}}</div>
+        <div class="dc_price_write">최종결제금액</div>
+        <div class="cancel">
+            <div>취소시간</div>
+            <div class="cancel_time"></div>
         </div>
 
     </div>
     <form action="/desc/payment" name="frm" method="POST">
-        결제 카드번호 입력 ('-'을 제외한 숫자만 입력)
+        결제 카드번호 입력 ('-'을 제외한 숫자만 입력)<br/>
         <input type="number" name="items" class="card_number">
         <input type="hidden" name="items" class="user_grade" value="{{DC.user_id}} {{DC.grade_name}} {{DC.discount_rate}}">
         <input type="hidden" name="items" value="{{id}}">
@@ -94,5 +195,6 @@
         {% endfor %}
         <input type="submit" class="total_price_btn" value="결제하기" disabled>
     </form>
+    </div>
 </body>
 </html>
