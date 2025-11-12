@@ -134,6 +134,7 @@
     .perf_list tr:hover {
         background-color: #f5f5f5;
         transition: background-color 0.2s;
+        cursor: pointer; /* 클릭 가능한 요소임을 표시 */
     }
 
     /* --- 열 너비 및 내용 정렬 --- */
@@ -164,12 +165,6 @@
         border-radius: 4px;
     }
 
-    /* 공연 이름 링크 스타일 */
-    .perf_list_name a {
-        color: #1f3f6e;
-        text-decoration: none;
-        font-weight: 600;
-    }
     .perf_list_name a:hover {
         text-decoration: underline;
         color: #5a80d4;
@@ -225,8 +220,8 @@
         <div class="perf_list">
             <table border="">
                 {%for perf in perfList%}
-                    <tr>
-                        <td class="perf_list_name"><a href="/desc/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
+                    <tr onclick="location.href='/desc/{{perf.perf_id}}'">
+                        <td class="perf_list_name">{{perf.perf_name}}</td>
                         <td class="perf_list_poster"><img src="/img/{{perf.poster_url}}" alt=""></td>
                         <td class="perf_list_genre">{%if genre=='all'%}{{perf.genre}}{%else%}<b>{{perf.genre}}</b>{%endif%}</td>
                         <td class="perf_list_running">{{perf.running_time}}분</td>
