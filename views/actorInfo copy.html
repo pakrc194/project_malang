@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{actorInfo.actor_name}}</title>
+    <style>
+        #actor_profile, #perf_poster {
+            width : 100px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            let toggleInterest = document.querySelector('#toggleInterest')
+
+            toggleInterest.addEventListener('click', (e)=>{
+                let actorId =  document.querySelector('#actor_id').value
+                console.log('actorId : ', actorId)
+                
+                fetch(`/actor/interest/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({actorId: actorId})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.msg=='delete') {
+                        alert('관심 취소')
+                        toggleInterest.value='+'
+                    } else if(data.msg=='insert') {
+                        alert('관심 등록')
+                        toggleInterest.value='-'
+                    } else {
+                        alert('실패')
+                    }
+                    console.log(data)
+                })
+                .catch(err => console.log('에러 :', err.message))
+            })
+        }
+    </script>
+</head>
+<body>
+    <h1>배우 상세정보</h1>
+    <input type="hidden" id="actor_id" value="{{actorInfo.actor_id}}">
+    {{actorInfo.actor_name}}<br/>
+    <img id="actor_profile" src="/img/{{actorInfo.actor_profile_url}}" alt="{{actorInfo.actor_profile_url}}"><br/>
+    {{actorInfo.actor_birth_year}}<br/>
+    {{actorInfo.actor_gender}}<hr/>
+    {{actorInfo.actor_history}}<hr>
+    <input type="button" id="toggleInterest" value="{% if isInterest == true %}-{% else %}+{% endif %}"><hr>
+    <h2>상영작</h2>
+    {% for perf in perfList %}
+    
+    {{perf.perf_name}}<br/>
+    <a href="/desc/{{perf.perf_id}}">
+        <img id="perf_poster" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
+    </a>
+    {{perf.start_date}}~{{perf.end_date}}<hr/>
+    {% endfor %}
+    <a href="javascript:history.back()">뒤로</a>
+</body>
+</html>

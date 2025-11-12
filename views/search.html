@@ -4,56 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색결과</title>
-    <style>
-        #img_search_actor,
-        #img_search_perf {
-            width: 100px;
-        }
-
-        hr{
-            margin: 20px;
-            color: #777;
-        }
-        img{
-            border-radius: 13px;
-        }
-
-        h2{
-            color:#333;
-        }
-
-        
-        
-     
-
-    </style>
+    <link rel="stylesheet" href="/style/search.css">
 </head>
 <body>
     {% include './header.html' %}
     <h1>검색결과</h1>
 
     <h2>배우</h2>
-    
-    {% for actor in actorResult %}
-    <div class="actor_box">
-        <a href="/actor/{{actor.actor_id}}">
-            <img id="img_search_actor" src="/img/{{actor.actor_profile_url}}" alt=""><br/>
-        </a>
-        <b>{{actor.actor_name}}</b><br/>
-           {{actor.actor_birth_year}} &nbsp;&nbsp;{{actor.actor_gender}}
-    </div>   
-    <hr/>
-    {% endfor %}
-   
-    
+    <div class="actor_list">
+        {% for actor in actorResult %}
+        <div class="actor_box">
+            <a href="/actor/{{actor.actor_id}}">
+                <img id="img_search_actor" src="/img/{{actor.actor_profile_url}}" alt=""> <br/>
+                <div class="div_span_text">
+                <span class="span_name">{{actor.actor_name}}</span> <br/>
+                <span class="span_info">{{actor.actor_birth_year}} &nbsp;&nbsp;{{actor.actor_gender}}</span> <br/>
+                </div>
+            </a>
+        </div>   
+        {% endfor %}
+    </div>
+    <!-- <hr> -->
     <h2>공연</h2>
-    {% for perf in perfResult %}
-        <a href="/desc/{{perf.perf_id}}">
-            <img id="img_search_perf" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
-        </a>
-        {{perf.perf_name}}<br/>
-        {{perf.genre}}<hr/>
-    {% endfor %}
-    
+    <div class="perf_list">
+        {% for perf in perfResult %}
+        <div class="perf_box">
+            <a href="/desc/{{perf.perf_id}}">
+                <img id="img_search_perf" src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"><br/>
+                <div class="perf_text">
+                    <span class="perf_name">{{perf.perf_name}}</span><br/>
+                    {{perf.genre}}
+                </div>
+            </a>    
+        </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
