@@ -5,49 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>list</title>
     <style>
-        img {
-            width: 100px;
-        }
-        wrapper {
-            display: block;
-            width: 1200px;
-            margin: auto;
-        }
-        .perf_list_header {
-            width: 1200px;
-            height: 50px;
-            margin: auto;
-            margin-top: 10px;
-        }
-        .perf_list_header > table {
-            height: 100%;
-            text-align: center;
-        }
-        .perf_list {
-            width: 1200px;
-            height: 500px;
-            margin: auto;
-            overflow: auto;
-            text-align: center;
-        }
-        .perf_list_no {
-            width: 100px;
-        }
-        .perf_list_poster {
-            width: 200px;
-        }
-        .perf_list_name {
-            width: 300px;
-        }
-        .perf_list_reg_date {
-            width: 150px;
-        }
-        .perf_list_resv_status {
-            width: 150px;
-        }
-        .perf_list_hidden {
-            width: 100px;
-        }
+    /* ============================================== */
+    /* 관리자 - 공연 목록 페이지 (perf_list_admin) 스타일 */
+    /* ============================================== */
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- 목록 컨테이너 설정 --- */
+    wrapper {
+        max-width: 900px; /* 테이블 최대 너비 설정 */
+        margin: 30px auto;
+        display: block;
+    }
+
+    /* --- 테이블 공통 스타일 --- */
+    .perf_list_header table,
+    .perf_list table {
+        width: 100%;
+        border-collapse: collapse; 
+        table-layout: fixed; 
+        border: none; /* 외곽선 제거 */
+    }
+
+    /* 스크롤바 너비를 고려하여 헤더 테이블의 너비를 조정 */
+    .perf_list_header table {
+        width: calc(100% - 17px); /* 스크롤바 공간 확보 (약 17px) */
+        margin-top: 10px;
+        border-top: 2px solid #1f3f6e; /* 상단 강조선 */
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    /* 목록 테이블 컨테이너 (스크롤 영역) */
+    .perf_list {
+        max-width: 900px; 
+        margin: 0 auto;
+        
+        max-height: 70vh; /* 최대 높이 설정 */
+        overflow-y: auto; /* Y축 스크롤 적용 */
+        
+        border: none; /* 외곽선 제거 */
+        border-radius: 0; 
+    }
+
+    /* --- 헤더 스타일 --- */
+    .perf_list_header tr {
+        color: #333;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd; /* 헤더 하단 구분선 */
+    }
+
+    .perf_list_header td {
+        padding: 12px 10px;
+        border: none; /* 셀 테두리 제거 */
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* --- 목록 행 스타일 --- */
+    .perf_list tr td {
+        padding: 15px 10px;
+        border: none; /* 셀 테두리 제거 */
+        border-bottom: 1px solid #eee; /* 행 하단 구분선 */
+        vertical-align: middle;
+        text-align: center;
+    }
+    /* 목록 테이블의 마지막 행 구분선 제거 */
+    .perf_list table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* 💡 목록 행에 마우스 오버 효과 (클릭 가능하므로 활성화) */
+    .perf_list tr:hover {
+        background-color: #f7f7f7; 
+        transition: background-color 0.2s;
+        cursor: pointer; /* 클릭 가능한 요소임을 표시 */
+    }
+
+    /* --- 열 너비 및 내용 정렬 --- */
+    /* 열 너비 설정 (헤더와 목록 동일하게 유지) */
+    .perf_list_no { width: 8%; }
+    .perf_list_poster { width: 12%; }
+    .perf_list_name { width: 30%; }
+    .perf_list_reg_date { width: 15%; }
+    .perf_list_resv_status { width: 15%; }
+    .perf_list_hidden { width: 10%; } /* 합: 90% -> 나머지 10%는 넉넉하게 */
+
+
+    /* 포스터 이미지 스타일 */
+    .perf_list_poster img {
+        max-width: 100%;
+        height: 100px; 
+        object-fit: cover; 
+        display: block;
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+
+    /* 공연 이름 링크 스타일 */
+    .perf_list_name a {
+        color: #1f3f6e;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .perf_list_name a:hover {
+        text-decoration: underline;
+        color: #5a80d4;
+    }
+
+    /* 숨김 여부 (O/X)와 예매 상태 텍스트 정렬 */
+    .perf_list_resv_status, .perf_list_hidden {
+        white-space: nowrap; /* 줄바꿈 방지 */
+    }
+
+    /* 등록 버튼 스타일 */
+    a[href="/admin/perf/upload"] {
+        display: block;
+        width: 120px;
+        margin: 20px auto;
+        padding: 10px 0;
+        text-align: center;
+        text-decoration: none;
+        background-color: #5a80d4;
+        color: white;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.2s;
+    }
+    a[href="/admin/perf/upload"]:hover {
+        background-color: #4369b3;
+    }
     </style>
 </head>
 <body>
@@ -68,14 +159,16 @@
         <div class="perf_list">
             <table border="">
                 {%for perf in res%}
-                    <tr>
+                    <tr onclick="location.href='/admin/perf/detail/{{perf.perf_id}}'">
                         <td class="perf_list_no">{{loop.index}}</td>
                         <td class="perf_list_poster"><img src="/img/{{perf.poster_url}}" alt="{{perf.poster_url}}"></td>
-                        <td class="perf_list_name"><a href="/admin/perf/detail/{{perf.perf_id}}">{{perf.perf_name}}</a></td>
+                        <td class="perf_list_name">{{perf.perf_name}}</a></td>
                         <td class="perf_list_reg_date">{{perf.reg_date}}</td>
                         <td class="perf_list_resv_status">
-                            {% if perf.resv_status == 'PREPARING'%}
-                                D-
+                            {%if perf.schedule_date > 0 %}    
+                                D-{{perf.schedule_date}}
+                            {% elif perf.resv_status == 'PREPARING'%}
+                                준비중
                             {% elif perf.resv_status == 'OPEN'%}
                                 예매중
                             {% else %}

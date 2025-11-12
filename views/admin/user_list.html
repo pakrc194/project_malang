@@ -5,57 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원목록</title>
     <style>
-        wrapper {
-            width: 1200px;
-            margin:auto;
-            display: block;
-        }
-        .user_list_header {
-            width: 1200px;
-            height: 50px;
-            margin: auto;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .user_list_header > table {
-            height: 100%;
-            text-align: center;
-        }
-        .user_list {
-            width: 1200px;
-            height: 500px;
-            text-align: center;
-            overflow: auto;
-        }
-        .user_list_no {
-            width: 100px;
-        }
-        .user_list_email {
-            width: 200px;
-        }
-        .user_list_name {
-            width: 100px;
-        }
-        .user_list_sign {
-            width: 100px;
-        }
-        .user_list_grade {
-            width: 100px;
-        }
-        .user_list_point {
-            width: 100px;
-        }
-        .user_list_resv_count {
-            width: 100px;
-        }
-        .user_list_status {
-            width: 100px;
-        }
+    /* ============================================== */
+    /* 회원 목록 페이지 (user_list) 스타일 */
+    /* ============================================== */
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- 목록 컨테이너 설정 --- */
+    wrapper {
+        max-width: 1200px; /* 테이블 최대 너비 설정 */
+        margin: 30px auto;
+        display: block;
+    }
+
+    /* --- 테이블 공통 스타일 --- */
+    .user_list_header table,
+    .user_list table {
+        width: 100%;
+        border-collapse: collapse; 
+        table-layout: fixed; 
+        border: none; /* 외곽선 제거 */
+    }
+
+    /* 스크롤바 너비를 고려하여 헤더 테이블의 너비를 조정 */
+    .user_list_header table {
+        width: calc(100% - 17px); /* 스크롤바 공간 확보 (약 17px) */
+        margin-top: 10px;
+        border-top: 2px solid #1f3f6e; /* 상단 강조선 */
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    /* 목록 테이블 컨테이너 (스크롤 영역) */
+    .user_list {
+        max-width: 1200px; 
+        margin: 0 auto;
+        
+        max-height: 70vh; /* 최대 높이 설정 */
+        overflow-y: auto; /* Y축 스크롤 적용 */
+        
+        border: none; 
+        border-radius: 0; 
+    }
+
+    /* --- 헤더 스타일 --- */
+    .user_list_header tr {
+        color: #333;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd; /* 헤더 하단 구분선 */
+    }
+
+    .user_list_header td {
+        padding: 12px 10px;
+        border: none; 
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* --- 목록 행 스타일 --- */
+    .user_list tr td {
+        padding: 15px 10px;
+        border: none; 
+        border-bottom: 1px solid #eee; /* 행 하단 구분선 */
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* 목록 테이블의 마지막 행 구분선 제거 */
+    .user_list table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* 💡 목록 행에 마우스 오버 효과 (클릭 가능함) */
+    .user_list tr:hover {
+        background-color: #f7f7f7; 
+        transition: background-color 0.2s;
+        cursor: pointer; 
+    }
+
+    /* --- 열 너비 설정 --- */
+    /* 열 너비 합계는 100% */
+    .user_list_no { width: 5%; } 
+    .user_list_email { width: 20%; } 
+    .user_list_name { width: 10%; } 
+    .user_list_sign { width: 10%; } 
+    .user_list_grade { width: 8%; } 
+    .user_list_point { width: 12%; } 
+    .user_list_resv_count { width: 8%; } 
+    .user_list_status { width: 8%; } 
+    /* (총 81%. 나머지 19%는 기본 셀 패딩 등으로 조정됨) */
+
+    /* 이메일 링크 스타일 */
+    .user_list_email a {
+        color: #1f3f6e;
+        text-decoration: none;
+    }
+    .user_list_email a:hover {
+        text-decoration: underline;
+        color: #5a80d4;
+    }
+
+    /* 숫자 데이터 오른쪽 정렬 */
+    .user_list_point,
+    .user_list_resv_count {
+        text-align: right; 
+    }
+
+    /* 탈퇴여부 (Y) 강조 */
+    .user_list_status {
+        font-weight: bold;
+    }
+    .user_list_status:has(Y) {
+        color: #dc3545; /* 'Y' 텍스트를 포함하는 셀 빨간색 강조 */
+    }
     </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <div class="user_list_header">
+
+    <wrapper>
+            <div class="user_list_header">
     <table border="">
         <tr>
             <td class="user_list_no">번호</td>
@@ -67,15 +142,14 @@
             <td class="user_list_resv_count">예매 수</td>
             <td class="user_list_status">탈퇴여부</td>
         </tr>
-    </table>
-    </div>
-    <wrapper>
+        </table>
+        </div>
         <div class="user_list">
             <table border="">
                 {% for user in userlist %}
-                <tr>
+                <tr onclick="location.href='/admin/reserv/detail?userId={{user.user_id}}'">
                     <td class="user_list_no">{{loop.index}}</td>
-                    <td class="user_list_email"><a href="/admin/reserv/detail?userId={{user.user_id}}">{{user.email}}</a></td>
+                    <td class="user_list_email">{{user.email}}</td>
                     <td class="user_list_name">{{user.user_name}}</td>
                     <td class="user_list_sign">{{user.sign_method}}</td>
                     <td class="user_list_grade">{{user.grade_name}}</td>

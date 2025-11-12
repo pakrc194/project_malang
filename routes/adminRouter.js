@@ -28,12 +28,35 @@ router.get('/perf/list', (req, res)=>{
             res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', resQuery)
+            // 현재 날짜(오늘)를 구하고 시간 정보를 00:00:00으로 초기화
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayTime = today.getTime();
+            const dayInMilliseconds = 1000 * 60 * 60 * 24;
             for(const perf of resQuery) {
                 perf.start_date = base_date_format(perf.start_date)
+
+            // 2. D-Day 계산을 위한 스케줄 날짜 처리
+                const scheduledDateString = perf.start_date;
+                const scheduledDate = new Date(scheduledDateString);
+                
+                // 스케줄 날짜 역시 시간 정보를 00:00:00으로 초기화
+                scheduledDate.setHours(0, 0, 0, 0); 
+                
+                // 3. 시간 차이 계산 (밀리초)
+                const timeDiff = scheduledDate.getTime() - todayTime;
+                
+                // 4. 밀리초를 일 수로 변환 (Math.ceil을 사용하여 남은 시간이 조금이라도 있으면 1일로 올림)
+                const diffDays = Math.ceil(timeDiff / dayInMilliseconds);
+
+                // 5. D-day 값으로 resv.schedule_date 업데이트
+                perf.schedule_date = diffDays;
+
+
                 perf.end_date = base_date_format(perf.end_date)
                 perf.reg_date = base_date_format(perf.reg_date)
             }
-            res.render('../views/admin/perf_list.html', {loginout, res : resQuery})
+            res.render('../views/admin/perf_list.html', {loginout, current_path:'perf' ,res : resQuery})
         }
     })
 })
@@ -420,7 +443,7 @@ router.get('/actor/list', (req, res)=>{
             res.render('../views/admin/actor_list.html')
         } else {
             console.log('sql 성공', resQuery)
-            res.render('../views/admin/actor_list.html', {res : resQuery})
+            res.render('../views/admin/actor_list.html', {res : resQuery, current_path:'actor'})
         }
     })
 })
@@ -470,7 +493,7 @@ router.get('/user/list', (req, res)=> {
         }
         
 
-        res.render('../views/admin/user_list.html', {userlist : ret})
+        res.render('../views/admin/user_list.html', {userlist : ret, current_path:'user'})
         
     })
 })
@@ -512,7 +535,7 @@ router.get('/reserv/list', (req, res)=>{
                 resv.final_amount = Number(resv.final_amount).toLocaleString()
             }
             
-            res.render('../views/admin/perf_reservation.html', {reservList : reservQuery})
+            res.render('../views/admin/perf_reservation.html', {reservList : reservQuery, current_path:'resv'})
         }
     })
 })
