@@ -602,6 +602,13 @@ router.get('/reserv/detail', (req, res)=>{
                 console.log('resrvErr : ', resrvErr.message)
             else {
                 console.log(reservQuery)
+                for(let resv of reservQuery) {
+                    resv.schedule_date = base_date_format(resv.schedule_date)
+                    resv.resv_date = base_date_format(resv.resv_date)
+                    resv.total_amount = Number(resv.total_amount).toLocaleString()
+                    resv.final_amount = Number(resv.final_amount).toLocaleString()
+                    resv.discount_rate = eval(resv.discount_rate)*100
+                }
                 res.render('../views/admin/reserv_detail.html', {userInfo: userQuery, reservList : reservQuery})
             }
             
