@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> 배우 상세 정보 페이지</title>
     <link rel="stylesheet" href="/style/actor_info.css">
+    <script>
+        window.onload = function() {
+            let toggleInterest = document.querySelector('#btnFavor')
+
+            toggleInterest.addEventListener('click', (e)=>{
+                let actorId =  document.querySelector('#actor_id').value
+                console.log('actorId : ', actorId)
+                
+                fetch(`/actor/interest/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({actorId: actorId})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.msg=='delete') {
+                        alert('관심 취소')
+                        toggleInterest.value='관심배우등록 +'
+                    } else if(data.msg=='insert') {
+                        alert('관심 등록')
+                        toggleInterest.value='관심배우등록 -'
+                    } else {
+                        alert('실패')
+                    }
+                    console.log(data)
+                })
+                .catch(err => console.log('에러 :', err.message))
+            })
+        }        
+    </script>
 </head>
 <body>
     <h1>배우 상세 정보</h1>
@@ -20,7 +52,7 @@
         </div>
 
         <div class="favor_button">
-            <input type="button" id='btnFavor' value="관심 배우 등록">
+            <input type="button" id='btnFavor' value="관심 배우 등록 +">
         </div>
 
         <hr>
@@ -36,6 +68,7 @@
                 <b>장르  </b> {{res[0].genre}}<br/>
             </div>
         </div>
+        <input type="hidden" id="actor_id" value="{{res[0].actor_id}}">
     </div>
 
 </body>
