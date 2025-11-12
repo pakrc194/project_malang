@@ -146,30 +146,44 @@ wss.on('connection', (ws, req)=>{
             time = arr[3]
             venue_id = arr[4]
 
+            conn.query(`select schedule_id from perf_schedule where perf_id = ${perf_id} and schedule_date = "${date}" and schedule_round = ${time}`, (err, sch_id)=>{
+                schedule_id = sch_id[0].schedule_id
+                console.log('app.스케줄 아이디: ', schedule_id)
+            })
+
+        }
+        else if (arr[0] == "reserve"){
+            conn.query(
+            `select seat_layout.*, seat_status.seat_status from seat_layout join seat_status on seat_status.seat_id = seat_layout.seat_id
+            join perf_schedule 
+            where seat_status.schedule_id = ${schedule_id}             
+                and perf_schedule.perf_id = ${perf_id}
+                and perf_schedule.schedule_round = ${time}
+                and perf_schedule.schedule_date = "${date}"
+                and seat_status.seat_status != "Available"
+                `, (err, avoid)=>{
+                    console.log('avoid: ', avoid)
+                    ws.send(JSON.stringify({type: 'avoid', result: avoid}))
+                    // wss.clients.forEach((client) => {
+                    //     if (client != ws){
+                    //         client.send(JSON.stringify({ type: 'A', result: a_up, schedule_id: schedule_id }));
+                    //     }
+                    // });
+                })
         }
         else {
             arr.push(new Date(Date.now() + 5*60*1000))
             console.log('arr: ', arr)
             // arr: 0좌석등급, 1구역, 2열, 3번호, 4유저id, 5작품id, 날짜, 회차, 만료시간
-
-            conn.query(`select distinct seat_status.schedule_id from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
-                
-                and perf_schedule.perf_id = ${arr[5]}
-                and perf_schedule.schedule_round = ${arr[7]}
-                and perf_schedule.schedule_date = "${base_date_format(arr[6])}"
-                
-                `,
-            (err, queryData)=>{
-                console.log('좌석 정보 :', queryData)
-                schedule_id = queryData[0].schedule_id
-                console.log(arr, time, date)
-                
+            conn.query(`select schedule_id from perf_schedule where schedule_date = "${arr[6]}" and schedule_round = ${arr[7]}`, (err, sche_id)=>{
+                schedule_id = sche_id[0].schedule_id
+                console.log('좌석 선택시 스케줄아이디 확인: ', schedule_id)
             })
-            
 
             conn.query(`SELECT seat_id FROM seat_layout WHERE venue_id = ${venue_id} 
                 AND area = "${arr[1]}" AND seat_row = ${arr[2]} AND seat_number = ${arr[3]}`, (err, seat) =>{
                     seat_id = seat[0].seat_id
+                    console.log('seat: ', seat)
 
                     let find_seat_status = `SELECT seat_status, seat_id FROM seat_status 
                             WHERE schedule_id = ${schedule_id}
@@ -181,7 +195,12 @@ wss.on('connection', (ws, req)=>{
                         
                         let expires = new Date(Date.now() + 5*60*1000)
                         let formatted = expires.toISOString().slice(0, 19).replace('T', ' ')
-                        console.log(new Date(), formatted)
+                        // console.log(new Date(), formatted)
+
+                        // 좌석이 DB에 있는지 확인
+                        let find_seat = `select * from seat_status where schedule_id = ${schedule_id} and seat_id = ${seat_id}`
+                        let inser_seat = `insert into seat_status(schedule_id, seat_id, seat_status, user_id, temp_resv_time) values (?, ?, ?, ?, ?)`
+                        let is = [schedule_id, seat_id, "Reserved", arr[4], formatted]
 
                         let update_seat_status_R = `UPDATE seat_status SET seat_status = "Reserved", user_id = ${arr[4]}, temp_resv_time = "${formatted}"
                                 WHERE schedule_id = ${schedule_id} AND seat_id = ${seat_id}`
@@ -209,38 +228,6 @@ wss.on('connection', (ws, req)=>{
                                 AND seat_status.schedule_id = ${schedule_id}
                                 `
 
-                        if (s_s_up[0].seat_status == "Available"){
-                            console.log('상태 변경: ', arr[4], schedule_id, seat_id)
-                            // 좌석 정보를 Reserved로 변경
-                            conn.query(update_seat_status_R, (err, res_R)=>{
-                                conn.query(send_seat_status, (err, send_s1)=>{
-                                    console.log('send_s1, Reserved: ', send_s1)
-                                    ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
-                                })
-                            })        
-                        }
-                        else if (s_s_up[0].seat_status == "Reserved"){
-                            // 좌석 정보를 Available로 변경
-                            conn.query(update_seat_status_A, (err, res_A)=>{
-                                conn.query(send_seat_status, (err, send_s1)=>{
-                                    console.log('send_s1: ', send_s1[0])
-                                    ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
-
-                                    // Available로 변경된 좌석정보 전송
-                                    conn.query(`select * from seat_layout where seat_id = ${s_s_up[0].seat_id}`, (err, a_up)=>{
-
-                                        wss.clients.forEach((client) => {
-                                            if (client != ws){
-                                                client.send(JSON.stringify({ type: 'A', result: a_up, schedule_id: schedule_id }));
-
-                                            }
-                                        });
-                                    })
-                                })
-                            })
-                        }
-
-                        
                         let send_seat_status_not_me = `
                                 SELECT 
                                 perf_price.grade_code AS grade,
@@ -261,16 +248,155 @@ wss.on('connection', (ws, req)=>{
                                 AND seat_layout.grade_code = perf_price.grade_code
                                 AND seat_status.schedule_id = ${schedule_id}
                                 `
-                        
-                        conn.query(send_seat_status_not_me, (err, send_s2)=>{
-                            console.log('send_s2: ', send_s2)
-                            wss.clients.forEach((client) => {
-                                if (client.readyState == websocket.OPEN){
-                                    client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));
-                                }
+
                                 
-                            });
+                        conn.query(find_seat, (err, find_seat)=>{
+                            console.log('find_seat', find_seat.length, find_seat)
+                            // console.log('좌석 상태, 유저 아이디 확인', find_seat[0].seat_status, find_seat[0].user_id, arr[4])
+
+                            if (find_seat.length == 0){
+                                // 존재하지 않는다면 DB에 추가
+                                conn.query(inser_seat, is, (err, res_insert)=>{
+                                    conn.query(send_seat_status, (err, send_s1)=>{
+                                        console.log('send_s1, Reserved: ', send_s1)
+                                        // 내가 선택한 좌석을 화면에 뿌리기 위해 전송
+                                        ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
+                                        conn.query(send_seat_status_not_me, (err, send_s2)=>{
+                                            console.log('send_s2: ', send_s2)
+                                            wss.clients.forEach((client) => {
+                                                if (client.readyState == websocket.OPEN){
+                                                    client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));
+                                                }
+                                                
+                                            });
+                                        })
+                                        // wss.clients.forEach((client) => {
+                                        //     if (client != ws){
+                                        //         client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
+                                        //     }
+                                        // });
+                                    })
+                                })
+                            }
+                            else {
+                                // 좌석이 존재함
+                                // 예약 가능하다면
+                                if (find_seat[0].seat_status == "Available") {
+                                    console.log("Available")
+                                    // reserved로 업데이트
+                                    conn.query(update_seat_status_R, (err, res_R)=>{
+                                        conn.query(send_seat_status, (err, send_s1)=>{
+                                            // console.log('send_s1, Reserved: ', send_s1)
+                                            ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
+                                            conn.query(send_seat_status_not_me, (err, send_s2)=>{
+                                            console.log('send_s2: ', send_s2)
+                                            wss.clients.forEach((client) => {
+                                                if (client.readyState == websocket.OPEN){
+                                                    client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));
+                                                }
+                                                
+                                            });
+                                        })
+                                        //     wss.clients.forEach((client) => {
+                                        //     if (client != ws){
+                                        //         client.send(JSON.stringify({ type: 'temp', result: send_s1 }));
+                                        //     }
+                                        // });
+                                        })
+                                    }) 
+                                }
+                                else if (find_seat[0].seat_status == "Reserved" && find_seat[0].user_id == arr[4]){
+                                    //내가 예약상태면 예약 상태 해제
+                                    conn.query(update_seat_status_A, (err, res_A)=>{
+                                        conn.query(send_seat_status, (err, send_s1)=>{
+                                            // console.log('send_s1: ', send_s1[0])
+                                            ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
+
+                                            // Available로 변경된 좌석정보 전송
+                                            conn.query(`select * from seat_layout where seat_id = ${s_s_up[0].seat_id}`, (err, a_up)=>{
+
+                                                wss.clients.forEach((client) => {
+                                                    if (client != ws){
+                                                        client.send(JSON.stringify({ type: 'A', result: a_up, schedule_id: schedule_id }));
+
+                                                    }
+                                                });
+                                            })
+                                        })
+                                    })
+                                }
+                            }
                         })
+
+
+                        
+                        
+                        
+
+                        
+
+                        // if (s_s_up[0].seat_status == "Available"){
+                        //     console.log('상태 변경: ', arr[4], schedule_id, seat_id)
+                        //     // 좌석 정보를 Reserved로 변경
+                        //     conn.query(update_seat_status_R, (err, res_R)=>{
+                        //         conn.query(send_seat_status, (err, send_s1)=>{
+                        //             console.log('send_s1, Reserved: ', send_s1)
+                        //             ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
+                        //         })
+                        //     })        
+                        // }
+                        // else if (s_s_up[0].seat_status == "Reserved"){
+                        //     // 좌석 정보를 Available로 변경
+                        //     conn.query(update_seat_status_A, (err, res_A)=>{
+                        //         conn.query(send_seat_status, (err, send_s1)=>{
+                        //             console.log('send_s1: ', send_s1[0])
+                        //             ws.send(JSON.stringify({ type: 'temp', result: send_s1 }))
+
+                        //             // Available로 변경된 좌석정보 전송
+                        //             conn.query(`select * from seat_layout where seat_id = ${s_s_up[0].seat_id}`, (err, a_up)=>{
+
+                        //                 wss.clients.forEach((client) => {
+                        //                     if (client != ws){
+                        //                         client.send(JSON.stringify({ type: 'A', result: a_up, schedule_id: schedule_id }));
+
+                        //                     }
+                        //                 });
+                        //             })
+                        //         })
+                        //     })
+                        // }
+
+                        
+                        // let send_seat_status_not_me = `
+                        //         SELECT 
+                        //         perf_price.grade_code AS grade,
+                        //         seat_layout.area AS area,
+                        //         seat_layout.seat_row AS s_row,
+                        //         seat_layout.seat_number AS s_col,
+                        //         perf_price.price AS price,
+                        //         seat_status.seat_id AS seat_id,
+                        //         seat_status.user_id AS user_id,
+                        //         seat_status.seat_status AS seat_status,
+                        //         seat_status.schedule_id AS schedule_id
+
+                        //         FROM seat_status 
+                        //         JOIN seat_layout ON seat_status.seat_id = seat_layout.seat_id
+                        //         JOIN perf_price ON seat_layout.venue_id = perf_price.venue_id
+                        //         WHERE seat_status.seat_status != "Available"
+                        //         AND perf_price.perf_id = ${arr[5]}
+                        //         AND seat_layout.grade_code = perf_price.grade_code
+                        //         AND seat_status.schedule_id = ${schedule_id}
+                        //         `
+                        
+                        // conn.query(send_seat_status_not_me, (err, send_s2)=>{
+                        //     console.log('send_s2: ', send_s2)
+                        //     wss.clients.forEach((client) => {
+                        //         if (client.readyState == websocket.OPEN){
+                        //             client.send(JSON.stringify({ type: 'seat_status', result: send_s2 }));
+                        //         }
+                                
+                        //     });
+                        // })
                     })
                 })
         }
