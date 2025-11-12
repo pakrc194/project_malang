@@ -175,7 +175,7 @@ wss.on('connection', (ws, req)=>{
             arr.push(new Date(Date.now() + 5*60*1000))
             console.log('arr: ', arr)
             // arr: 0좌석등급, 1구역, 2열, 3번호, 4유저id, 5작품id, 날짜, 회차, 만료시간
-            conn.query(`select schedule_id from perf_schedule where schedule_date = "${arr[6]}" and schedule_round = ${arr[7]}`, (err, sche_id)=>{
+            conn.query(`select schedule_id from perf_schedule where schedule_date = "${arr[6]}" and schedule_round = ${arr[7]} and perf_id = ${perf_id}`, (err, sche_id)=>{
                 schedule_id = sche_id[0].schedule_id
                 console.log('좌석 선택시 스케줄아이디 확인: ', schedule_id)
             })

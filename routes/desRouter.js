@@ -140,7 +140,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
             resP[2].price = Number(resP[2].price).toLocaleString()
 
             let arr={
-                date: req.body.items[0],  // 선택 날짜
+                date: base_date_format(req.body.items[0]),  // 선택 날짜
                 time: req.body.items[1],  // 선택 회차
                 flag: req.body.items[2], // 표시해야할 날짜
                 name: resPf[0].venue_name, // 공연장 이름
