@@ -12,7 +12,7 @@ router.get('/:id', async (req, res) => {
     const loginout = req.session.email || req.session.kakao_email
     const name = req.session.user_name
 
-    let userId = 7
+    let userId = req.session.user_id
     let isInterest = false
     if(email) {
         let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
