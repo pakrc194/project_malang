@@ -1,20 +1,137 @@
 <style>
     #imgGrade {
-        width: 100px;
+        width: 150px;
+        margin: auto;
+        align-self: center;
+    }
+    .myInfo {
+        width: 700px;
+        height: 550px;
+        margin:auto;
+        overflow: hidden;
+        position:relative;
+    }
+    /* myGrade 섹션1 */
+    .myGrade_section1 {
+        width: 100%;
+        height: 250px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        box-sizing: border-box;
+        position:relative;
+    }
+    .myGrade_curImg {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+    .myGrade_nextInfo {
+        width: 400px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        box-sizing: border-box;
+        
+        position:relative;
+    }
+    .myGrade_nextDetail {
+        width: 200px;
+        height: 150px;
+        line-height: 30px;
+        position:absolute;
+        left: 10px;
+        top:0;
+    }
+    .myGrade_nextImg {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        box-sizing: border-box;
+        position:absolute;
+        right:0;
+        top:0;
+    }
+    /* myGrade 섹션2 */
+    .myGrade_section2 {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .myGrade_warn {
+        width: 600px;
+        height: 200px;
+        margin: auto;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        box-sizing: border-box;
+        line-height: 60px;
+        padding: 10px;
+    }
+    #aResv {
+        display: block;
+        width: 120px;
+        margin: 20px auto;
+        padding: 10px 0;
+        text-align: center;
+        text-decoration: none;
+        background-color: #5a80d4;
+        color: white;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.2s;
+    }
+    #aResv:hover {
+        background-color: #4369b3;
     }
 </style>
 <div class="myGrade">
-    {{myGrade.email}}<br/>
-    {{myGrade.user_name}}<br/>
-    {{myGrade.score}}<br/>
-    {{myGrade.grade_name}}<br/>
-    {{myGrade.discount_rate}}<br/>
-    {{myGrade.grade_score}}<br/>
-    <img id="imgGrade" src="../../img/{{myGrade.grade_image_url}}" alt="{{myGrade.grade_image_url}}"><hr/>
-    {{nextGrade.grade_name}}<br/>
-    {{nextGrade.grade_score}}<br/>
-    {{nextGrade.discount_rate}}<br/>
-    <img id="imgGrade" src="../../img/{{nextGrade.grade_image_url}}" alt="{{nextGrade.grade_image_url}}"><hr/>
-    <a href="/mypage/reserveSelect">등급 이력</a>
-    <hr>
+    <div class="myGrade_section1">
+        <div class="myGrade_curImg">
+            <img id="imgGrade" src="../../img/{{myGrade.grade_image_url}}" alt="{{myGrade.grade_image_url}}">
+        </div>
+        <div class="myGrade_nextInfo">
+            <div class="myGrade_nextDetail">
+                <b>현재 등　급　</b>{{myGrade.grade_name}}<br/>
+                <b>현재 할인율　</b>{{myGrade.discount_rate}}<br/><br/>
+                
+                {% if myGrade.grade_id != 5%}
+                <b>다음 등　급　</b> {{nextGrade.grade_name}}<br/>
+                <b>다음 할인율　</b> {{nextGrade.discount_rate}}<br/>
+                {% else %}
+                <b>최고 등급입니다.</b> <br/>
+                <b></b><br/>
+                {% endif %}
+                
+            </div>
+            <div class="myGrade_nextImg">
+                {% if myGrade.grade_id != 5%}
+                <img id="imgGrade" src="/img/{{nextGrade.grade_image_url}}" alt="{{nextGrade.grade_image_url}}">
+                {% else %}
+                <img id="imgGrade" src="/img/malang_logo.png" alt="{{nextGrade.grade_image_url}}">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="myGrade_section2">
+        <div class="myGrade_warn">
+            현재 점수는 {{total.curMonthTotal}} 입니다.<br>
+            {% if myGrade.grade_id == 5%}
+            최고 등급입니다. 다음 등급은 없습니다.
+            {% else %}
+            다음 등급까지 남은 점수는 {{total.needNextGrade}}입니다.<br>
+            {% endif %}
+            다음 달 예상 점수는 {{total.nextMonthTotal}} 입니다.<br>
+        </div>
+    </div>
+    
+    <a href="/mypage/reserveSelect" id="aResv">등급 이력</a>
 </div>

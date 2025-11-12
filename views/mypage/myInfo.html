@@ -1,12 +1,127 @@
 <style>
     #imgGrade {
-        width: 100px;
+        width: 150px;
+        margin: auto;
+        align-self: center;
+    }
+    .myInfo {
+        width: 700px;
+        height: 550px;
+        margin:auto;
+        overflow: hidden;
+    }
+    /* myInfo 헤더 */
+    .myInfo_header {
+        width: 100%;
+        height: 180px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .myInfo_detail {
+        width: 300px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        line-height: 75px;
+        padding-left: 10px;
+    }
+    .myInfo_resv {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        line-height: 75px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    .myInfo_interest {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        line-height: 75px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    /* myInfo 바디 */
+    .myInfo_body {
+        width: 100%;
+        height: 180px;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .myInfo_grade_img {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+    }
+    .myInfo_grade_info {
+        width: 500px;
+        height: 150px;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        line-height: 40px;
+        padding: 10px;
+    }
+    /* myInfo 푸터 */
+    .myInfo_footer{
+        width: 100%;
+        height: 180px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .myInfo_grade_warn {
+        width: 650px;
+        height: 150px;
+        line-height: 30px;
+        margin: auto;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        padding: 10px;
     }
 </style>
 <div class="myInfo">
-    {{myInfo.email}}<br/>
-    {{myInfo.user_name}}<br/>
-    {{myInfo.grade_name}}<br/>
-    <img id="imgGrade" src="../../img/{{myInfo.grade_image_url}}" alt="{{myInfo.grade_image_url}}"><hr/>
-    예매내역 {{reservCnt}} <hr/>
+    <div class="myInfo_header">
+        <div class="myInfo_detail">
+            <b>이　름</b>　　{{myInfo.user_name}}<br/>
+            <b>이메일　　</b>{{myInfo.email}}
+        </div>
+        <div class="myInfo_resv">
+            예매내역<br/>
+            {{reservCnt}}
+        </div>
+        <div class="myInfo_interest">
+            관심배우<br/>
+            {{interestCnt}}
+        </div>
+    </div>
+    <div class="myInfo_body">
+        <div class="myInfo_grade_img">
+            <img id="imgGrade" src="/img/{{myInfo.grade_image_url}}" alt="등급 이미지">
+        </div>
+        <div class="myInfo_grade_info">
+            현재 등급은 <b>{{myInfo.grade_name}}</b> 입니다.<br/>
+            적용되는 할인은 {%set rate = myInfo.discount_rate*100%}{{rate}}% 입니다.<br/>
+            등급은 최근 6개월의 결제 누적 금액으로 배정됩니다.
+        </div>
+    </div>
+    <div class="myInfo_footer">
+        <div class="myInfo_grade_warn">
+            (비밀번호 변경, 회원 탈퇴 정보)<br/>
+            회원가입 시 등록하신 비밀번호는 ‘비밀번호 변경’에서 변경하실 수 있습니다.<br/>
+            회원탈퇴를 원하시면 회원탈퇴 버튼을 클릭해주세요. <br/>
+            회원을 탈퇴하시면 등록되어 있던 개인정보가 비활성화됩니다. <br/>
+        </div>
+    </div>
 </div>
