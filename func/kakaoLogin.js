@@ -148,28 +148,5 @@ router.get("/redirect", async function (req, res) {
 })
 
 
-// 로그아웃 요청
-// router.get("/logout", async function (req, res) {
-//   const uri = api_host + "/v1/user/logout";
-//   const header = {
-//     Authorization: "Bearer " + req.session.key
-//   };
-
-//   const rtn = await call("POST", uri, null, header);
-//   req.session.destroy();
-//   res.send(rtn);
-// });
-
-// 연결 해제 요청
-router.get("/unlink", async function (req, res) {
-  const uri = api_host + "/v1/user/unlink";
-  const header = {
-    Authorization: "Bearer " + req.session.key
-  };
-
-  const rtn = await call("POST", uri, null, header);
-  req.session.destroy();
-  res.send(rtn);
-});
 
 module.exports = router;

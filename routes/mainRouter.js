@@ -12,10 +12,11 @@ const { base_date_format } = require('../func/date.js')
 
 
 router.get('/', (req, res) => {
-        console.log('세션 이메일 확인: ', req.session.kakao_email)
+    console.log('세션 이메일 확인: ', req.session.kakao_email)
 
 
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     // 1. 메인배너(현재 상영)
     const mainbenner = `
@@ -58,6 +59,10 @@ ORDER BY
     RAND();
   `;
 
+  const user_name = `
+  select
+  user_name from user_info where user_name = ? `;
+
     conn.query(mainbenner, (err1, main_bennr) => {
         if (err1) {
             console.log('현재 상영작 조회 실패:', err1.message)
@@ -72,18 +77,19 @@ ORDER BY
             if (err2) {
                 console.log('오픈 예정작 조회 실패:', err2.message)
             } else {
-            for (const row of coming_benner) {
-                row.start_date = base_date_format(row.start_date);
-                row.end_date = base_date_format(row.end_date);
+                for (const row of coming_benner) {
+                    row.start_date = base_date_format(row.start_date);
+                    row.end_date = base_date_format(row.end_date);
+                }
             }
-        }
 
             conn.query(actorbenner, (err3, actor_benner) => {
                 if (err3) {
                     console.log('배우 조회 실패:', err3.message)
-                }
+                } 
+                console.log('배우 조회 성공')
 
-                res.render('../views/main.html', { loginout, main_bennr, coming_benner, actor_benner })
+                    res.render('../views/main.html', { loginout, main_bennr, coming_benner, actor_benner, name })
             })
         })
     })

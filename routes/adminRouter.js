@@ -21,6 +21,7 @@ conn.query = util.promisify(conn.query);
 //공연 데이터가 없어서 공연장으로 임시 대체
 router.get('/perf/list', (req, res)=>{
     const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     conn.query('select * from performance_info', (err, resQuery)=>{
         if(err) {
@@ -33,7 +34,7 @@ router.get('/perf/list', (req, res)=>{
                 perf.end_date = base_date_format(perf.end_date)
                 perf.reg_date = base_date_format(perf.reg_date)
             }
-            res.render('../views/admin/perf_list.html', {loginout, res : resQuery})
+            res.render('../views/admin/perf_list.html', {loginout, name, res : resQuery})
         }
     })
 })

@@ -14,6 +14,8 @@ let orderStatus = {1:true, 2:true}
 router.get('/:genre', (req, res) => {
     let genre = req.params.genre 
     let order = req.query.order || 0
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
     console.log('order : ', order)
     let orderQuery = ''
     if(order == 1) {
@@ -38,7 +40,7 @@ router.get('/:genre', (req, res) => {
                 perf.start_date = base_date_format(perf.start_date)
                 perf.end_date = base_date_format(perf.end_date)
             }
-            res.render('../views/list.html', {perfList: listQuery, genre:genre})
+            res.render('../views/list.html', {perfList: listQuery, genre:genre , loginout, name})
         })
     } else {
         let genreList = {origin:"오리지널", creative:'창작', license:'라이선스', nonVerbal:'넌버벌퍼포먼스'}
@@ -52,7 +54,7 @@ router.get('/:genre', (req, res) => {
                 perf.start_date = base_date_format(perf.start_date)
                 perf.end_date = base_date_format(perf.end_date)
             }
-            res.render('../views/list.html', {perfList: listQuery, genre:genre})
+            res.render('../views/list.html', {perfList: listQuery, genre:genre , loginout, name})
         })
     }
 })

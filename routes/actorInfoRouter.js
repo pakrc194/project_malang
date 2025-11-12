@@ -9,7 +9,10 @@ const { base_date_format } = require('../func/date')
 router.get('/:id', async (req, res) => {
     console.log('email', req.session?.email, req.params.id)
     const email = req.session?.email || req.session?.kakao_email;
-    let userId = req.session?.user_id
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
+    let userId = 7
     let isInterest = false
     if(email) {
         let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
@@ -27,7 +30,7 @@ router.get('/:id', async (req, res) => {
         
         conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
             console.log(perfListQuery)
-            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery, loginout, name})
         })
     })
 })

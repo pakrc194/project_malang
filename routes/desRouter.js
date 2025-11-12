@@ -19,6 +19,20 @@ let venue_id = 0
 
 // 상세페이지
 router.get('/:id', (req, res)=>{
+    let email = ''
+    if (req.session.email) {
+        email = req.session.email
+    }
+    else {
+        email = req.session.kakao_email
+    }
+
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
+        console.log('상세페이지 세션 이메일 확인: ', email)
+
+    let venue_id = 0
     init_perf_id = req.params.id
        
     
@@ -108,6 +122,11 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     
     
     conn.query('delete from seat_temp')
+    // console.log(req.body.items[0])
+    // console.log(req.params.id)
+    console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${init_perf_id}`, (err, resPf)=>{
@@ -156,6 +175,9 @@ router.post('/discount/:id', (req, res)=>{
     console.log('할인 세션 이메일 확인: ', email)
     console.log('items : ',req.body.items[0])
 
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
     let temp_data = [] // grade, area, s_row, s_col, price
     for (let i of JSON.parse(req.body.items[0])){
         // console.log(i.split(' '))
@@ -184,7 +206,7 @@ router.post('/discount/:id', (req, res)=>{
         conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
             conn.query(discountQuery, (err, resDC)=>{
                 // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id})
+                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id, loginout, name})
             })
         })
     })
@@ -192,9 +214,14 @@ router.post('/discount/:id', (req, res)=>{
 
 
 router.get('/actor/:id', (req, res)=>{
+    console.log('배우 상세정보 페이지로 이동')
+
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
 
     conn.query(`select * from actor_info where actor_id = ${req.params.id}`, (err, resActor)=>{
-        res.render("../views/actorInfo.html", {id: req.params.id, actor: resActor[0]})
+        console.log(resActor[0])
+        res.render("../views/actorInfo.html", {id: req.params.id, actor: resActor[0], loginout, name})
     })
 
 })
@@ -209,6 +236,10 @@ router.post('/payment', async (req, res)=>{
         email = req.session.kakao_email
     }
 
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
+    // let dd = base_date_format(arr.date)
     console.log('정보: ', req.body.items)
     console.log('카드번호: ', req.body.items[0])
     console.log('유저id, 등급, 할인율: ', req.body.items[1].split(' '))

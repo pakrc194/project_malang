@@ -1,116 +1,225 @@
 <style>
-    * {
-        margin: 0px;
-        padding: 0px;
-    }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    .reservLists {
-        width: 800px;
-        border: 1px solid #000;
-        box-sizing: border-box;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        box-sizing: border-box;
-        
-    }
+  .sortList {
+    width: 100%;
+    padding: 10px 0;
+    text-align: right;
+    margin-bottom: 15px;
+  }
 
-    img {
-        width: 120px;
-        height: 100px;
-        float: left;
-        border-radius: 10px;
-        margin: 10px;
-    }
+  #sortSelect {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+  }
 
-    .reserveMenu {
-        width: 800px;
-        border: 1px solid #000;
-        box-sizing: border-box;
-        
-    }
+  .reservLists {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-    .sortList{
-        width: 800px;
-        overflow: auto;
-        box-sizing: border-box;
-    }
+  .reservecard {
+    display: flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: 0.2s;
+  }
+
+  .reserveimg {
+    flex-shrink: 0;
+  }
+
+  .reserveimg > img {
+    margin-top: 5px;
+    margin-left: 5px;
+    width: 150px;
+    height: 180px;
+  }
+
+  .reserveinfo {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .reserveinfo h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .reserveinfo p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.4;
+  }
+
+  .reservestatus {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .reservestatus.cancelled {
+    color: #d9534f;
+  }
+
+  .reservestatus.complete {
+    color: #5cb85c;
+  }
+
+  .reservebtns {
+    margin-top: 10px;
+    text-align: right;
+  }
+
+  .reservebtns input {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-left: 6px;
+    font-size: 13px;
+  }
+
+  .reservebtns input[type="button"]:first-child {
+    background-color: #6c63ff;
+    color: #fff;
+  }
+
+  .reservebtns input[type="button"]:nth-child(2) {
+    background-color: #f15b5b;
+    color: #fff;
+  }
+
+  .reservebtns input[type="button"]:disabled {
+    background-color: #bbb !important;
+    color: #f2f2f2;
+  }
+
+  .empty {
+    text-align: center;
+    color: #888;
+    padding: 50px 0;
+  }
+
+  .perf_name {
+    float: none;
+  }
+
+  .d_day {
+    float: none;
+  }
+
+  .titlerow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  .d_day {
+    font-weight: bold;
+    color: #d9534f;
+    flex-shrink: 0;
+  }
 </style>
+
 <script>
-    window.onload = function () {
+  window.resvDetail = function (resvId) {
+    location.href = `/mypage/resvDetail?resv_id=${resvId}`;
+  };
 
-        const sortSelect = document.querySelector('#sortSelect');
-        sortSelect.addEventListener('change', function () {
-            const selected = this.value;
-            location.href = `/mypage/reserveSelect?sort=${selected}`;
-        });
-    };
+  window.resvCancel = function (resvId) {
+      location.href = `/mypage/resvCancel?resv_id=${resvId}`;
+  };
+
+  window.onload = function () {
+    const sortSelect = document.querySelector('#sortSelect');
+    sortSelect.addEventListener('change', async function () {
+      const selected = this.value;
+
+      const response = await fetch(`/mypage/reserveSelect?sort=${selected}`);
+      const html = await response.text();
+
+      const parser = new DOMParser();
+      const newDoc = parser.parseFromString(html, 'text/html');
+      const newSection = newDoc.querySelector('.reservLists');
+
+      document.querySelector('.reservLists').innerHTML = newSection.innerHTML;
+    });
+  };
 </script>
+
 <section class="sortList">
-    <select id="sortSelect">
-        <option value="latest" {% if sort=='latest' %}selected{% endif %}>날짜순</option>
-        <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
-    </select>
-    <div class="reservLists">
-        <!-- {% if resvList and resvList.length > 0 %} -->
-        {% for i in resvList %}
-        <div class="reserveMenu">
-            {{i.d_day}} / 예매일 : {{i.resv_date}}
-        </div>
-        <div>
-            <img src='../../img/{{i.poster_url}}' alt="">
-            <br>
-            공연 이름 : {{i.perf_name}}
-            <br>
-            공연 날짜 : {{ i.schedule_date }}({{ i.schedule_time }})
-            <br>
-            공연장 이름 : {{i.venue_name}}
-            <br>
-            예매자 : {{i.user_name}}
-            <br>
-            예매 수량 : {{i.resv_count}}매
-            <br>
-            예매 번호 : {{i.resv_number}}
-            <br>
-            예매 좌석 :
-            {% for seat in i.seats %}
-            {{ seat.area }}{{ seat.seat_row }}{{seat.seat_number}}번({{ seat.grade_code }})
-            {% endfor %}
-            <br>
-            결제 금액 : {{i.final_amount}}원
-        </div>
-        {% if i.resv_status == 'CANCELLED' %}
-        예매 상태 : 환불 완료
-        {% elif i.resv_status == 'PAID' %}
-        {% if i.cancelable %}
-        예매 상태 : 예매 완료
-        {% else %}
-        예매 상태 : 예매 완료(취소 불가)
-        {% endif %}
-        {% endif %}
-
-        <div class="btn-group">
-            <input type="button" value="상세내역" onclick="resvDetail('{{i.resv_id}}')">
-            <input type="button" value="취소하기" onclick="resvCancel('{{i.resv_id}}')">
-        </div>
-
-        {% endfor %}
-
-        {% else %}
-        예매 내역이 없습니다.
-        {% endif %}
-
-    </div>
+  <select id="sortSelect">
+    <option value="latest" {% if sort=='latest' %}selected{% endif %}>날짜순</option>
+    <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
+  </select>
 </section>
 
-<script>
-    function resvDetail(resvid) {
-        // 상세내역 페이지 이동
-        location.href = `/mypage/resvDetail?resv_id=${resvid}`;
-    }
+<div class="reservLists">
+  {% if resvList and resvList.length > 0 %}
+  {% for i in resvList %}
+  <div class="reservecard">
+    <div class="reserveimg">
+      <img src='../../img/{{i.poster_url}}' alt="포스터">
+    </div>
+    <div class="reserveinfo">
+      <div>
+        <div class="titlerow">
+          <h3 class="perf_name">{{ i.perf_name }}</h3>
+          <p class="d_day">{{ i.d_day }}</p>
+        </div>
+        <p><strong>예매일:</strong> {{i.resv_date}}</p>
+        <p><strong>공연일:</strong> {{i.schedule_date}} ({{i.schedule_time}})</p>
+        <p><strong>공연장:</strong> {{i.venue_name}}</p>
+        <p><strong>예매자:</strong> {{i.user_name}} / <strong>수량:</strong> {{i.resv_count}}매</p>
+        <p><strong>좌석:</strong>
+          {% for seat in i.seats %}
+          {{ seat.area }}{{ seat.seat_row }}{{seat.seat_number}}번({{ seat.grade_code }})
+          {% endfor %}
+        </p>
+        <p><strong>결제금액:</strong> {{i.final_amount}}원</p>
+      </div>
 
-    function resvCancel(resvid) {
-        // 취소 페이지 이동
-        location.href = `/mypage/resvCancel?resv_id=${resvid}`;
-    }
-</script>
+      {% if i.resv_status == 'CANCELLED' %}
+      <p class="reservestatus cancelled" style="color: rgb(230, 40, 40);">환불 완료</p>
+      {% elif i.resv_status == 'PAID' %}
+      <div class="reservestatus complete">
+        <span style="color: black;"></span>
+        {% if i.cancelable %}
+        <span style="color: goldenrod;">예매 완료</span>
+        {% else %}
+        <span style="color: rgb(8, 210, 76);">예매 완료(취소 불가)</span>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="reservebtns">
+        <input type="button" value="상세내역" onclick="resvDetail('{{i.resv_id}}')">
+        {% if i.resv_status == 'CANCELLED' or i.d_day == 'D-DAY' or i.d_day == '공연 종료' %}
+        <input type="button" value="취소하기" disabled>
+        {% else %}
+        <input type="button" value="취소하기" onclick="resvCancel('{{i.resv_id}}')">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="empty">예매 내역이 없습니다.</div>
+  {% endif %}
+</div>
