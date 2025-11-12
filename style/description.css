@@ -1,7 +1,4 @@
-.site_header {
-    height: 100px;
-    background-color: #ff0;
-}
+
 .big_poster {
     position: absolute;
     background-color: #000;
@@ -38,13 +35,13 @@
     line-height: 70px;
 }
 .des_main {
-    border: 1px solid #f00;
+    /* border: 1px solid #f00; */
     display: flex;
     align-items: center;
     justify-content: space-evenly;
 }
 .musical_info {
-    border: 1px solid #000;
+    /* border: 1px solid #000; */
     display: flex;
     width: 800px;
     align-items: center;
@@ -71,12 +68,12 @@
 .actor {
     /* height: 300px; */
     margin-bottom: 15px;
-    background-color: #faa;
+    /* background-color: #faa; */
 }
 
 .story {
     /* height: 200px; */
-    background-color: #afa;
+    /* background-color: #afa; */
     align-items: center;
     text-align: center;
 }
@@ -84,26 +81,14 @@
     width: 1200px;
 }
 
-.seat {
-    /* height: 200px; */
-    background-color: #dbf;
-}
 .seat > img {
     width: 1200px;
 }
 
-.review {
-    /* height: 200px; */
-    background-color: #3cf;
-}
 .review > img {
     width: 1200px;
 }
 
-.footer {
-    /* height: 200px; */
-    background-color: #f77;
-}
 .footer > img {
     width: 1200px;
 }
@@ -115,22 +100,19 @@
 .act_wrapper {
     width: 1200px;
     height: 300px;
+    /* background-color: beige; */
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
 }
 .view_casting {
     position: relative;
     width: 1200px;
     height: 90px;
-    background-color: beige;
+    /* background-color: beige; */
 }
 
 
-.casting_schedule {
-    width: 120px;
-    height: 40px;
-    position: absolute;
-    right: 30px;
-    top: 20px;
-}
+
 
 .letter_casting {
     height: 50px;
@@ -146,14 +128,13 @@
     justify-content: space-evenly;
     /* flex-wrap: wrap; */
     overflow-x: auto;
-    
 }
 
 .ind_actor {
     /* width: 150px; */
     width: 200px;
     height: 210px;
-    background-color: pink;
+    /* background-color: pink; */
     text-align: center;
     padding-top: 10px;
     box-sizing: border-box;
