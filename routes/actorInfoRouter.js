@@ -58,7 +58,7 @@ router.get('/:id', async (req, res) => {
         }
     }
     console.log(isInterest)
-
+})
 //     let actorInfoSQL = 'select * from actor_info where actor_id = ?'
 //     conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
 //         console.log(actorInfoQuery)
