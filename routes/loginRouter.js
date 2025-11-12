@@ -5,6 +5,7 @@ const path = require('path');
 const conn = require('../db/db');
 
 const kakaoRouter = require('../func/kakaoLogin');
+const { nowGrade } = require('../func/grade');
 router.use('/kakao', kakaoRouter);
 
 // 정적 처리
@@ -74,6 +75,38 @@ router.post('/login', (req, res) => {
         console.log('로그인 성공:', user.sign_method);
         console.log('로그인 성공:', user.user_id);
         console.log('로그인 성공:', user.user_name);
+
+        let resvCurMonthSQL = `SELECT
+            SUM(final_amount) AS total_amount_last_6_months 
+            FROM
+                reservation_info
+            WHERE
+            final_amount IS NOT NULL AND final_amount > 0 
+            AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+            and user_id = ?;`
+
+        let updateGradeSQL = `UPDATE user_info
+            SET 
+            score = ?, 
+            grade_id = ?
+            WHERE user_id = ?;` 
+
+        conn.query(resvCurMonthSQL, [user.user_id], (scoreErr, scoreQuery)=>{
+            let nowScore = scoreQuery[0].total_amount_last_6_months;
+            console.log(nowScore)
+            
+            if(eval(user.score) != eval(nowScore)) {
+                conn.query(updateGradeSQL, [nowScore, nowGrade(nowScore), user.user_id], (updateErr, updateQuery)=>{
+                    if(updateErr)
+                        console.log(updateErr.message)
+                    else {
+                        console.log(updateQuery)
+                    }
+                })
+            }
+        })
+        
+
 
         // 관리자인 경우 managermain.html 으로 이동
         if (user.sign_method === 'admin') {

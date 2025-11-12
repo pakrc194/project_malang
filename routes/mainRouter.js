@@ -71,6 +71,7 @@ ORDER BY
                 row.start_date = base_date_format(row.start_date);
                 row.end_date = base_date_format(row.end_date);
             }
+            console.log(main_bennr)
         }
 
         conn.query(comingbenner, (err2, coming_benner) => {

@@ -232,6 +232,9 @@
       const maxIndex = totalItems - itemsPerPage;
 
       currentIndex += direction * itemsPerPage;
+
+      console.log('currentIndex',currentIndex, maxIndex)
+
       if (currentIndex < 0) currentIndex = maxIndex;
       if (currentIndex > maxIndex) currentIndex = 0;
 

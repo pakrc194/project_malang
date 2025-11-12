@@ -218,3 +218,37 @@ select schedule_cast.*, CI.cast_name, AI.actor_name,
         ORDER BY
             schedule_cast.schedule_id, CI.cast_id
         limit 0, 100;
+
+
+SELECT
+        DATE_FORMAT(resv_date, '%Y-%m') AS resv_month,
+        SUM(final_amount) AS total_monthly_amount
+    FROM
+        reservation_info
+    WHERE
+        final_amount IS NOT NULL 
+        AND final_amount > 0 
+        -- 최근 6개월의 데이터만 필터링
+        AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 5 MONTH)
+        /* 💡 애플리케이션에서 :selected_month_param 값이 있을 때만 이 줄을 추가 */
+        -- AND DATE_FORMAT(resv_date, '%Y-%m') = :selected_month_param 
+        AND resv_status='PAID'
+    GROUP BY
+        resv_month
+    ORDER BY
+        resv_month;
+
+
+
+        SELECT
+    -- final_amount의 전체 합계를 계산합니다.
+    SUM(final_amount) AS total_amount_last_6_months 
+FROM
+    reservation_info
+WHERE
+    -- 유효한 final_amount 값만 포함합니다.
+    final_amount IS NOT NULL AND final_amount > 0 
+    -- resv_date가 현재 날짜(CURDATE())의 6개월 전보다 크거나 같은지 확인합니다.
+    -- (즉, 최근 6개월 기간에 해당되는지 필터링합니다.)
+    AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+    and user_id = 7;
