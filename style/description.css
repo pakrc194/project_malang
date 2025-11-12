@@ -1,20 +1,25 @@
 
 .big_poster {
-    position: absolute;
+    /* position: absolute; */
     background-color: #000;
     width: 100%;
     height: 100%;
     display: none;
     z-index: 10;
+    position: fixed;
     /* margin: calc(100%/2-1200); */
     /* left: -600px; */
 
 }
 .big_poster > img{
-    margin-top: 10px;
+    /* position: fixed;
+    top: 10%;
+    left: 10%; */
+    margin-top: 100px;
 }
 
 .b_p_tx {
+
     color: #fff;
     margin-left: calc(100%/3);
 
