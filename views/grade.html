@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/style/grade.css">
 </head>
 <body>
-    <h1>등급</h1>
+    <h1>등급 안내</h1>
 
     {{user_grade.grade_id}}
 
@@ -27,64 +27,56 @@
 
 
     <table class="styled-table">
-    <thead>
-        <tr>
-            <th>등급</th>
-            <th>등급명</th>
-            <th>기준</th>
-            <th>혜택</th>
-        </tr>
-    </thead>
-    <tbody>
-         {%for grade in res %}
-         <tr>
-            <td><img src="/img/{{grade.grade_image_url}}" alt=""></td>
-            <td>{{grade.grade_name}}</td>
-            <td>
-                {% if grade.grade_id == 1 %}
-                    회원가입 후 첫 로그인 시 등급 획득
-                {%else%}
-                    {{grade.grade_score}} 포인트 적립 시 , '{{grade.grade_name}}' 등급 승급
+        <thead>
+            <tr>
+                <th>등급 </th>
+                <th>등급명</th>
+                <th>기준</th>
+                <th>혜택</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for grade in res %}
+            <tr>
+                <td><img src="/img/{{grade.grade_image_url}}" alt=""></td>
+                <td>{{grade.grade_name}}</td>
+                <td>
+                    {% if grade.grade_id == 1 %}
+                        회원가입 후 첫 로그인 시 등급 획득
+                    {%else%}
+                        {{grade.grade_score}} 포인트 적립 시 , '{{grade.grade_name}}' 등급 승급
+                        
+                    {% endif %}
+                </td>
+                <td>
+                    {% if grade.discount_rate == 0%}
+                        -
+                    {%else%}
+                        {% set discount = grade.discount_rate*100 %}
+                        {{discount}}%
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4">
+                    <b>등급 유지 조건 :</b> 회원 등급은 최근 6개월 동안의 결제 금액을 기준으로 산정됩니다.
+                    여기서 6개월은 <span>직전 5개월 + 현재 달(이번 달)</span>의 결제 누적 금액을 의미하며, 쿠폰 사용 후 결제된 금액 기준으로 계산됩니다.<br/>
                     
-                {% endif %}
-                
-            </td>
-            <td>
-                {% if grade.discount_rate == 0%}
-                    -
-                {%else%}
-                    {% set discount = grade.discount_rate*100 %}
-                    {{discount}}%
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td colspan="4">
-                <b>등급 유지 조건 :</b> 회원 등급은 최근 6개월 동안의 결제 금액을 기준으로 산정됩니다.
-                여기서 6개월은 <span>직전 5개월 + 현재 달(이번 달)</span>의 결제 누적 금액을 의미하며, 쿠폰 사용 후 실제 결제된 금액 기준으로 계산됩니다.<br/>
-                
-                등급은 매월 1일에 자동으로 다시 산정되어 업데이트됩니다.
-                즉, 매월 1일마다 최근 6개월치 결제액을 합산해 어떤 등급인지 다시 판단하게 됩니다. <br/><br/>
+                    등급은 매월 1일에 자동으로 다시 산정되어 업데이트됩니다.
+                    즉, 매월 1일마다 최근 6개월치 결제액을 합산해 어떤 등급인지 다시 판단하게 됩니다. <br/><br/>
 
-                <b>등급 주의 사항 :</b> 매월 새로운 달이 시작되면, 6개월보다 더 이전에 결제한 금액은 자동으로 계산에서 제외됩니다.<br/>
+                    <b>등급 주의 사항 :</b> 매월 새로운 달이 시작되면, 6개월보다 더 이전에 결제한 금액은 자동으로 계산에서 제외됩니다.<br/>
+                    따라서 예전에 결제했던 금액이 빠질 경우, 다음 달에 적용될 등급이 변동될 수 있습니다.
+                    즉, 최근 6개월 동안 결제 금액이 충분히 유지되어야 현재 등급을 유지할 수 있습니다. <br/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-                따라서 예전에 결제했던 금액이 빠질 경우, 다음 달에 적용될 등급이 변동될 수 있습니다.
-
-                즉, 최근 6개월 동안 결제 금액이 충분히 유지되어야 현재 등급을 유지할 수 있습니다. <br/>
-            </td>
-        </tr>
-        
-        
-    </tbody>
-</table>
-
-    
-
-
-    <div class="a_tag">
-        <a href="/main">메인페이지로</a>
-    </div>
+<div class="a_tag">
+    <a href="/main">메인페이지로</a>
+</div>
 
  
 </body>

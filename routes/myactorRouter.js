@@ -12,8 +12,8 @@ router.get("/", (req, res)=>{
         user_grade.grade_image_url,
         actor_info.*
         from user_interest_actor 
-        join user_info on user_interest_actor.user_id=user_info.user_id 
-        join user_grade on user_info.grade_id= user_grade.grade_id
+        join user_info on user_interest_actor.user_id = user_info.user_id 
+        join user_grade on user_info.grade_id = user_grade.grade_id
         join actor_info on user_interest_actor.actor_id = actor_info.actor_id
         where user_interest_actor.user_id = 2`
      

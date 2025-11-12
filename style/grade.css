@@ -1,3 +1,10 @@
+h1 {
+    text-align: center;
+    margin: 30px;
+
+    color: #222;
+}
+
 img {
     width: 70px;
 }
