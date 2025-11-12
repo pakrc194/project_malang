@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,113 +6,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비밀번호 변경</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .pwchangecontainer {
+            width: 400px;
+            margin: 80px auto;
+            padding: 30px 35px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="password"] {
+            width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="submit"] {
+            width: 80%;
+            background-color: #5a3fc0;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 15px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #745ec5;
+        }
+
+        input[type="submit"]:disabled {
+            background-color: #bbb;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
-<script>
-    window.onload = function () {
-
-        const submit = document.querySelector('#submit')
-        const oldpw = document.querySelector('#oldpw')
-        const newpw1 = document.querySelector('#newpw1')
-        const newpw2 = document.querySelector('#newpw2')
-        const submit2 = document.querySelector('#submit2')
-
-        // 새비밀번호 숨기고 있다가 이메일 입력 후 비밀번호 찾기 버튼 클릭 시 DB 확인 후 나타나기
-
-        newpw1.style.display = 'none'
-        newpw2.style.display = 'none'
-        submit2.style.display = 'none'
-
-        // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
-        document.querySelector("#submit").addEventListener("click", (e) => {
-            e.preventDefault();
-
-            const oldpwConfirm = document.querySelector('#oldpw').value.trim()
-            const oldpw = oldpwConfirm
-
-            if (!oldpw) {
-                return alert('현재 비밀번호를 입력해주세요.')
-            }
-
-            let ttt = JSON.stringify({ oldpw })
-
-            fetch(`/mypage/checkpw`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-
-                },
-                body: ttt
-
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.exists) {
-                        alert('비밀번호가 확인되었습니다.')
-                        newpw1.style.display = 'block'
-                        newpw2.style.display = 'block'
-                        submit2.style.display = 'block'
-                    } else {
-                        alert('없는 비밀번호입니다.')
-                    }
-                })
-                .catch(err => console.log('에러 :', err.message))
-        })
-
-        // --------------------------------------------------------------------------------- 비밀번호 변경 누르면 발생하는 거
-
-        // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
-        document.querySelector("#submit2").addEventListener("click", (e) => {
-            e.preventDefault();
-
-
-            const oldpw = document.querySelector('#oldpw').value.trim()
-            const newpw1 = document.querySelector('#newpw1').value.trim()
-            const newpw2 = document.querySelector('#newpw2').value.trim()
-
-            console.log(newpw1, newpw2)
-
-            if (!newpw1 || !newpw2) { return alert('비밀번호를 입력해주세요.') }
-            if (newpw1 !== newpw2) { return alert('비밀번호가 일치하지 않습니다.') }
-
-            fetch(`/mypage/changepw`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-
-                },
-                body: JSON.stringify({ newpw1 })
-
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        location.href = "/login";
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(err => console.log('에러 :', err.message))
-
-        })
-    }
-
-</script>
 
 <body>
-    <form id="oldpwForm">
-        <input type="password" name="oldpw" id="oldpw" placeholder="현재 비밀번호">
+    <div class="pwchangecontainer">
+
+        <form id="oldpwform">
+            <input type="password" name="oldpw" id="oldpw" placeholder="현재 비밀번호">
+            <input type="submit" name="submit" value="비밀번호 확인" id="submit">
+        </form>
         <br>
-        <input type="submit" name="submit" value="현재 비밀번호" id="submit">
-    </form>
-    <br>
-    <form id="newpwForm">
-        <input type="password" name="newpw" id="newpw1" placeholder="새 비밀번호">
-        <br>
-        <input type="password" name="newpw2" id="newpw2" placeholder="새 비밀번호 확인">
-        <br>
-        <input type="submit" value="비밀번호 변경" id="submit2">
-    </form>
+        <form id="newpwform">
+            <input type="password" name="newpw" id="newpw1" placeholder="새 비밀번호">
+            <input type="password" name="newpw2" id="newpw2" placeholder="새 비밀번호 확인">
+            <input type="submit" value="비밀번호 변경" id="submit2">
+        </form>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const submit = document.querySelector('#submit')
+            const oldpw = document.querySelector('#oldpw')
+            const newpw1 = document.querySelector('#newpw1')
+            const newpw2 = document.querySelector('#newpw2')
+            const submit2 = document.querySelector('#submit2')
+
+            // 새 비밀번호 관련 숨김
+            newpw1.style.display = 'none'
+            newpw2.style.display = 'none'
+            submit2.style.display = 'none'
+
+            // 현재 비밀번호 확인
+            document.querySelector("#submit").addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const oldpwConfirm = document.querySelector('#oldpw').value.trim()
+                const oldpw = oldpwConfirm
+
+                if (!oldpw) {
+                    return alert('현재 비밀번호를 입력해주세요.')
+                }
+
+                let ttt = JSON.stringify({ oldpw })
+
+                fetch(`/mypage/checkpw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: ttt
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.exists) {
+                            alert('비밀번호가 확인되었습니다.')
+                            newpw1.style.display = 'block'
+                            newpw2.style.display = 'block'
+                            submit2.style.display = 'block'
+                        } else {
+                            alert('비밀번호가 일치하지 않습니다.')
+                        }
+                    })
+                    .catch(err => console.log('에러 :', err.message))
+            })
+
+            // 비밀번호 변경
+            document.querySelector("#submit2").addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const oldpw = document.querySelector('#oldpw').value.trim()
+                const newpw1 = document.querySelector('#newpw1').value.trim()
+                const newpw2 = document.querySelector('#newpw2').value.trim()
+
+                if (!newpw1 || !newpw2) { return alert('비밀번호를 입력해주세요.') }
+                if (newpw1 !== newpw2) { return alert('비밀번호가 일치하지 않습니다.') }
+
+                const pwPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#&*])[A-Za-z\d!@#&*]{8,16}$/;
+                if (!pwPattern.test(newpw1)) {
+                    return alert('비밀번호는 8~16자, 영문자/숫자/특수문자(!,@,#,&,*)를 포함해야 합니다.');
+                }
+
+                fetch(`/mypage/changepw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newpw1 })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.href = "/login";
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => console.log('에러 :', err.message))
+            })
+        }
+    </script>
 </body>
 
 </html>

@@ -6,6 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비밀번호 변경</title>
 </head>
+<style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        #pwoutForm {
+            width: 400px;
+            margin: 80px auto;
+            padding: 30px 35px;
+        }
+
+        input[type="password"] {
+            width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="submit"] {
+            width: 80%;
+            background-color: #5a3fc0;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 15px;
+            cursor: pointer;
+            transition-duration: 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #745ec5;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+</style>
 <script>
     window.onload = function () {
 
@@ -50,7 +98,6 @@
 <body>
     <form id="pwoutForm">
         <input type="password" name="pwout" id="pwout" placeholder="비밀번호 입력">
-        <br>
         <input type="submit" value="탈퇴하기" id="submit">
     </form>
 </body>

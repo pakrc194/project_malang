@@ -29,13 +29,10 @@
             padding: 30px 25px;
             display: block;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-
         }
 
         select {
             text-align: center;
-
         }
 
         .joinmem {
@@ -43,7 +40,6 @@
             margin: auto;
         }
 
-        /* 공통 입력창 스타일 */
         input[type="text"],
         input[type="password"],
         select {
@@ -56,8 +52,7 @@
             font-size: 14px;
         }
 
-        /* 이메일 영역 */
-        .email-row {
+        .emailrow {
             display: flex;
             align-items: center;
             gap: 5px;
@@ -67,7 +62,6 @@
 
         #email1 {
             flex: 1.2;
-            /* 약간 넓게 */
             height: 38px;
             border: 1px solid #ccc;
             border-radius: 6px;
@@ -97,11 +91,10 @@
             margin: auto;
         }
 
-        /* 중복확인 버튼 */
         #emailoverlap {
             flex: 0.7;
             height: 35px;
-            background-color: #0d47a1;
+            background-color: #5a3fc0;
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -111,14 +104,13 @@
         }
 
         #emailoverlap:hover {
-            background-color: #1565c0;
+            background-color: #745ec5;
         }
 
-        /* 인증번호 받기 버튼 */
         #confirmcode {
             width: 100%;
             height: 35px;
-            background-color: #0d47a1;
+            background-color: #5a3fc0;
             color: white;
             border: none;
             border-radius: 5px;
@@ -128,7 +120,7 @@
 
 
         #confirmcode:hover {
-            background-color: #1565c0;
+            background-color: #745ec5;
         }
 
         #authSection {
@@ -148,7 +140,7 @@
         #checkCodeBtn {
             width: 100%;
             height: 35px;
-            background-color: #0d47a1;
+            background-color: #5a3fc0;
             color: white;
             border: none;
             border-radius: 5px;
@@ -159,7 +151,7 @@
         .verify-finish {
             width: 100%;
             height: 45px;
-            background-color: #0d47a1;
+            background-color: #5a3fc0;
             color: white;
             font-weight: bold;
             border: none;
@@ -183,7 +175,7 @@
             width: 100%;
             height: 45px;
             margin-top: 15px;
-            background-color: #0d47a1;
+            background-color: #5a3fc0;
             color: white;
             font-weight: bold;
             font-size: 16px;
@@ -193,7 +185,7 @@
         }
 
         #submit:hover {
-            background-color: #1565c0;
+            background-color: #745ec5;
         }
 
         .loginLogo {
@@ -311,21 +303,6 @@
                     .catch(err => console.log('에러 :', err.message));
             };
 
-            // -----------------------------------------------------------------------------------------------
-            // 인증번호 입력 시 검증
-            // document.querySelector("#code").addEventListener('change', function () {
-            //     const email = document.querySelector("#email1").value + document.querySelector("#email2").value;
-            //     const code = document.querySelector("#code").value;
-
-            //     fetch(`/joinmem/verifyCode`, {
-            //         method: 'POST',
-            //         headers: { 'Content-Type': 'application/json' },
-            //         body: JSON.stringify({ email, code })
-            //     })
-            //         .then(res => res.json())
-            //         .then(data => alert(data.message))
-            //         .catch(err => console.log('에러 :', err.message));
-            // });
             //----------------------------------------------------------------------------------------------- 가입완료
             let myFrm = document.forms.myFrm
             let pwEqChk = document.querySelector('#pwEqChk')
@@ -368,7 +345,7 @@
                     return;
                 }
 
-                const nameInput = document.querySelector("#name").value.trim(); // 🔹 name 변수 정의 추가
+                const nameInput = document.querySelector("#name").value.trim();
                 const koreanName = /^[가-힣]{1,10}$/; // 한글 1~10자
                 const englishName = /^[a-zA-Z\s]+$/;  // 영어만 (띄어쓰기 포함 가능)
                 const onlyConsonants = /^[ㄱ-ㅎ]+$/;  // 자음만
@@ -452,7 +429,7 @@
             <div><br>
                 <form action="/" method="post" name="myFrm">
                     <!--이메일-->
-                    <div class="email-row">
+                    <div class="emailrow">
                         <input type="text" id="email1" placeholder="아이디(이메일)">
                         <select id="email2">
                             <option value="@naver.com">@naver.com</option>

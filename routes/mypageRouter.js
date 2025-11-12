@@ -475,17 +475,6 @@ router.get('/resvCancel', async (req, res) => {
         }
     })
 
-
-
-    
-    //case1  input hidden value={{reserv_id}}
-    /**
-     * 취소하기 -> 
-     * ticket.html 결제취소(a //ticket/cancel?res=1). post (reserv_id, payment_id) 
-     * 
-     * get post /ticket/cancel
-     * render = mypage/reservation
-     */
 });
 
 module.exports = router

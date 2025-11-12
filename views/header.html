@@ -1,182 +1,3 @@
-<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
-<style>
-    *{
-        margin: 0px;
-        padding: 0px;
-    }
-    header {
-        position: relative;
-        width: 100%;
-        height: 100px;
-        border-bottom: 3px solid #555;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0px 10px;
-    }
-
-    #aLogo {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    header>div:first-child {
-        width: 500px;
-        margin-top: 20px;
-        margin-left: 10px;
-        height: 40px;
-        float: left;
-    }
-
-    header>div:first-child>img {
-        width: 40px;
-        height: 40px;
-        margin-top: 5px;
-        float: left;
-    }
-
-    header>div:first-child>#title {
-        height: 40px;
-        line-height: 40px;
-        font-size: 1.8rem;
-        float: left;
-        margin-left: 20px;
-        font-family: "Hachi Maru Pop", cursive;
-        font-weight: 400;
-        font-style: normal;
-    }
-
-    .temp_box {
-        position: absolute;
-        right: 35px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        height: 100px;
-    }
-
-    .search_box {
-        position: absolute;
-        right: 400px;
-        /* float: right; */
-        text-align: right;
-        width: 300px;
-        height: 45px;
-        line-height: 100px;
-        box-sizing: border-box;
-        border-radius: 20px;
-        border: 1px solid #ccc;
-    }
-
-    #inputSearch{
-        border-radius: 18px;
-        margin-top: 5px;
-        margin-left: 10px;
-        width: 235px;
-        height: 35px;
-        line-height: 35px;
-        float: left;
-        border: none;
-        text-align: left;
-    }
-   
-    #inputSearch:focus{
-        border: none;
-        outline: none;
-    }
-
-    #btnSearch{
-        float: right;
-        border: none;
-        text-align: center;
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-        background-color: white;
-        border-radius: 10px;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-
-
-    .temp_box>a {
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        align-items: center;
-    }
-
-    .loginlogo {
-        border: 1px solid #e2dfdf;
-        width: 80px;
-        height: 50px;
-        background-color: rgb(40, 19, 224);
-        border-radius: 10px;
-        text-align: center;
-        line-height: 50px;
-        color: white;
-        font-weight: bold;
-    }
-
-    .loginlogo:hover {
-        background-color: rgb(76, 59, 235);
-    }
-
-    /* .loginLogo>div {
-        text-align: center;
-        font-size: 20px;
-        border: 1px solid #e2dfdf;
-    } */
-
-    #aid>img {
-        display: block;
-        width: 40px;
-        height: 40px;
-    }
-
-    .logologo{
-        height: 100px;
-    }
-
-    .user_name{
-        font-weight: bold;
-    }
-
-</style>
-<header>
-    <div class="logologo">
-        <img src="/img/malang_logo.png" alt=""><span id="title"><a id="aLogo" href="/">MALANG MUSE</a></span>
-    </div>
-    <div class="search_box">
-        <input type="text" id="inputSearch" placeholder="검색어를 입력해주세요"><input type="button" id="btnSearch" value="🔍">
-    </div>
-
-    <div class="temp_box">
-        {% if loginout == null %}
-        <a href="/login" alt="로그인"><div class="loginlogo">로그인</div></a>&nbsp;
-        {% else %}
-        <div class="user_name">{{ name }}님</div>&nbsp;
-        <a href="/logout" id="logout" alt="로그아웃"><div class="loginlogo">로그아웃</div></a>&nbsp;
-        {% endif %}
-        <a href="/mypage" id="aid"><img src="../img/mypagelogo.jpg" alt="마이페이지"></a>&nbsp;
-        <a href="/main/grade" id="aid"><img src="../img/gradelogo.jpg" alt="등급페이지"></a>
-    </div>
-
-    <script>
-        let btnSearch = document.querySelector('#btnSearch')
-        let inputSearch = document.querySelector('#inputSearch')
-
-        btnSearch.addEventListener('click', (e) => {
-            console.log('search : ', inputSearch.value)
-            location.href = `/search?word=${inputSearch.value}`
-        })
-    </script>
-</header> -->
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
@@ -197,16 +18,15 @@
         align-items: center;
         padding: 0 50px;
         background-color: white;
-        overflow: hidden; /* 혹시 넘칠 때 스크롤 방지 */
-        white-space: nowrap; /* 줄바꿈 금지 */
+        overflow: hidden;
+        white-space: nowrap; 
     }
 
-    /* 로고 영역 */
     .logo_box {
         display: flex;
         align-items: center;
         gap: 15px;
-        flex-shrink: 0; /* 줄어들지 않게 고정 */
+        flex-shrink: 0;
         min-width: 200px;
     }
 
@@ -223,7 +43,6 @@
         white-space: nowrap;
     }
 
-    /* 검색창 */
     .search_box {
         display: flex;
         align-items: center;
@@ -258,7 +77,6 @@
         flex-shrink: 0;
     }
 
-    /* 오른쪽 영역 */
     .right_box {
         display: flex;
         align-items: center;
@@ -268,7 +86,7 @@
     }
 
     .login_btn {
-        background-color: rgb(40, 19, 224);
+        background-color: #5a3fc0;
         color: white;
         font-weight: bold;
         padding: 10px 20px;
@@ -280,7 +98,7 @@
     }
 
     .login_btn:hover {
-        background-color: rgb(76, 59, 235);
+        background-color: #745ec5;
     }
 
     .user_name {
@@ -296,10 +114,6 @@
         cursor: pointer;
         flex-shrink: 0;
     }
-
-    /* body {
-        overflow-x: auto;
-    } */
 
 </style>
 

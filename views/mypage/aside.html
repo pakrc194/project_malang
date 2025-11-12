@@ -1,5 +1,5 @@
 <style>
-  .aside-container {
+  .asidecontainer {
     width: 100%;
     height: 100%;
     background-color: #fff;
@@ -10,7 +10,7 @@
     box-sizing: border-box;
   }
 
-  .aside-title {
+  .asidetitle {
     text-align: center;
     font-size: 20px;
     font-weight: bold;
@@ -19,14 +19,14 @@
     padding-bottom: 15px;
   }
 
-  .aside-menu {
+  .asidemenu {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
   }
 
-  .aside-menu a {
+  .asidemenu a {
     width: 70%;
     text-decoration: none;
     color: #555;
@@ -38,41 +38,40 @@
     transition-duration: 0.2s;
   }
 
-  .aside-menu a:hover {
+  .asidemenu a:hover {
     color: #5a3fc0;
     font-weight: bold;
   } 
 
-  .aside-divider {
+  .asidedivider {
     width: 80%;
     height: 1px;
     background-color: #ddd;
     margin: 20px auto;
   }
 
-  .aside-menu a.active {
-    border: 1px dashed #b19aff;
+  .asidemenu a.active {
     color: #5a3fc0;
     background-color: #f9f7ff;
     font-weight: bold;
   }
 </style>
 
-<div class="aside-container">
-  <div class="aside-title">말랑뮤즈</div>
+<div class="asidecontainer">
+  <div class="asidetitle">말랑뮤즈</div>
 
-  <div class="aside-divider"></div>
+  <div class="asidedivider"></div>
   
-  <div class="aside-menu">
+  <div class="asidemenu">
     <a href="/mypage/info" class="{% if mainUrl == 'info' %}active{% endif %}">회원 정보</a>
     <a href="/mypage/grade" class="{% if mainUrl == 'grade' %}active{% endif %}">내 등급</a>
     <a href="/mypage/interest" class="{% if mainUrl == 'interest' %}active{% endif %}">관심 배우</a>
     <a href="/mypage/reserveSelect" class="{% if mainUrl == 'reserveSelect' %}active{% endif %}">예매 내역</a>
   </div>
 
-  <div class="aside-divider"></div>
+  <div class="asidedivider"></div>
 
-  <div class="aside-menu">
+  <div class="asidemenu">
     <a href="/mypage/pwChange" class="{% if mainUrl == 'pwChange' %}active{% endif %}">비밀번호 변경</a>
     <a href="/mypage/memberOut" class="{% if mainUrl == 'memberOut' %}active{% endif %}">회원 탈퇴</a>
   </div>

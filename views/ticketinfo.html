@@ -1,81 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>예매취소</title>
 </head>
 <style>
-        * {
-            margin: 0px;
-            padding: 0px;
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    footer {
+        width: 100%;
+        height: 100px;
+        background-color: #ff0;
+        border: 1px solid #000;
+    }
+
+    wrapper {
+        width: 1200px;
+        margin: 50px auto;
+        display: block;
+    }
+
+    table {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        header {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
+        th,
+        td {
+            border: 1px solid #f0e0e0;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
         }
 
-        footer {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
+        th {
+            background-color: #f8e6de;
+            color: #5a3e36;
+            font-weight: bold;
+            width: 30%;
         }
 
-        wrapper {
-            width: 1200px;
-            background-color: #fa0;
-            border: 1px solid #000;
-            margin: auto;
-            display: block;
+        tr:nth-child(even) {
+            background-color: #fff9f6;
         }
 
-        section {
-            border: 1px solid #000;
-            width: 100%px;
-            margin: auto;
-            display: block;
-            height: 300px;
+        tr:hover {
+            background-color: #fdf2ec;
+            transition: 0.2s;
         }
-    </style>
-    <script>
-        
-    </script>
+</style>
+<script>
+
+</script>
+
 <body>
-    <header>헤더</header>
+    {% include './header.html' %}
     <wrapper>
-        <section class="ticketprice">
-            
-            예매자 : {{io.user_name}}
-            <hr>
-            예매 번호 : {{io.resv_number}}
-            <br>
-            예매 좌석 : 
-            {% for seats in io.seats %}
-            {{ seats.area }}{{ seats.seat_row }}{{seats.seat_number}}번({{ seats.grade_code }})
-            {% endfor %}
-            <br>
-            예매 수량 : {{io.resv_count}}
-            <br>
-            결제 수단 : {{io.payment_method}}
-            <br>
-            할인 전 가격 : {{io.total_amount}}
-            <br>
-            할인율 : {{io.discount_rate}}
-            <br>
-            할인 적용 가격 : {{io.final_amount}}
-            
-        </section>
-        <section>
-    
-        <section>
-            이전으로
-            <input type="button" value="예매내역" id="reserveSelectgo">
-        </section>
+
+        <table>
+        <tr>
+            <th>예매자</th>
+            <td>{{io.user_name}}</td>
+        </tr>
+
+        <tr>
+            <th>예매번호</th>
+            <td>{{io.resv_number}}</td>
+        </tr>
+
+        <tr>
+            <th>예매좌석</th>
+            <td>{% for seats in io.seats %}
+                {{ seats.area }}{{ seats.seat_row }}{{seats.seat_number}}번({{ seats.grade_code }})
+                {% endfor %}</td>
+        </tr>
+
+        <tr>
+            <th>예매수량</th>
+            <td>{{io.resv_count}}매</td>
+        </tr>
+
+        <tr>
+            <th>결제수단</th>
+            <td>{{io.payment_method}}</td>
+        </tr>
+
+        <tr>
+           <th>할인전 가격</th>
+            <td>{{io.total_amount}}원</td>
+        </tr>
+        <tr>
+           <th>할인율</th>
+            <td>{{io.discount_rate}}%</td>
+        </tr>
+        <tr>
+           <th>할인 적용 가격</th>
+            <td>{{io.final_amount}}원</td>
+        </tr>
+    </table>
     </wrapper>
-    <footer>푸터</footer>
 </body>
+
 </html>
