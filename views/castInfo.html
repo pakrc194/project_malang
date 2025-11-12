@@ -252,7 +252,9 @@
                 </div>
             </div>
         </section>
-        <h2>다른 배우 추천</h2>
+        {% if castActorList.length > 1%}
+            <h2>다른 배우 추천</h2>
+        {% endif %}
         <section class="cast_other">
             {% for castActor in castActorList %}
                 {% if castActor.actor_id != castInfo.actor_id %}

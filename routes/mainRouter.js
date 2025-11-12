@@ -108,7 +108,7 @@ router.get('/grade', (req, res) => {
             res.render('../views/grade.html')
         } else {
             console.log('sql 성공', resQuery)
-            res.render('../views/grade.html', {res : resQuery})
+            res.render('../views/grade.html', {grade_list : resQuery})
         }
     })
 

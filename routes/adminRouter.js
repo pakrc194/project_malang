@@ -610,6 +610,7 @@ router.get('/reserv/detail', (req, res)=>{
                     resv.discount_rate = eval(resv.discount_rate)*100
                 }
                 res.render('../views/admin/reserv_detail.html', {userInfo: userQuery, reservList : reservQuery})
+                  
             }
             
         })

@@ -7,6 +7,9 @@ const { base_date_format } = require('../func/date')
 
 router.get("/:id", (req, res)=>{
     console.log(req.params.id)
+    const email = req.session?.email || req.session?.kakao_email;
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
     let actorInfoSql = `select *
         from actor_info
         
@@ -14,15 +17,28 @@ router.get("/:id", (req, res)=>{
         join performance_info on perf_cast.perf_id = performance_info.perf_id
         where actor_info.actor_id = ?`  
      
-        conn.query(actorInfoSql, [req.params.id],(err, resQuery)=>{
-        if(err) {
-            console.log('sql 실패', err.message)
-            res.render('../views/actorInfo.html')
-        } else {
-            console.log('actorInfo sql 성공', resQuery)
-            res.render('../views/actorInfo.html', {res : resQuery})
-        }
-    })
+        conn.query(actorInfoSql, [req.params.id], async (err, resQuery)=>{
+            if(err) {
+                console.log('sql 실패', err.message)
+                res.render('../views/actorInfo.html')
+            } else {
+                console.log('actorInfo sql 성공', resQuery)
+
+
+                let userId = req.session.user_id
+                let isInterest = false
+                if(email) {
+                    let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
+                    let selectQuery = await conn.query(sInterestSql, [req.params.id, userId])
+                    console.log(selectQuery)
+                    if(selectQuery.length > 0) {
+                        isInterest = true
+                    }
+                }
+
+                res.render('../views/actorInfo.html', {res : resQuery, isInterest, loginout})
+            }
+        })
 })
 
 
@@ -47,7 +63,7 @@ router.get('/:id', async (req, res) => {
     const loginout = req.session.email || req.session.kakao_email
     const name = req.session.user_name
 
-    let userId = 7
+    let userId = req.session.user_id
     let isInterest = false
     if(email) {
         let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
