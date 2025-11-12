@@ -89,6 +89,11 @@
     width: 1200px;
 }
 
+.footer {
+    background-color: #f7a;
+    height: 100px;
+}
+
 .footer > img {
     width: 1200px;
 }
