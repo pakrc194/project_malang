@@ -457,36 +457,12 @@
                                     seat.style.cursor= "default";
                                 }
                             }
-                            // else {
-                            //     seat.className = "Available"
-                            //     if (arr[0] == "R") {
-                            //         seat.style.cursor="pointer";
-                            //         seat.style.backgroundColor= "yellowgreen";
-                            //         seat.style.borderColor="yellowgreen";
-                            //     }
-                            //     else if (arr[0] == "S") {
-                            //         seat.style.cursor="pointer";
-                            //         seat.style.backgroundColor= "violet";
-                            //         seat.style.borderColor="violet";
-                            //     }
-                            //     else {
-                            //         seat.style.cursor="pointer";
-                            //         seat.style.backgroundColor= "skyblue";
-                            //         seat.style.borderColor="skyblue";
-                            //     }
-
-                            // }
                             
                         }
                     }
                 })
 
                 }
-
-                
-                                                
-
-                
             }
             else if (data.type == "A" && data.result.length > 0) {
                 console.log('A 스케쥴 아이디: ', data.schedule_id, "{{avoid[0].schedule_id}}")
@@ -539,6 +515,7 @@
                     seat.style.backgroundColor= "#fff"
                     seat.style.cursor= "default";
                 }
+
             })
 
             let frm = document.forms.frm
@@ -556,15 +533,36 @@
                 socket.send([obj.value, "{{user_id}} {{id}} {{arr.date}} {{arr.time}}"].join(' '))
                 if (obj.checked == true){
                     seat_cnt++
+                    obj.style.borderColor = "#f00"
                 }
                 else {
                     seat_cnt--
+                    if (obj.value.split(' ')[0] == "R") {
+                        obj.style.borderColor = "yellowgreen"
+
+                    }
+                    else if (obj.value.split(' ')[0] == "S"){
+                        obj.style.borderColor = "violet"
+                    }
+                    else {
+                        obj.style.borderColor = "skyblue"
+                    }
                 }
     
                 if (seat_cnt > 4) {
                     alert('선택 가능한 좌석 지정을 초과했습니다.')
                     obj.checked = false
                     seat_cnt--
+                    if (obj.value.split(' ')[0] == "R") {
+                        obj.style.borderColor = "yellowgreen"
+
+                    }
+                    else if (obj.value.split(' ')[0] == "S"){
+                        obj.style.borderColor = "violet"
+                    }
+                    else {
+                        obj.style.borderColor = "skyblue"
+                    }
                     // socket1.send(obj.value)
                     socket.send([obj.value, "{{user_id}} {{id}} {{arr.date}} {{arr.time}}"].join(' '))
 
