@@ -446,12 +446,14 @@
                             if (arr[0] == i.grade && arr[1] == i.area && arr[2] == i.s_row && arr[3] == i.s_col){
                                 seat.className = `${i.seat_status}`
                                 if (i.seat_status == "Sold"){
+                                    seat.className = "Sold"
                                     seat.style.borderColor = "#555"
                                     seat.style.backgroundColor= "#555"
                                     seat.style.cursor= "default";
                                 }
                                 else {
                                     // 예약 상태일 때
+                                    seat.className = "Reserved"
                                     seat.style.borderColor = "#555"
                                     seat.style.backgroundColor= "#fff"
                                     seat.style.cursor= "default";

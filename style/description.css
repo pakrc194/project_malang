@@ -103,26 +103,21 @@
     width: 1200px;
 }
 
-
-
-
+.actor {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
 
 .act_wrapper {
     width: 1200px;
-    height: 300px;
-    /* background-color: beige; */
+    height: 320px;
     border-top: 1px solid #ccc;
-    margin-top: 10px;
 }
 .view_casting {
     position: relative;
     width: 1200px;
     height: 90px;
-    /* background-color: beige; */
 }
-
-
-
 
 .letter_casting {
     height: 50px;
@@ -143,19 +138,23 @@
 .ind_actor {
     /* width: 150px; */
     width: 200px;
-    height: 210px;
+    height: 230px;
     /* background-color: pink; */
     text-align: center;
     padding-top: 10px;
     box-sizing: border-box;
+    border: 1px solid #666;
+    border-radius: 10px;
+    margin-right: 5px;
 }
 
 .ind_actor > img{
-    width: 100px;
-    height: 100px;
-    margin-left: 50px;
-    margin-right: 50px;
+    width: 120px;
+    height: 120px;
+    margin-left: 40px;
+    margin-right: 40px;
     margin-bottom: 20px;
+    border-radius: 60px;
 }
 
 .fav_act {
