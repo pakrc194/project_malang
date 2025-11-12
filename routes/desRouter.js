@@ -96,8 +96,7 @@ router.get('/:id', (req, res)=>{
             if (resPerf && resPerf.length > 0){
                 resPerf[0].start_date = base_date_format(resPerf[0].start_date)
                 resPerf[0].end_date = base_date_format(resPerf[0].end_date)
-                console.log('resPerf', resPerf[0])
-                res.render("reserv/description.html", {perf: resPerf[0], musical: resP})
+                res.render("reserv/description.html", {perf: resPerf[0], musical: resP, loginout})
             }
 
         })
@@ -273,7 +272,7 @@ router.post('/payment', async (req, res)=>{
                 WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
                     WHERE schedule_date = "${base_date_format(date)}" 
                     AND schedule_round = ${req.body.items[3].split(' ')[3]}
-                    AND perf_id = ${req.body.items[2]}
+                    AND perf_id = ${req.body.items[2]}  
                     )
                     
                 AND seat_id = (SELECT seat_id FROM seat_layout 

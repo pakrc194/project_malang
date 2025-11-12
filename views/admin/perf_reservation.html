@@ -4,23 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+    /* ============================================== */
+    /* 예매 관리 목록 페이지 (resv_list) 스타일 */
+    /* ============================================== */
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- 목록 컨테이너 설정 --- */
+    wrapper {
+        max-width: 1100px; /* 테이블 최대 너비 설정 (항목이 많아 너비 확장) */
+        margin: 30px auto;
+        display: block;
+    }
+
+    /* --- 테이블 공통 스타일 --- */
+    .resv_list_header table,
+    .resv_list table {
+        width: 100%;
+        border-collapse: collapse; 
+        table-layout: fixed; 
+        border: none; /* 외곽선 제거 */
+    }
+
+    /* 스크롤바 너비를 고려하여 헤더 테이블의 너비를 조정 */
+    .resv_list_header table {
+        width: calc(100% - 17px); /* 스크롤바 공간 확보 (약 17px) */
+        margin-top: 10px;
+        border-top: 2px solid #1f3f6e; /* 상단 강조선 */
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    /* 목록 테이블 컨테이너 (스크롤 영역) */
+    .resv_list {
+        max-width: 1100px; 
+        margin: 0 auto;
+        
+        max-height: 70vh; /* 최대 높이 설정 */
+        overflow-y: auto; /* Y축 스크롤 적용 */
+        
+        border: none; /* 외곽선 제거 */
+        border-radius: 0; 
+    }
+
+    /* --- 헤더 스타일 --- */
+    .resv_list_header tr {
+        color: #333;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd; /* 헤더 하단 구분선 */
+    }
+
+    .resv_list_header td {
+        padding: 12px 10px;
+        border: none; /* 셀 테두리 제거 */
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* --- 목록 행 스타일 --- */
+    .resv_list tr td {
+        padding: 15px 10px;
+        border: none; /* 셀 테두리 제거 */
+        border-bottom: 1px solid #eee; /* 행 하단 구분선 */
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap; /* 내용이 넘칠 경우 줄바꿈 방지 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* 목록 테이블의 마지막 행 구분선 제거 */
+    .resv_list table tr:last-child td {
+        border-bottom: none;
+    }
+
+
+    /* --- 열 너비 설정 --- */
+    /* 열 너비 합계는 100% */
+    .resv_list_no { width: 15%; }
+    .resv_list_user { width: 10%; }
+    .resv_list_perf_name { width: 25%; }
+    .resv_list_resv_date { width: 15%; }
+    .resv_list_resv_qty { width: 8%; }
+    .resv_list_discount { width: 8%; }
+    .resv_list_price { width: 12%; }
+    .resv_list_status { width: 7%; }
+
+    /* 공연 이름 셀은 텍스트가 길 수 있으므로 줄바꿈 허용 (선택적) */
+    .resv_list_perf_name {
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    .resv_list_perf_name a {
+        color: #1f3f6e;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .resv_list_perf_name a:hover {
+        text-decoration: underline;
+        color: #5a80d4;
+    }
+    </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>예매 목록</h1>
-    {% for reserv in reservList %}
-        <a href="/admin/reserv/detail?resvId={{reserv.resv_id}}&userId={{reserv.user_id}}">{{reserv.resv_number}}</a><br/>
-        {{reserv.email}}<br/>
-        {{reserv.perf_name}}<br/>
-        {{reserv.poster_url}}<br/>
-        {{reserv.schedule_date}}<br/>
-        {{reserv.schedule_time}}<br/>
-        {{reserv.schedule_round}}<br/>
-        {{reserv.total_amount}}<br/>
-        {{reserv.discount_rate}}<br/>
-        {{reserv.final_amount}}<br/>
-        {{reserv.resv_date}}<br/>
-        {{reserv.resv_status}}<hr/>
-    {% endfor %}
+    
+    <wrapper>
+    <div class="resv_list_header">
+        <table border="">
+            <td class="resv_list_no">번호</td>
+            <td class="resv_list_name">예매자</td>
+            <td class="resv_list_perf">공연이름</td>
+            <td class="resv_list_resv_date">예매일</td>
+            <td class="resv_list_count">예매 수</td>
+            <td class="resv_list_discount">할인</td>
+            <td class="resv_list_price">금액</td>
+            <td class="resv_list_status">예매상태</td>
+        </table>
+    </div>
+    <div class="resv_list">
+        <table border="">
+            {% for reserv in reservList %}
+            <tr>
+                <td class="resv_list_no">{{reserv.resv_number}}</td>
+                <td class="resv_list_name">{{reserv.user_name}}</td>
+                <td class="resv_list_perf">{{reserv.perf_name}}</td>
+                <td class="resv_list_resv_date">{{reserv.resv_date}}</td>
+                <td class="resv_list_count">{{reserv.seat_id_arr}}</td>
+                <td class="resv_list_discount">
+                    {% set rate = reserv.discount_rate*100%}
+                    {{rate}}%
+                </td>
+                <td class="resv_list_price">{{reserv.final_amount}}</td>
+                <td class="resv_list_status">
+                    {% if reserv.resv_status == 'PAID'%}
+                    예매
+                    {% else %}
+                    취소
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </wrapper>
 </body>
 </html>

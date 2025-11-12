@@ -1,7 +1,62 @@
-<h2>
-    <a href="/admin/perf">공연관리</a>
-    <a href="/admin/actor">배우관리</a>
-    <a href="/admin/reserv">예매관리</a>
-    <a href="/admin/user">회원관리</a>
-    <a href="/">홈</a>
-</h2>
+<style>
+    /* 기존 스타일 */
+    .admin_nav {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 1.5rem;
+        height: 60px;
+        border-bottom: 3px solid #555;
+        box-sizing: border-box;
+    }
+    .admin_nav_div {
+        /* 링크 컨테이너가 flex 항목이므로, 내부 링크를 정렬하기 위해 추가 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%; /* active 선을 올바르게 배치하기 위해 */
+    }
+
+    /* 💡 링크 기본 스타일 (보라색 계열) */
+    .admin_nav a {
+        color: #4a007b; /* 기본 텍스트 색상 (보라색 계열) */
+        text-decoration: none;
+        padding: 0 10px; /* 클릭 영역 확보 및 active 선과의 간격 */
+        height: 100%;
+        display: flex; /* 텍스트를 중앙에 정렬하기 위해 */
+        align-items: center;
+        position: relative; /* ::after 요소를 위한 기준점 */
+        transition: color 0.2s;
+    }
+
+    /* 💡 현재 페이지 강조 스타일 (active 클래스) */
+    .admin_nav a.active {
+        color: #1f3f6e; /* 텍스트 색상 변경 */
+        font-weight: bold;
+        text-decoration: underline; /* 💡 밑줄 추가 */
+        text-decoration-thickness: 3px; /* 밑줄 두께 조정 (선택 사항) */
+        text-underline-offset: 5px; /* 밑줄 위치 조정 (선택 사항) */
+    }
+
+    /* 마우스 오버 효과 (선택적) */
+    .admin_nav a:not(.active):hover {
+        color: #5a80d4;
+    }
+
+</style>
+<div class="admin_nav">
+    <div class="admin_nav_div">
+        <a href="/admin/perf" class="{% if current_path == 'perf' %}active{% endif %}">공연관리</a>
+    </div>
+    <div class="admin_nav_div">
+        <a href="/admin/actor" class="{% if current_path =='actor' %}active{% endif %}">배우관리</a>
+    </div>
+    <div class="admin_nav_div">
+        <a href="/admin/reserv" class="{% if current_path =='resv' %}active{% endif %}">예매관리</a>
+    </div>
+    <div class="admin_nav_div">
+        <a href="/admin/user" class="{% if current_path =='user' %}active{% endif %}">회원관리</a>
+    </div>
+</div>

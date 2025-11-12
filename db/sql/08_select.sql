@@ -203,3 +203,18 @@ where perf_cast.cast_id = 1 and perf_cast.perf_id = 1
 
 select * from performance_info join venue_info 
 where performance_info.perf_id = venue_info.venue_id 
+
+
+
+select schedule_cast.*, CI.cast_name, AI.actor_name,
+        PS.schedule_date, PS.schedule_time, PS.schedule_round 
+        from schedule_cast 
+        join perf_schedule as PS on schedule_cast.schedule_id = PS.schedule_id
+        JOIN
+            CAST_INFO AS CI ON schedule_cast.cast_id = CI.cast_id
+        JOIN
+            ACTOR_INFO AS AI ON schedule_cast.actor_id = AI.actor_id
+        where ps.perf_id = '1'
+        ORDER BY
+            schedule_cast.schedule_id, CI.cast_id
+        limit 0, 100;
