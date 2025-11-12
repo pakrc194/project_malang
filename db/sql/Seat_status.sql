@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
 DROP TABLE seat_status;
 CREATE TABLE seat_status (
     status_id INT PRIMARY KEY AUTO_INCREMENT,

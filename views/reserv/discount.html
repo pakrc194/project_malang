@@ -190,6 +190,8 @@
         <input type="hidden" name="items" class="date" value="{{seat.year}} {{seat.month}} {{seat.day}} {{seat.choice_time}}">
         <input type="hidden" name="items" class="total_price" value="{{ptot}}">
         <input type="hidden" name="items" class="dc_price">
+        <input type="hidden" name="items" value="{{venue}}">
+        
         {% for i in temp_data %}
             <input type="hidden" name="items" class="seat" value="{{i.grade}} {{i.area}} {{i.s_row}} {{i.s_col}} {{i.price}}">
         {% endfor %}
