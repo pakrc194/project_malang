@@ -80,16 +80,15 @@ router.get('/:id', (req, res)=>{
         v.venue_id, v.venue_name, v.venue_region, v.venue_type, v.seat_grade;
     `
 
-    // conn.query(query, (err, rrr)=>{
-    //     console.log(rrr)
-    //     console.log(rrr[0].cast_list)
-    // })
-    // let qq = `select performance_info.*, venue_info.venue_name as th_name from performance_info join venue_info where performance_info.venue_id = venue_info.venue_id and performance_info.id = ${req.params.id}`
     conn.query(query, (err, resPerf)=>{
         // console.log(resPerf)
         venue_id = resPerf[0].venue_id
         // 공연장에 해당하는 좌석 가격 가져오기
         conn.query(`select * from perf_price where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, resP)=>{
+            console.log('resP', resP)
+            resP[0].price = Number(resP[0].price).toLocaleString()
+            resP[1].price = Number(resP[1].price).toLocaleString()
+            resP[2].price = Number(resP[2].price).toLocaleString()
             if (!resPerf || resPerf.length === 0) {
                 return res.status(404).send("해당 공연을 찾을 수 없습니다.");
             }
@@ -104,6 +103,8 @@ router.get('/:id', (req, res)=>{
 })
 
 
+let schedule_id = 0
+
 router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     // 회원 이메일
     if (req.session.email) {
@@ -112,6 +113,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     else {
         email = req.session.kakao_email
     }
+    console.log(`예약화면 세션 확인: `, email)
     // 회원 id
     conn.query(`select user_id FROM user_info where email = "${email}"`, (err, req_id)=>{
         user_id = req_id[0].user_id
@@ -120,7 +122,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     
     
     
-    conn.query('delete from seat_temp')
+    // conn.query('delete from seat_temp')
     // console.log(req.body.items[0])
     // console.log(req.params.id)
     console.log('예매 세션 이메일 확인: ', req.session.kakao_email)
@@ -130,12 +132,15 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
     conn.query(`select performance_info.*, venue_info.venue_name from performance_info join venue_info 
                 where performance_info.venue_id = venue_info.venue_id and performance_info.perf_id = ${init_perf_id}`, (err, resPf)=>{
         let venue_id = resPf[0].venue_id
-        console.log('reserve_venue_id', venue_id)
+        // console.log('reserve_venue_id', venue_id)
         // conn.query(`select seat_price.grade, seat_price.price from seat_price join venue_info on find_in_set(seat_price.grade, venue_info.seat_grade) where venue_info.venue_id="${venue_id}" `, (err, resP)=>{
         conn.query(`select grade_code, price FROM perf_price where perf_price.venue_id="${venue_id}" AND perf_price.perf_id=${init_perf_id}`, (err, resP)=>{
-            
+            resP[0].price = Number(resP[0].price).toLocaleString()
+            resP[1].price = Number(resP[1].price).toLocaleString()
+            resP[2].price = Number(resP[2].price).toLocaleString()
+
             let arr={
-                date: req.body.items[0],  // 선택 날짜
+                date: base_date_format(req.body.items[0]),  // 선택 날짜
                 time: req.body.items[1],  // 선택 회차
                 flag: req.body.items[2], // 표시해야할 날짜
                 name: resPf[0].venue_name, // 공연장 이름
@@ -144,16 +149,25 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
             // console.log(resP)
             // and seat_status.seat_status != "Available"
             console.log('arr: ', arr)
-            conn.query(`select * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
-                
+            conn.query(`select distinct * from seat_status join perf_schedule where seat_status.schedule_id = perf_schedule.schedule_id 
+                and seat_status.seat_status != "Available"
                 and perf_schedule.perf_id = ${init_perf_id}
-                and perf_schedule.schedule_round = ${req.body.items[1]}
-                and perf_schedule.schedule_date = "${base_date_format(req.body.items[0])}"
+                and perf_schedule.schedule_round = ${arr.time}
+                and perf_schedule.venue_id = ${venue_id}
+                and perf_schedule.schedule_date = "${arr.date}"
                 
                 `, (err, resSold)=>{
-                    // console.log('resSold: ', resSold)
+                    // console.log('resSold: ', resSold, init_perf_id)
                     if (resPf && resPf.length > 0){
-                        res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold})
+                        conn.query(`select schedule_id from perf_schedule 
+                            where perf_id = ${init_perf_id}
+                            and venue_id = ${venue_id}
+                            and schedule_round = ${req.body.items[1]} 
+                            and schedule_date = "${base_date_format(req.body.items[0])}"    
+                            `, (err, sche_id)=>{
+                                // console.log(sche_id[0])
+                                res.render("reserv/reserve.html", {perf: resPf[0], arr, seat: resP, id:req.params.id, avoid: resSold, user_id: user_id, email: email, sche_id: sche_id[0].schedule_id})
+                            })
                     }
                 })
             
@@ -164,6 +178,7 @@ router.post('/reserve/:id', isLoggedIn, (req, res)=>{
 
 
 router.post('/discount/:id', (req, res)=>{
+    console.log('좌석에서 넘어오는 정보: ', req.body.items)
     let email = ''
     if (req.session.email) {
         email = req.session.email
@@ -190,25 +205,40 @@ router.post('/discount/:id', (req, res)=>{
             }
         )
     }
+    let pp = Number(req.body.items[1]).toLocaleString()
     let ptot = req.body.items[1]
+            
     let cnt = JSON.parse(req.body.items[0]).length
 
-    let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
-    where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
-    conn.query('select choice_date, choice_time from seat_temp', (err, resS)=>{
-        let arr1 = {
-            choice_time: resS[0].choice_time, 
-            year: resS[0].choice_date.getFullYear(), 
-            month: resS[0].choice_date.getMonth() +1,
-            day: resS[0].choice_date.getDate()
-        }
-        conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
-            conn.query(discountQuery, (err, resDC)=>{
-                // resDC = 회원 등급 이름, 등급 할인률, 회원id
-                res.render('reserv/discount.html', {ptot: ptot, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id, loginout, name})
+    conn.query(`select user_id from user_info where email = "${email}"`, (err, Uid)=>{
+        user_id = Uid[0].user_id
+        console.log(user_id)
+
+        let discountQuery = `select user_grade.discount_rate, user_grade.grade_name, user_info.user_id FROM user_grade join user_info 
+        where user_info.grade_id = user_grade.grade_id and user_info.email = "${email}"`
+    
+        conn.query(`SELECT * FROM seat_status WHERE user_id = ${user_id} AND seat_status = "Reserved"`, (err, resS)=>{
+            console.log('resS: ', resS)
+            conn.query(`SELECT * FROM perf_schedule WHERE schedule_id = ${resS[0].schedule_id}`, (err, resSche)=>{
+                console.log(resSche)
+                let date = new Date(resSche[0].schedule_date)
+                let arr1 = {
+                    choice_time: resSche[0].schedule_round, 
+                    year: date.getFullYear(), 
+                    month: date.getMonth() +1,
+                    day: date.getDate()
+                }
+                console.log(arr1)
+                conn.query(`select * from performance_info where perf_id = ${req.params.id}`, (err, resCP)=>{
+                    conn.query(discountQuery, (err, resDC)=>{
+                        // resDC = 회원 등급 이름, 등급 할인률, 회원id
+                        res.render('reserv/discount.html', {ptot: ptot, pp: pp, temp_data, cnt: cnt, seat: arr1, perf: resCP[0], DC: resDC[0], id: req.params.id, venue: req.body.items[2]})
+                    })
+                })
             })
         })
     })
+
 })
 
 
@@ -246,7 +276,8 @@ router.post('/payment', async (req, res)=>{
     console.log('작품 선택 날짜, 회차: ', req.body.items[3].split(' '))
     console.log('총 금액: ', req.body.items[4])
     console.log('할인 금액: ', req.body.items[5])
-    for (let i = 6; i < req.body.items.length; i++) {
+    console.log('극장 이름: ', req.body.items[6])
+    for (let i = 7; i < req.body.items.length; i++) {
         console.log('티켓 정보: ', req.body.items[i].split(' '))
     }
 
@@ -265,24 +296,28 @@ router.post('/payment', async (req, res)=>{
     conn.query(userUpQ)
     // // 좌석 상태 업데이트
     let date = `${req.body.items[3].split(' ')[0]}-${req.body.items[3].split(' ')[1]}-${req.body.items[3].split(' ')[2]}`
-
-
-    for (let i = 6; i < req.body.items.length; i++) {
-        conn.query(`UPDATE seat_status SET seat_status = "Sold", user_id = (SELECT user_id FROM user_info WHERE email = "${email}")
-                WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
-                    WHERE schedule_date = "${base_date_format(date)}" 
-                    AND schedule_round = ${req.body.items[3].split(' ')[3]}
-                    AND perf_id = ${req.body.items[2]}  
-                    )
-                    
-                AND seat_id = (SELECT seat_id FROM seat_layout 
-                    WHERE area = "${req.body.items[i].split(' ')[1]}"
-                    AND seat_row = ${req.body.items[i].split(' ')[2]}
-                    AND seat_number = ${req.body.items[i].split(' ')[3]}
-                    AND venue_id = ${venue_id})`)
-                    //1번쨰 서브쿼리 perf_id 필요
-                    //2번쨰 서브쿼리 venue_id 필요
-    }
+    conn.query(`select venue_id from venue_info where venue_name = "${req.body.items[6]}"`, (err, ve)=>{
+        venue_id = ve[0].venue_id
+        console.log('극장 아이디: ', venue_id)
+        for (let i = 7; i < req.body.items.length; i++) {
+            console.log('티켓 정보: ', req.body.items[i].split(' '))
+            conn.query(`UPDATE seat_status SET seat_status = "Sold", temp_resv_time = null
+                    WHERE schedule_id = (SELECT schedule_id FROM perf_schedule
+                        WHERE schedule_date = "${base_date_format(date)}" 
+                        AND schedule_round = ${req.body.items[3].split(' ')[3]}
+                        AND perf_id = ${req.body.items[2]}  
+                        )
+                    AND seat_id = (SELECT seat_id FROM seat_layout 
+                        WHERE area = "${req.body.items[i].split(' ')[1]}"
+                        AND seat_row = ${req.body.items[i].split(' ')[2]}
+                        AND seat_number = ${req.body.items[i].split(' ')[3]}
+                        AND venue_id = ${venue_id})`, (err, up_sold)=>{
+                            console.log('up_sold', up_sold)
+                        })
+                        //1번쨰 서브쿼리 perf_id 필요
+                        //2번쨰 서브쿼리 venue_id 필요
+        }
+    })
     
     let reservQ = `INSERT INTO reservation_info(user_id, schedule_id, resv_number, total_amount, discount_rate, final_amount, resv_date, resv_status, resv_count, seat_id_arr, payment_id)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -293,7 +328,7 @@ router.post('/payment', async (req, res)=>{
 
     let u_id = await conn.query(`SELECT user_id FROM user_info where email = "${email}"`)
     let seat_arr = []
-    for (let i  = 6; i < req.body.items.length; i++){
+    for (let i  = 7; i < req.body.items.length; i++){
         let seat_id = await conn.query(`SELECT seat_id FROM seat_layout 
                     WHERE area = "${req.body.items[i].split(' ')[1]}"
                     AND seat_row = ${req.body.items[i].split(' ')[2]}
@@ -301,13 +336,48 @@ router.post('/payment', async (req, res)=>{
 
         seat_arr.push(seat_id[0].seat_id)
     }
+    
     let s_arr = seat_arr.join(',')
     console.log(seat_arr)
     let pay_id = await conn.query(`SELECT payment_id FROM payment_info where transaction_id = "${t_id}"`)
+    // user_id, schedule_id, resv_number, total_amount, discount_rate, final_amount, resv_date, resv_status, resv_count, seat_id_arr, payment_id
     let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-6, `${s_arr}`, `${pay_id[0].payment_id}`]
     conn.query(reservQ, reservI)
     // s_id, u_id, seat_arr, pay_id
-    res.render('../views/reserv/payment.html', {info: req.body.items})
+    // 뮤지컬 포스터, 이름, 공연 일시, 회차
+
+    // user_id : u_id[0].user_id
+    // schedule_id : s_id[0].schedule_id -> schedule_date, schedule_round, schedule_time
+    conn.query(`select * from performance_info where perf_id = ${req.body.items[2]}`, (err, perf_info)=>{
+        conn.query(`select * from perf_schedule where schedule_id = ${s_id[0].schedule_id}`, (err, perf_sche)=>{
+            let date = new Date(perf_sche[0].schedule_date)
+            let arr1 = {
+                choice_time: perf_sche[0].schedule_round, 
+                year: date.getFullYear(), 
+                month: date.getMonth() +1,
+                day: date.getDate(), 
+                time: perf_sche[0].schedule_time
+            }
+            let amount = Number(req.body.items[5]).toLocaleString() 
+            /**
+            console.log('정보: ', req.body.items)
+            console.log('카드번호: ', req.body.items[0])
+            console.log('유저id, 등급, 할인율: ', req.body.items[1].split(' '))
+            console.log('작품id: ', req.body.items[2])
+            console.log('작품 선택 날짜, 회차: ', req.body.items[3].split(' '))
+            console.log('총 금액: ', req.body.items[4])
+            console.log('할인 금액: ', req.body.items[5])
+            
+             */
+            let ticket = []
+            for (let i = 7; i < req.body.items.length; i++) {
+                // console.log('티켓 정보: ', req.body.items[i].split(' '))
+                ticket.push(req.body.items[i].split(' '))
+            }
+            console.log('ticket: ', ticket)
+            res.render('../views/reserv/payment.html', {info: ticket, perf: perf_info[0], seat: arr1, amount: amount})
+        })
+    })
 })
 
 router.post('/payment/cancel', async (req, res)=>{

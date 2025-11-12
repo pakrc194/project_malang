@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761830225502@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;

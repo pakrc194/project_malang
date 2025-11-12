@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 성공 페이지</title>
+    <style>
+    .success-container {
+      max-width: 450px;
+      width: 100%;
+      padding: 30px 20px;
+      background-color: white;
+      border-radius: 12px;
+      text-align: center;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 20px;
+    }
+
+    .checkmark {
+      scale: 1.5;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .detail-label {
+      color: #666;
+    }
+
+    .detail-value {
+      font-weight: bold;
+      color: #333;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-container {
+      animation: fadeIn 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+   
+
+
+    <div class="success-container">
+    <div class="success-icon">
+      <div style="position: relative;">
+        <!-- <img src="./img/sandbox-sample-icon.png" /> -->
+        <svg width="55" height="54" viewBox="0 0 55 54" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="position:absolute;right: -27px;top: -17px;">    <!--체크박스 이미지-->
+          <circle cx="27.5" cy="27" r="27" fill="#0F71FF"></circle>
+          <path d="M15.5 25.7353L24.6655 35L40.5 20" stroke="white" stroke-width="5.5" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+    </div>
+    <h1>결제를 완료했어요</h1>
+    <p>실제 결제 연동시 결제 승인 API 요청을 보내주세요. <br /></p>
+    <a href='/payment/ticket' style="text-decoration: underline;">돌아가기</a>
+  </div>
+
+    
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>뮤지컬 상세페이지</title>
+    <title>뮤지컬 〈{{perf.performance_name}}〉</title>
     <link rel="stylesheet" href="../style/description.css">
 
     <!-- <script src="../js/description.js"></script> -->
@@ -21,8 +21,10 @@
         window.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll(".ind_actor").forEach(act_box =>{
                 act_box.addEventListener("click", ()=>{
-                    console.log(`/cast/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
-                    window.open(`/cast/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
+                    console.log(act_box.id)
+                    // console.log(`/cast/info?cast=${act_box.classList[2]}&actor=`+act_box.classList[1])
+                    // window.open(`/cast/info?cast=${act_box.id}&actor=`+act_box.classList[1])
+                    window.location.href=`/cast/info?cast=${act_box.id}&actor=`+act_box.classList[1]
                 })
             })
         })
@@ -76,8 +78,8 @@
                 </div>
                 <div class="actor_box">
                     {% for i in perf.cast_list %}
-                        <div class="ind_actor {{i.actor_id}} {{i.cast_id}}">
-                            <img src="../img/{{i.actor_profile_url}}" alt="">
+                        <div class="ind_actor {{i.actor_id}}" id="{{i.cast_id}}">
+                            <img src="../img/{{i.actor_profile_url}}">
                             <div class="actor_name">{{i.actor_name}}</div>
                             <div calss="cast_name">{{i.cast_name}}</div>
                         </div>
@@ -93,9 +95,10 @@
         <div class="seat">
             <img src="../img/seat.png" alt="">
         </div>
-        <div class="footer">
-            <img src="../img/footer.png" alt="">
-        </div>
+    </div>
+    <div class="footer">
+        푸터
+        <!-- <img src="../img/footer.png" alt=""> -->
     </div>
 </body>
 </html>

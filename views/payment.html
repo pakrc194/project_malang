@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>말랑결제연동</title>
+  <link rel="stylesheet" href="style/pay_style.css" />
+</head>
+
+<body>
+  <div class="payment-container">
+    <div class="payment-header">
+      <h1>결제 수단 선택</h1>
+      <p>원하시는 결제 수단을 선택해 주세요.</p>
+    </div>
+
+    <div class="payment-info">
+      <div class="payment-info-title">결제 안내</div>
+      <div class="payment-info-text">안전한 결제를 위해 고객님의 정보는 암호화되어 처리됩니다.</div>
+    </div>
+
+
+    <div class = "payment-methods-grid">
+      <div class="payment-method-button">
+        <input type="radio" id="CARD" name="payment-method" value="CARD">
+        <div class="selected-indicator"></div>
+        <div class="payment-method-icon">💳</div>
+        <div class="payment-method-name">카드결제</div>
+      </div>
+
+      <div class="payment-method-button">
+        <input type="radio" id="MOBILE" name="payment-method" value="MOBILE">
+        <div class="selected-indicator"></div>
+        <div class="payment-method-icon">📱</div>
+        <div class="payment-method-name">휴대폰결제</div>
+      </div>
+
+      <div class="payment-method-button">
+        <input type="radio" id="NAVERPAY" name="payment-method" value="NAVERPAY">
+        <div class="selected-indicator"></div>
+        <img src="/img/npay.png" style="width:75px;margin-bottom: 8px;" />
+        <div class="payment-method-name">네이버페이</div>
+      </div>
+
+      <div class="payment-method-button">
+        <input type="radio" id="KAKAOPAY" name="payment-method" value="KAKAOPAY">
+        <div class="selected-indicator"></div>
+        <img src="/img/kakaopay.png" style="width:75px;margin-bottom: 8px;" />
+        <div class="payment-method-name">카카오페이</div>
+      </div>
+
+      <div class="payment-method-button">
+        <input type="radio" id="PAYCO" name="payment-method" value="PAYCO">
+        <div class="selected-indicator"></div>
+        <img src="/img/payco.jpg" style="width:75px;margin-bottom: 8px;" />
+        <div class="payment-method-name">페이코</div>
+      </div>
+
+      <div class="payment-method-button">
+        <input type="radio" id="VACCOUNT" name="payment-method" value="VACCOUNT">
+        <div class="selected-indicator"></div>
+        <div class="payment-method-icon">🔢</div>
+        <div class="payment-method-name">무통장입금</div>
+      </div>
+
+    </div>
+
+
+
+    <div class="payment-button-container">
+      <button class="payment-button" id="payButton">결제하기</button>
+    </div>
+
+  </div>
+  <script src="https://static.danalpay.com/d1/sdk/index.js"></script>
+  <script src="/js/payment.js"></script>
+</body>
+
+</html>
