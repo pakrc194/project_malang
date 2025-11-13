@@ -12,7 +12,7 @@ const port = 80
 const client_id = "9010fbf47377b2f34b0e443ad62a2326"
 const client_secret = "XeIcIaPxVYR4u4ZKhOT8VUDqAxGzuyhc"
 // 이거 리다이렉트 URL이니까 주소마다 바꿔줘야함.
-const domain = "http://192.168.219.185/login/kakao"
+const domain = "http://192.168.0.117/login/kakao"
 const redirect_uri = `${domain}/redirect`
 const token_uri = "https://kauth.kakao.com/oauth/token"
 const api_host = "https://kapi.kakao.com"
@@ -133,6 +133,8 @@ router.get("/redirect", async function (req, res) {
     // 세션 저장
     req.session.kakao_email = email
     req.session.kakao_name = name
+
+    console.log(req.session.kakao_name)
 
 
     // 세션 저장

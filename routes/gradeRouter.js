@@ -9,7 +9,12 @@ router.get('/', (req, res) => {
     console.log('email', req.session.email)
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email && req.session.user_name
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
+
 
     let resvCurMonthSQL = `SELECT
         DATE_FORMAT(resv_date, '%Y-%m') AS resv_month,
@@ -54,7 +59,7 @@ router.get('/', (req, res) => {
         console.log(nextMonthTotal)
 
         let needNextGrade = 0
-        if(nextGradeQuery)
+        if(nextGradeQuery.length>0)
             needNextGrade = nextGradeQuery[0].grade_score-curMonthTotal
         let total = {
             curMonthTotal : Number(curMonthTotal).toLocaleString(),

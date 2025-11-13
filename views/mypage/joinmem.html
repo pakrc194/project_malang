@@ -12,16 +12,8 @@
             box-sizing: border-box;
         }
 
-        header,
-        footer {
-            width: 1200px;
-            background-color: #ff0;
-        }
-
         wrapper {
             width: 800px;
-            height: 700px;
-
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -421,7 +413,6 @@
 <body>
     <!--헤더-->
      {% include '../header.html' %}
-
     <wrapper>
         <!--회원가입-->
         <section class="joinmem">
@@ -479,7 +470,7 @@
         </section>
     </wrapper>
     <!--푸터-->
-    <footer>footer</footer>
+    {% include '../footer.html' %}
 </body>
 
 </html>

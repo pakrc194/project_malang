@@ -1,9 +1,4 @@
 <style>
-    #imgGrade {
-        width: 150px;
-        margin: auto;
-        align-self: center;
-    }
     .myInfo {
         width: 700px;
         height: 550px;
@@ -28,6 +23,11 @@
         border: 1px solid #aaa;
         border-radius: 10px;
         box-sizing: border-box;
+    }
+    #imgGrade {
+        width: 150px;
+        margin: auto;
+        align-self: center;
     }
     .myGrade_nextInfo {
         width: 400px;
@@ -101,11 +101,11 @@
         <div class="myGrade_nextInfo">
             <div class="myGrade_nextDetail">
                 <b>현재 등　급　</b>{{myGrade.grade_name}}<br/>
-                <b>현재 할인율　</b>{{myGrade.discount_rate}}<br/><br/>
+                <b>현재 할인율　</b> {% set curRate = myGrade.discount_rate*100%}{{curRate}}%<br/><br/>
                 
                 {% if myGrade.grade_id != 5%}
                 <b>다음 등　급　</b> {{nextGrade.grade_name}}<br/>
-                <b>다음 할인율　</b> {{nextGrade.discount_rate}}<br/>
+                <b>다음 할인율　</b> {% set nextRate = nextGrade.discount_rate*100%}{{nextRate}}%<br/>
                 {% else %}
                 <b>최고 등급입니다.</b> <br/>
                 <b></b><br/>

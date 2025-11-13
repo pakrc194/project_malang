@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {{actorInfo.actor_name}}</title>
+    <title> {{res[0].actor_name}}</title>
     <link rel="stylesheet" href="/style/actor_info.css">
     <script>
         window.onload = function() {
@@ -50,25 +50,29 @@
                 <b>이력  </b>{{res[0].actor_history}}<br/>
             </div>
         </div>
-
+        {% if loginout != null %}
         <div class="favor_button">
             <input type="button" id='btnFavor' value="관심 배우 등록{% if isInterest == true %}-{% else %}+{% endif %}">
         </div>
+        {% endif %}
 
         <hr>
 
         <h4>상영작품</h4>
-        <div class = "perf_now">
-            <img src="/img/{{res[0].poster_url}}" alt=""><br/>
-            <div class="perf_text">
-                <b>출연작품  </b> {{res[0].perf_name}}<br/>
-                <b>공연 시작일  </b> {{res[0].start_date}}<br/>
-                <b>공연 종료일  </b> {{res[0].end_date}}<br/>
-                <b>러닝타임  </b> {{res[0].running_time}}분<br/>
-                <b>장르  </b> {{res[0].genre}}<br/>
+        {% for perfNow in res%}
+            <div class = "perf_now">
+                <a href="/desc/{{perfNow.perf_id}}"><img src="/img/{{perfNow.poster_url}}" alt=""></a><br/>
+                <div class="perf_text">
+                    <b>출연작품  </b> {{perfNow.perf_name}}<br/>
+                    <b>공연 시작일  </b> {{perfNow.start_date}}<br/>
+                    <b>공연 종료일  </b> {{perfNow.end_date}}<br/>
+                    <b>러닝타임  </b> {{perfNow.running_time}}분<br/>
+                    <b>장르  </b> {{perfNow.genre}}<br/>
+                </div>
             </div>
-        </div>
-        <input type="hidden" id="actor_id" value="{{res[0].actor_id}}">
+            <input type="hidden" id="actor_id" value="{{perfNow.actor_id}}">
+        {% endfor %}
+        
     </div>
 
 </body>

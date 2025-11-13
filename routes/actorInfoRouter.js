@@ -7,22 +7,44 @@ const { base_date_format } = require('../func/date')
 
 router.get("/:id", (req, res)=>{
     console.log(req.params.id)
+    const email = req.session?.email || req.session?.kakao_email;
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name
+
     let actorInfoSql = `select *
         from actor_info
         
         join perf_cast on actor_info.actor_id = perf_cast.actor_id 
         join performance_info on perf_cast.perf_id = performance_info.perf_id
-        where actor_info.actor_id = ?`  
+        where actor_info.actor_id = ?
+        and performance_info.is_hidden = 0`  
      
-        conn.query(actorInfoSql, [req.params.id],(err, resQuery)=>{
-        if(err) {
-            console.log('sql 실패', err.message)
-            res.render('../views/actorInfo.html')
-        } else {
-            console.log('actorInfo sql 성공', resQuery)
-            res.render('../views/actorInfo.html', {res : resQuery})
-        }
-    })
+        conn.query(actorInfoSql, [req.params.id], async (err, resQuery)=>{
+            if(err) {
+                console.log('sql 실패', err.message)
+                res.render('../views/actorInfo.html')
+            } else {
+                console.log('actorInfo sql 성공', resQuery)
+
+
+                let userId = req.session.user_id
+                let isInterest = false
+                if(email) {
+                    let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
+                    let selectQuery = await conn.query(sInterestSql, [req.params.id, userId])
+                    console.log(selectQuery)
+                    if(selectQuery.length > 0) {
+                        isInterest = true
+                    }
+                }
+                for(perf of resQuery) {
+                    perf.start_date = base_date_format(perf.start_date)
+                    perf.end_date = base_date_format(perf.end_date)
+                }
+
+                res.render('../views/actorInfo.html', {res : resQuery, isInterest, loginout})
+            }
+        })
 })
 
 
@@ -45,9 +67,13 @@ router.get('/:id', async (req, res) => {
     console.log('email', req.session?.email, req.params.id)
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
-    let userId = 7
+    let userId = req.session.user_id
     let isInterest = false
     if(email) {
         let sInterestSql = 'select * from user_interest_actor where actor_id = ? and user_id = ?'
@@ -58,17 +84,16 @@ router.get('/:id', async (req, res) => {
         }
     }
     console.log(isInterest)
-})
-//     let actorInfoSQL = 'select * from actor_info where actor_id = ?'
-//     conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
-//         console.log(actorInfoQuery)
+    let actorInfoSQL = 'select * from actor_info where actor_id = ?'
+    conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
+        console.log(actorInfoQuery)
         
-//         conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
-//             console.log(perfListQuery)
-//             res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
-//         })
-//     })
-// })
+        conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
+            console.log(perfListQuery)
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery, loginout, name, data})
+        })
+    })
+})
 
 router.post('/interest/toggle', (req, res) => {
     let userId = req.session?.user_id

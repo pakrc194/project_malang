@@ -21,7 +21,7 @@ conn.query = util.promisify(conn.query);
 //공연 데이터가 없어서 공연장으로 임시 대체
 router.get('/perf/list', (req, res)=>{
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
 
     conn.query('select * from performance_info', (err, resQuery)=>{
         if(err) {
@@ -70,23 +70,41 @@ router.get('/perf/detail/:id', (req, res)=>{
             res.render('../views/admin/perf_list.html')
         } else {
             console.log('sql 성공', perfInfoQuery)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayTime = today.getTime();
+            const dayInMilliseconds = 1000 * 60 * 60 * 24;
+
             perfInfoQuery[0].start_date = base_date_format(perfInfoQuery[0].start_date)
             perfInfoQuery[0].end_date = base_date_format(perfInfoQuery[0].end_date)
             perfInfoQuery[0].reg_date = base_date_format(perfInfoQuery[0].reg_date)
+
+        // 2. D-Day 계산을 위한 스케줄 날짜 처리
+            const scheduledDateString = perfInfoQuery[0].start_date;
+            const scheduledDate = new Date(scheduledDateString);
             
+            // 스케줄 날짜 역시 시간 정보를 00:00:00으로 초기화
+            scheduledDate.setHours(0, 0, 0, 0); 
+            
+            // 3. 시간 차이 계산 (밀리초)
+            const timeDiff = scheduledDate.getTime() - todayTime;
+            
+            // 4. 밀리초를 일 수로 변환 (Math.ceil을 사용하여 남은 시간이 조금이라도 있으면 1일로 올림)
+            const diffDays = Math.ceil(timeDiff / dayInMilliseconds);
+
+            // 5. D-day 값으로 resv.schedule_date 업데이트
+            perfInfoQuery[0].schedule_date = diffDays;
+
             let sVenueInfo = 'select * from venue_info where venue_id = ?'
 
             tasks.push(conn.query(sVenueInfo, [perfInfoQuery[0].venue_id]))
             tasks.push(conn.query(sPrefCastWpid, [req.params.id]))
-            tasks.push(conn.query(sScheduleCast, [req.params.id]))
             
-            const [venueQuery, perfCastQuery, sScheduleQuery] = await Promise.all(tasks);
-            for(schedule of sScheduleQuery) {
-                schedule.schedule_date = base_date_format(schedule.schedule_date)
-            }
+            const [venueQuery, perfCastQuery] = await Promise.all(tasks);
+           
             //console.log(perfCastQuery)
 
-            res.render('../views/admin/perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, perfScedule : sScheduleQuery, venueInfo: venueQuery[0]})
+            res.render('../views/admin/perf_detail.html', {perfInfo : perfInfoQuery[0], perfCast : perfCastQuery, venueInfo: venueQuery[0]})
         }
     })
 })
@@ -255,6 +273,31 @@ router.post('/perf/upload', multer.fields(arr), async (req, res)=>{
         res.status(500).send('공연 등록 중 오류가 발생했습니다.');
     }
 })
+
+router.post('/upload/check', (req, res)=> {
+    let sql = `SELECT * FROM PERFORMANCE_INFO
+        WHERE
+            venue_id = ?
+            AND start_date <= ?
+            AND end_date >= ?
+            and is_hidden = 0;`
+    console.log(req.body.start_date, req.body.end_date, req.body.venue_id)
+    
+    conn.query(sql, [req.body.venue_id, req.body.start_date, req.body.end_date], (err, query)=>{
+        if(query.length > 0) {
+            let data={
+                start_date: base_date_format(query[0].start_date),
+                end_date : base_date_format(query[0].end_date),
+                msg : 'fail'
+            }
+            console.log(data)
+            res.json(data)
+        } else {
+            res.json({msg:'success'})
+        }
+    })
+})
+
 
 router.get('/test/:id', async(req, res)=>{
     console.log('-----',req.params.id)
@@ -510,7 +553,8 @@ router.get('/reserv/list', (req, res)=>{
         from reservation_info 
         join user_info on user_info.user_id = reservation_info.user_id
         join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
-        join performance_info on performance_info.perf_id = perf_schedule.perf_id`
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id
+        order by reservation_info.resv_date desc;`
         
     // reservSQL = `
     //     select 
@@ -559,7 +603,15 @@ router.get('/reserv/detail', (req, res)=>{
                 console.log('resrvErr : ', resrvErr.message)
             else {
                 console.log(reservQuery)
+                for(let resv of reservQuery) {
+                    resv.schedule_date = base_date_format(resv.schedule_date)
+                    resv.resv_date = base_date_format(resv.resv_date)
+                    resv.total_amount = Number(resv.total_amount).toLocaleString()
+                    resv.final_amount = Number(resv.final_amount).toLocaleString()
+                    resv.discount_rate = eval(resv.discount_rate)*100
+                }
                 res.render('../views/admin/reserv_detail.html', {userInfo: userQuery, reservList : reservQuery})
+                  
             }
             
         })

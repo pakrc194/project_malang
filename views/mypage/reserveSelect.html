@@ -5,6 +5,10 @@
     box-sizing: border-box;
   }
 
+  body {
+            background-color: #f8f9fa;
+        }
+
   .sortList {
     width: 100%;
     padding: 10px 0;
@@ -189,7 +193,7 @@
         <p><strong>예매자:</strong> {{i.user_name}} / <strong>수량:</strong> {{i.resv_count}}매</p>
         <p><strong>좌석:</strong>
           {% for seat in i.seats %}
-          {{ seat.area }}{{ seat.seat_row }}{{seat.seat_number}}번({{ seat.grade_code }})
+          {{ seat.area }} {{ seat.seat_row }}열 {{seat.seat_number}}번({{ seat.grade_code }}석)
           {% endfor %}
         </p>
         <p><strong>결제금액:</strong> {{i.final_amount}}원</p>

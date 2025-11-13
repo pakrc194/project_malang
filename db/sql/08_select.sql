@@ -1,4 +1,4 @@
--- Active: 1761830225502@@127.0.0.1@3306@malang_db
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;
@@ -253,4 +253,35 @@ WHERE
     AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
     and user_id = 7;
 
-select * from user_grade
+
+
+select schedule_cast.*, CI.cast_name, AI.actor_name,
+        PS.schedule_date, PS.schedule_time, PS.schedule_round 
+        from schedule_cast 
+        join perf_schedule as PS on schedule_cast.schedule_id = PS.schedule_id
+        JOIN
+            CAST_INFO AS CI ON schedule_cast.cast_id = CI.cast_id
+        JOIN
+            ACTOR_INFO AS AI ON schedule_cast.actor_id = AI.actor_id
+        where ps.perf_id = 1
+        ORDER BY
+            schedule_cast.schedule_id, CI.cast_id
+
+
+            SELECT * FROM PERFORMANCE_INFO
+        WHERE
+            venue_id = 1
+            AND start_date <= '2025'
+            AND end_date >= ?
+            and is_hidden != 0;
+
+            select 
+        reservation_info.*, user_info.user_id, user_info.user_name,
+        performance_info.perf_name
+        from reservation_info 
+        join user_info on user_info.user_id = reservation_info.user_id
+        join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id
+        order by reservation_info.resv_date desc;
+
+        update performance_info set resv_status = 'OPEN'

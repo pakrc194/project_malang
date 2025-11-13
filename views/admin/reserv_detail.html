@@ -4,37 +4,204 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        #resv_detail_img {
-            width: 100px;
-        }
-    </style>
+<style>
+/* --- 전체 컨테이너 및 기본 스타일 --- */
+.resv_detail_wrapper {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #1f3f6e;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #1f3f6e;
+    margin-top: 30px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #eee;
+    font-size: 1.4rem;
+}
+
+.user_email {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin: 15px 0 20px;
+}
+
+/* --- 테이블 공통 스타일 --- */
+.resv_header, .resv_list {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.resv_header table, .resv_list table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* --- 헤더 스타일 (resv_header) --- */
+.resv_header table {
+    border-top: 2px solid #5a80d4; 
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.resv_header table tr {
+    background-color: #f7f7f7;
+    font-weight: bold;
+    color: #333;
+}
+.resv_header td {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+.resv_header td:last-child {
+    border-right: none;
+}
+
+
+/* --- 목록 스타일 (resv_list) --- */
+.resv_list table {
+    border: 1px solid #ddd;
+    margin-top: -1px; 
+}
+.resv_list table tr {
+    transition: background-color 0.2s;
+}
+
+/* 줄무늬 배경 */
+.resv_list table tr:nth-child(even) {
+    background-color: #f9f9f9; 
+}
+.resv_list table tr:hover {
+    background-color: #eef2f8;
+}
+
+.resv_list td {
+    padding: 10px 10px;
+    text-align: center;
+    border: none; 
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    color: #555;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.resv_list td:last-child {
+    border-right: none;
+}
+
+/* --- 컬럼별 너비 및 정렬 조정 --- */
+.resv_list_name {
+    width: 25%;
+    text-align: left !important;
+    padding-left: 15px !important;
+    font-weight: bold;
+    color: #1f3f6e;
+}
+.resv_list_schedule {
+    width: 15%;
+}
+.resv_list_total {
+    width: 15%;
+}
+.resv_list_discount {
+    width: 8%;
+}
+.resv_list_final {
+    width: 15%;
+    font-weight: bold;
+}
+.resv_list_date {
+    width: 15%;
+}
+.resv_list_status {
+    width: 7%;
+}
+
+/* --- 뒤로가기 버튼 스타일 --- */
+.back_link {
+    text-align: right;
+    margin-top: 30px;
+}
+.back_link a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #5a80d4;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+}
+</style>
 </head>
 <body>
+ <div class="resv_detail_wrapper">
     <h1>예매 상세</h1>
+    
     <h2>회원정보</h2>
-    {{userInfo[0].email}}<br/>
+    <p class="user_email">{{userInfo[0].email}}</p>
     <hr>
+    
     <h2>예매 정보</h2>
-    {% if reservList.length == 0%}
-        예매 내역이 없습니다.<br/>
+    {% if reservList.length == 0 %}
+        <p class="no_reservation">예매 내역이 없습니다.</p>
     {% else %}
-        {% for reserv in reservList %}
-            {{reserv.resv_number}}<br/>
-            {{reserv.perf_name}}<br/>
-            <img id="resv_detail_img" src="/img/{{reserv.poster_url}}" alt="{{reserv.poster_url}}"><br/>
-            {{reserv.schedule_date}}<br/>
-            {{reserv.schedule_time}}<br/>
-            {{reserv.schedule_round}}<br/>
-            {{reserv.total_amount}}<br/>
-            {{reserv.discount_rate}}<br/>
-            {{reserv.final_amount}}<br/>
-            {{reserv.resv_date}}<br/>
-            {{reserv.resv_status}}<hr/>
-        {% endfor %}
+        <div class="resv_header">
+            <table>
+                <tr>
+                    <td class="resv_list_name">공연이름</td>
+                    <td class="resv_list_schedule">스케줄</td>
+                    <td class="resv_list_total">할인 전</td>
+                    <td class="resv_list_discount">할인율</td>
+                    <td class="resv_list_final">금액</td>
+                    <td class="resv_list_date">예매일</td>
+                    <td class="resv_list_status">예매상태</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="resv_list">
+            <table>
+                {% for resv in reservList %}
+                <tr>
+                    <td class="resv_list_name">{{resv.perf_name}}</td>
+                    <td class="resv_list_schedule">{{resv.schedule_date}}({{resv.schedule_round}})</td>
+                    <td class="resv_list_total">{{resv.total_amount}}</td>
+                    <td class="resv_list_discount">{{resv.discount_rate}}%</td>
+                    <td class="resv_list_final">{{resv.final_amount}}</td>
+                    <td class="resv_list_date">{{resv.resv_date}}</td>
+                    <td class="resv_list_status">
+                        {% if resv.resv_status == 'PAID'%}
+                        예매
+                        {% else %}
+                        취소
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
     {% endif %}
-
-
-    <a href="/admin/user/list">뒤로</a>
+    
+    <div class="back_link">
+        <a href="/admin/user/list">뒤로</a>
+    </div>
+</div>
 </body>
 </html>

@@ -6,85 +6,91 @@
     <title>예매취소</title>
 </head>
 <style>
-        * {
-            margin: 0px;
-            padding: 0px;
-        }
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
 
-        header {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
-        }
+    wrapper {
+        width: 1200px;
+        margin: 50px auto;
+        display: block;
+    }
 
-        footer {
-            width: 100%;
-            height: 100px;
-            background-color: #ff0;
-            border: 1px solid #000;
-        }
+    table {
+        width: 90%;
+        max-width: 800px;
+        margin: 30px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-        wrapper {
-            width: 1200px;
-            background-color: #fa0;
-            border: 1px solid #000;
-            margin: auto;
-            display: block;
-        }
+    th,
+    td {
+        border: 1px solid #f0e0e0;
+        padding: 15px;
+        text-align: center;
+        font-size: 14px;
+    }
 
-        table {
-            width: 90%;
-            max-width: 800px;
-            margin: 30px auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+    th {
+        background-color: #f8e6de;
+        color: #5a3e36;
+        font-weight: bold;
+        width: 30%;
+    }
 
-        th,
-        td {
-            border: 1px solid #f0e0e0;
-            padding: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
+    tr:nth-child(even) {
+        background-color: #fff9f6;
+    }
 
-        th {
-            background-color: #f8e6de;
-            color: #5a3e36;
-            font-weight: bold;
-            width: 30%;
-        }
+    .imgimg {
+        display: block;
+        border: none;
+        border-radius: 10px;
+        width: 300px;
+        height: 410px;
+        margin-right: 20px;
+        float: left;
+    }
 
-        tr:nth-child(even) {
-            background-color: #fff9f6;
-        }
+    #paymentcancel{
+        width: 40%;
+        height: 40px;
+        border: none;
+        background-color: #5a3fc0;
+        margin: auto;
+        border-radius: 10px;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        justify-content: end;
+        transition-duration: 0.3s;
+    }
+    
+    #paymentcancel:hover{
+        background-color: #745ec5;
+    }
 
-        img {
-            width: 100px;
-            height: 150px;
-        }
-        div {
-            margin: 10px;
-            display: flex;
-        }
-    </style>
-    <script>
-        window.onload = function() {
-            
+</style>
+<script>
+    window.onload = function () {
 
-            let resvId = document.querySelector('#resv_id').value
-            document.querySelector('#paymentcancel').addEventListener('click', (e)=>{
-                fetch(`/desc/payment/cancel`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({resvId: resvId})
-                })
+
+        let resvId = document.querySelector('#resv_id').value
+        document.querySelector('#paymentcancel').addEventListener('click', (e) => {
+            console.log()
+            fetch(`/desc/payment/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ resvId: resvId })
+            })
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
@@ -92,67 +98,67 @@
                         alert('취소가 완료되었습니다.')
                         location.href='/mypage/reserveSelect'    
                     }
-                        
+
                 })
                 .catch(err => console.log('에러 :', err.message))
-                
-            })
-        }
-        
-    </script>
+
+        })
+    }
+
+</script>
+
 <body>
-    <header>헤더</header>
+    {% include './header.html' %}
     <wrapper>
+        <img src="../img/{{io.poster_url}}" alt="" class="imgimg">
         <table>
-        <tr>
-            <th>예매자</th>
-            <td>{{io.user_name}}</td>
-        </tr>
+            <tr>
+                <th>예매자</th>
+                <td>{{io.user_name}}</td>
+            </tr>
 
-        <tr>
-            <th>예매번호</th>
-            <td>{{io.resv_number}}</td>
-        </tr>
+            <tr>
+                <th>예매번호</th>
+                <td>{{io.resv_number}}</td>
+            </tr>
 
-        <tr>
-            <th>예매좌석</th>
-            <td>{% for seats in io.seats %}
-                {{ seats.area }}{{ seats.seat_row }}{{seats.seat_number}}번({{ seats.grade_code }})
-                {% endfor %}</td>
-        </tr>
+            <tr>
+                <th>예매좌석</th>
+                <td>{% for seats in io.seats %}
+                    {{ seats.area }}{{ seats.seat_row }}{{seats.seat_number}}번({{ seats.grade_code }})
+                    {% endfor %}</td>
+            </tr>
 
-        <tr>
-            <th>예매수량</th>
-            <td>{{io.resv_count}}매</td>
-        </tr>
+            <tr>
+                <th>예매수량</th>
+                <td>{{io.resv_count}}매</td>
+            </tr>
 
-        <tr>
-            <th>결제수단</th>
-            <td>{{io.payment_method}}</td>
-        </tr>
+            <tr>
+                <th>결제수단</th>
+                <td>{{io.payment_method}}</td>
+            </tr>
 
-        <tr>
-           <th>할인전 가격</th>
-            <td>{{io.total_amount}}원</td>
-        </tr>
-        <tr>
-           <th>할인율</th>
-            <td>{{io.discount_rate}}%</td>
-        </tr>
-        <tr>
-           <th>할인 적용 가격</th>
-            <td>{{io.final_amount}}원</td>
-        </tr>
-    </table>
-    
-        <section>
-            결제 취소
+            <tr>
+                <th>할인전 가격</th>
+                <td>{{io.total_amount}}원</td>
+            </tr>
+            <tr>
+                <th>할인율</th>
+                <td>{{io.discount_rate}}%</td>
+            </tr>
+            <tr>
+                <th>할인 적용 가격</th>
+                <td>{{io.final_amount}}원</td>
+            </tr>
+        </table>
+<br><br>
+        <section class="cancelbtn">
+            <input type="hidden" id="resv_id" value="{{io.resv_id}}">
             <input type="button" value="취소하기" id="paymentcancel">
         </section>
     </wrapper>
-    <footer>푸터</footer>
+    {% include './footer.html' %}
 </body>
 </html>
 
-
-<!-- 예매 내역 안에 취소하기 버튼 -> id -> 취소 페이지에 전달 -> 전달된 값으로 넌적스 화면 출력 -> 결제 취소 누르면 -> id값을 넘겨주는데(payment.id를 join 상태 ) -> 예매 내역 예매 상태 표시 다르게  -->
