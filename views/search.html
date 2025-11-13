@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색결과</title>
     <link rel="stylesheet" href="/style/search.css">
+    <style>
+        .search_result {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     {% include './header.html' %}
-    <h1>검색결과</h1>
+    {% if actorResult.length > 0 or perfResult.length > 0 %}
+        <h1 class="search_result">검색 결과</h1>
+    {% else %}
+        <h1 class="search_result"> 해당 내용의 검색 결과가 없습니다. </h1>
+    {% endif %}
 
+    {% if actorResult.length > 0%}
     <h2>배우</h2>
+    {% endif %}
     <div class="actor_list">
         {% for actor in actorResult %}
         <div class="actor_box">
@@ -25,7 +37,9 @@
         {% endfor %}
     </div>
     <!-- <hr> -->
+    {% if perfResult.length > 0 %}
     <h2>공연</h2>
+    {% endif %}
     <div class="perf_list">
         {% for perf in perfResult %}
         <div class="perf_box">
