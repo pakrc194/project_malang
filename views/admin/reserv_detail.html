@@ -187,9 +187,9 @@ h2 {
                     <td class="resv_list_date">{{resv.resv_date}}</td>
                     <td class="resv_list_status">
                         {% if resv.resv_status == 'PAID'%}
-                        예매
-                        {% else %}
                         취소
+                        {% else %}
+                        예매
                         {% endif %}
                     </td>
                 </tr>
