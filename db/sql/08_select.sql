@@ -1,4 +1,4 @@
--- Active: 1761830225502@@127.0.0.1@3306@malang_db
+-- Active: 1761632592171@@127.0.0.1@3306@malang_db
 select * from perf_cast;
 
 select * from perf_cast where perf_id = 1;
@@ -274,3 +274,14 @@ select schedule_cast.*, CI.cast_name, AI.actor_name,
             AND start_date <= '2025'
             AND end_date >= ?
             and is_hidden != 0;
+
+            select 
+        reservation_info.*, user_info.user_id, user_info.user_name,
+        performance_info.perf_name
+        from reservation_info 
+        join user_info on user_info.user_id = reservation_info.user_id
+        join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id
+        order by reservation_info.resv_date desc;
+
+        update performance_info set resv_status = 'OPEN'

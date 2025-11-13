@@ -553,7 +553,8 @@ router.get('/reserv/list', (req, res)=>{
         from reservation_info 
         join user_info on user_info.user_id = reservation_info.user_id
         join perf_schedule on perf_schedule.schedule_id = reservation_info.schedule_id
-        join performance_info on performance_info.perf_id = perf_schedule.perf_id`
+        join performance_info on performance_info.perf_id = perf_schedule.perf_id
+        order by reservation_info.resv_date desc;`
         
     // reservSQL = `
     //     select 

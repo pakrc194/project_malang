@@ -10,6 +10,7 @@ router.get("/:id", (req, res)=>{
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email
     const name = req.session.user_name
+
     let actorInfoSql = `select *
         from actor_info
         
@@ -34,6 +35,10 @@ router.get("/:id", (req, res)=>{
                     if(selectQuery.length > 0) {
                         isInterest = true
                     }
+                }
+                for(perf of resQuery) {
+                    perf.start_date = base_date_format(perf.start_date)
+                    perf.end_date = base_date_format(perf.end_date)
                 }
 
                 res.render('../views/actorInfo.html', {res : resQuery, isInterest, loginout})
@@ -74,17 +79,16 @@ router.get('/:id', async (req, res) => {
         }
     }
     console.log(isInterest)
-})
-//     let actorInfoSQL = 'select * from actor_info where actor_id = ?'
-//     conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
-//         console.log(actorInfoQuery)
+    let actorInfoSQL = 'select * from actor_info where actor_id = ?'
+    conn.query(actorInfoSQL, [req.params.id], (actorInfoErr, actorInfoQuery)=> {
+        console.log(actorInfoQuery)
         
-//         conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
-//             console.log(perfListQuery)
-//             res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
-//         })
-//     })
-// })
+        conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
+            console.log(perfListQuery)
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
+        })
+    })
+})
 
 router.post('/interest/toggle', (req, res) => {
     let userId = req.session?.user_id

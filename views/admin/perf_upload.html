@@ -326,12 +326,15 @@
             let trCast = document.createElement("tr")
             trCast.id = `trCast${castArrIdx}`
             trCast.dataset.id = castArrIdx;
+
             let tdCastName = document.createElement("td")
             tdCastName.innerHTML = ipAddCast.value
             ipAddCast.value = '';
+
             let tdCastBg = document.createElement("td")
             tdCastBg.innerHTML = ipAddBg.value
             ipAddBg.value = '';
+
             let tdRemoveBtn = document.createElement("td")
             let removeBtn = document.createElement("input")
             removeBtn.setAttribute("type", "button")
@@ -347,7 +350,18 @@
                     let filterId = item.id.split('tempCast')[1]
                     return filterId != removeId
                 });
-                
+
+                perfCastArr = perfCastArr.filter((item, index) => {
+                    // trCast.dataset.id는 배역이 생성될 때의 고유 ID(castArrIdx)를 가리킵니다.
+                    // castArr와 perfCastArr는 생성 시점에 인덱스를 공유했으므로, 
+                    // 해당 인덱스(removeId)를 제거하는 것이 맞습니다.
+                    // 다만, castArr는 내부 id로 필터링했으므로, perfCastArr도 해당 인덱스를 제거해야 합니다.
+                    // *주의*: castArrIdx를 사용한 trCast.dataset.id는 인덱스가 재배열되면 더 이상 배열 인덱스와 일치하지 않을 수 있습니다. 
+                    // 가장 안전한 방법은 `perfCastArr.splice(removeId, 1)` 후 모든 `data-id`를 업데이트하거나,
+                    // 단순하게 `perfCastArr`에서도 필터링을 진행하여 길이를 맞추는 것입니다.
+                    return index !== removeId;
+                });
+                        
                 console.log('삭제 후 castArr:', castArr)
             })
             tdRemoveBtn.append(removeBtn)
@@ -378,22 +392,28 @@
             spanCastList.id = `castList${castArrIdx}`
             tdCastList.append(spanCastList)
 
-            let prefCastData = {}
+            // let prefCastData = {}
             
             
             castBtn.addEventListener("click", (e) => {
                 console.log(slActor.value, slActor.options[slActor.selectedIndex].innerHTML.trim())
                 let selectOptionName = slActor.options[slActor.selectedIndex].innerHTML.trim()
-                let cast_id = castBtn.id.split('castBtn')[1]
+                //let cast_id = castBtn.id.split('castBtn')[1]
+                let castIdx = Number(trCast.dataset.id); // 👈 해당 배역의 인덱스 가져오기
+                let castKey = `tempCast${castIdx}`;      // 👈 키 생성 (tempCast0, tempCast1 등)
+
+                // perfCastArr의 해당 인덱스 객체에 접근
+                let currentPrefCast = perfCastArr[castIdx];
+
                 if(spanCastList.innerHTML) {
                     
                     spanCastList.innerHTML += `,${selectOptionName}`
-                    prefCastData[`tempCast${cast_id}`] += `,${slActor.value.split('actor')[1]}`
+                    currentPrefCast[`${castKey}`] += `,${slActor.value.split('actor')[1]}`
                 } else {
                     spanCastList.innerHTML = `${selectOptionName}`
-                    prefCastData[`tempCast${cast_id}`] = `${slActor.value.split('actor')[1]}`
+                    currentPrefCast[`${castKey}`] = `${slActor.value.split('actor')[1]}`
                 }
-                console.log("prefCast",prefCastData)
+                console.log("perfCastArr",perfCastArr)
             })
             tdCastBtn.append(castBtn)
 
@@ -405,8 +425,12 @@
             initCastBtn.className = `initCastBtn`
             tdInitCast.append(initCastBtn)
             initCastBtn.addEventListener("click", (e) => {
+                let castIdx = Number(trCast.dataset.id); // 👈 해당 배역의 인덱스 가져오기
+                let castKey = `tempCast${castIdx}`;
+
                 spanCastList.innerHTML = ''
-                prefCastData[castBtn.id.split('castBtn')[1]] = ''
+                perfCastArr[castIdx][castKey] = '' // 👈 올바른 배열 인덱스에 접근
+                console.log("초기화 후 perfCastArr:", perfCastArr)
             })
 
 
@@ -420,10 +444,8 @@
             tbCast.append(trCast)
 
             castArr.push(newCastData)
-
+            perfCastArr.push({})
             castArrIdx++;
-
-            perfCastArr.push(prefCastData)
         }
 
         let divUploadActor = document.querySelector(".admin_upload_actor")
