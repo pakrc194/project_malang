@@ -9,10 +9,18 @@
     
 }
 
+.zero{
+    
+    font-size: 1.2rem;
+    color: #777;
+    margin: auto;
+    padding: 20px;
+}
+
 .actor_box{
-    width: 220px;   
+    width: 250px;   
     height: 120px;
-    background-color: white;
+    background-color: #f9f7ff;
     /* border:solid 1px gray; */
     gap: 10px;
     margin: 10px;
@@ -27,24 +35,26 @@
 
 .actor_box > img{
   width: 100px;   
-  height: 120px;
-  border-radius: 30px;  
+  height: 100px;
+  border-radius: 50px;  
 }
 
-a{
+.actor_list > a{
     text-decoration: none;
+    
 }
 
 .actor_info{
     padding-top: 10px;
+    margin-left: 10px;
 }
 
 
  .name {
     font-weight: bolder;
-    color: black;
+    color: #7d3fc0;
     font-size: 1.3rem;
-    /* background-color: aquamarine; */
+    
     
 
 }

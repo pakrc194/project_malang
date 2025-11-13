@@ -24,6 +24,8 @@
     <h2>배우</h2>
     {% endif %}
     <div class="actor_list">
+        
+
         {% for actor in actorResult %}
         <div class="actor_box">
             <a href="/actor/{{actor.actor_id}}">
@@ -36,6 +38,8 @@
         </div>   
         {% endfor %}
     </div>
+    {% endif %}
+
     <!-- <hr> -->
     {% if perfResult.length > 0 %}
     <h2>공연</h2>
@@ -53,5 +57,6 @@
         </div>
         {% endfor %}
     </div>
+    {% endif %}
 </body>
 </html>

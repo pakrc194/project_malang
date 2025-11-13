@@ -22,7 +22,7 @@ router.get("/", (req, res)=>{
             console.log('sql 실패', err.message)
             res.render('../views/favorActor.html')
         } else {
-            console.log('sql 성공', resQuery)
+            console.log('sql 성공123', resQuery)
             res.render('../views/favorActor.html', {res : resQuery})
         }
     })
