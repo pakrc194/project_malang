@@ -66,7 +66,11 @@ router.get('/:id', async (req, res) => {
     console.log('email', req.session?.email, req.params.id)
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     let userId = req.session.user_id
     let isInterest = false
@@ -85,7 +89,7 @@ router.get('/:id', async (req, res) => {
         
         conn.query(sPrefActWaid, [req.params.id], (perfListErr, perfListQuery)=> {
             console.log(perfListQuery)
-            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery})
+            res.render("../views/actorInfo.html",{actorInfo:actorInfoQuery[0], userEmail:email, isInterest, perfList:perfListQuery, loginout, name, data})
         })
     })
 })

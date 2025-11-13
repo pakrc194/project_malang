@@ -52,7 +52,7 @@ router.get('/', (req, res) => {
     const sessionuserid = req.session?.user_id
     console.log(sessionuserid)
 
-    
+
 
     //res.render('../views/mypage.html')
     //res.sendFile(path.join(__dirname, '../views/mypage.html'))
@@ -68,7 +68,11 @@ router.get('/myInfo', (req, res) => {
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
@@ -93,8 +97,10 @@ router.get('/myInfo', (req, res) => {
            
             userInfoQuery[0].score = Number(userInfoQuery[0].score).toLocaleString()
 
-            res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt, interestCnt, loginout, name })
+            res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt, interestCnt, loginout, name, data })
         }
+
+        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout, name })
     })
     //res.render("../views/list.html")
 })
@@ -107,7 +113,11 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data2 = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     const sort = req.query.sort || 'latest';
 
@@ -145,7 +155,7 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
      ORDER BY ${orderSql}
      `
 
-     //
+    //
     conn.query(sql, [email], async (err, rows) => {
         if (err) {
             console.error('예매 내역 조회 에러:', err);
@@ -159,20 +169,30 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
             row.resv_date = base_date_format(row.resv_date);
             row.schedule_date = base_date_format(row.schedule_date);
             row.schedule_time = base_time_format(row.schedule_time);
+            row.final_amount = Number(row.final_amount).toLocaleString();
 
+            // 날짜 문자열을 Date 객체로 변환
             const perfDate = new Date(row.schedule_date);
-            const diff = Math.ceil((perfDate - today) / (1000 * 60 * 60 * 24));
+
+            // === 수정된 부분 시작 ===
+            // 오늘 날짜와 공연 날짜의 '연/월/일'만 비교
+            const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const perfOnly = new Date(perfDate.getFullYear(), perfDate.getMonth(), perfDate.getDate());
+
+            const diff = (perfOnly - todayOnly) / (1000 * 60 * 60 * 24);
+            // === 수정된 부분 끝 ===
 
             if (diff > 0) {
-                row.d_day = `D-${diff}`
-                row.cancelable = true
+                row.d_day = `D-${diff}`;
+                row.cancelable = true;
             } else if (diff === 0) {
-                row.d_day = 'D-DAY'
-                row.cancelable = false
+                row.d_day = 'D-DAY';
+                row.cancelable = false;
             } else {
-                row.d_day = '공연 종료'
-                row.cancelable = false
+                row.d_day = '공연 종료';
+                row.cancelable = false;
             }
+
 
             const seatArr = row.seat_id_arr ? row.seat_id_arr.split(',') : [];
 
@@ -192,16 +212,17 @@ router.get('/reserveSelect', isLoggedIn, (req, res) => {
             }
         }
 
-       
+
 
         res.render('mypage/mypage.html', {
             title: data.title,
             aside: data.aside,
-            mainUrl: data.mainUrl,    
-            resvList: rows,    
+            mainUrl: data.mainUrl,
+            resvList: rows,
             sort,
             loginout,
-            name
+            name,
+            data2
         })
 
     })
@@ -216,22 +237,22 @@ router.get('/pwChange', isLoggedIn, (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
 
     console.log(sessionuserid)
     console.log(loginout)
     console.log(email)
 
-    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout, name })
+    res.render("../views/mypage/mypage.html", { mainUrl: data.mainUrl, loginout, name, data })
 })
 
 router.get('/memberOut', isLoggedIn, (req, res) => {
 
     data.mainUrl = 'memberOut'
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
 
-    res.render("../views/mypage/mypage.html", { mainUrl : data.mainUrl, loginout, name })
+    res.render("../views/mypage/mypage.html", { mainUrl: data.mainUrl, loginout, name })
 })
 
 // ------------------------------------------------------------------------------------------
@@ -243,7 +264,7 @@ router.post("/checkpw", isLoggedIn, (req, res) => {
 
     const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
-    
+
 
     console.log(sessionuserid)
     console.log(email)
@@ -333,11 +354,15 @@ router.post('/pwout', isLoggedIn, (req, res) => {
 
 router.get('/resvDetail', (req, res) => {
 
-     const email = req.session?.email || req.session?.kakao_email;
+    const email = req.session?.email || req.session?.kakao_email;
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     console.log(sessionuserid)
     console.log(email)
@@ -370,38 +395,44 @@ router.get('/resvDetail', (req, res) => {
     const resv_id = req.query.resv_id
 
     conn.query(sql, [email, resv_id], async (err, cancelresv) => {
+
+
+
         if (err) {
             console.error('예매 내역 조회 에러:', err);
-            
+
             return res.status(500).send('서버 에러');
-            
+
         } else {
             console.log(cancelresv[0])
 
             for (const cclresv of cancelresv) {
-            
-            const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
 
-            if (seatArr.length > 0) {
-                const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
-                const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+                cclresv.final_amount = Number(cclresv.final_amount).toLocaleString()
+                cclresv.total_amount = Number(cclresv.total_amount).toLocaleString()
+
+                const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
+
+                if (seatArr.length > 0) {
+                    const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
+                    const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
 
 
-                const seatNumbers = []
-                for (let i = 0; i < seatRows.length; i++) {
-                    seatNumbers.push(seatRows[i].seat_number)
+                    const seatNumbers = []
+                    for (let i = 0; i < seatRows.length; i++) {
+                        seatNumbers.push(seatRows[i].seat_number)
+                    }
+
+                    cclresv.seats = seatRows;
+                } else {
+                    cclresv.seats = []
                 }
-
-                cclresv.seats = seatRows;
-            } else {
-                cclresv.seats = []
             }
-        }
-        console.log(cancelresv)
-            res.render("../views/ticketinfo.html", { io : cancelresv[0], loginout, name })
+            console.log(cancelresv)
+            res.render("../views/ticketinfo.html", { io: cancelresv[0], loginout, name, data })
 
         }
-})
+    })
 });
 
 router.get('/resvCancel', async (req, res) => {
@@ -410,7 +441,11 @@ router.get('/resvCancel', async (req, res) => {
     const sessionuserid = req.session?.user_id
 
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     console.log(sessionuserid)
     console.log(email)
@@ -453,11 +488,12 @@ router.get('/resvCancel', async (req, res) => {
     const resv_id = req.query.resv_id
 
     conn.query(sql, [email, resv_id], async (err, cancelresv) => {
+
         if (err) {
             console.error('예매 내역 조회 에러:', err);
-            
+
             return res.status(500).send('서버 에러');
-            
+
         } else {
             console.log(cancelresv[0])
 
@@ -466,28 +502,30 @@ router.get('/resvCancel', async (req, res) => {
             for (const cclresv of cancelresv) {
 
                 cclresv.payment_date = base_date_format(cclresv.payment_date)
-                
-                
-            const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
-
-            if (seatArr.length > 0) {
-                const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
-                const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+                cclresv.final_amount = Number(cclresv.final_amount).toLocaleString()
+                cclresv.total_amount = Number(cclresv.total_amount).toLocaleString()
 
 
-                const seatNumbers = []
-                for (let i = 0; i < seatRows.length; i++) {
-                    seatNumbers.push(seatRows[i].seat_number)
+                const seatArr = cclresv.seat_id_arr ? cclresv.seat_id_arr.split(',') : [];
+
+                if (seatArr.length > 0) {
+                    const seatSql = `SELECT seat_id, seat_row, seat_number, grade_code, area FROM seat_layout WHERE seat_id IN (?)`;
+                    const [seatRows] = await conn.promise().query(seatSql, [seatArr]);
+
+
+                    const seatNumbers = []
+                    for (let i = 0; i < seatRows.length; i++) {
+                        seatNumbers.push(seatRows[i].seat_number)
+                    }
+
+                    cclresv.seats = seatRows;
+                } else {
+                    cclresv.seats = []
                 }
-
-                cclresv.seats = seatRows;
-            } else {
-                cclresv.seats = []
             }
-        }
 
-        console.log(cancelresv)
-            res.render("../views/ticketcancel.html", { io : cancelresv[0], loginout, name })
+            console.log(cancelresv)
+            res.render("../views/ticketcancel.html", { io: cancelresv[0], loginout, name, data })
 
         }
     })

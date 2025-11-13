@@ -1,0 +1,219 @@
+<style>
+    .footer-container {
+        height: 200px;
+        background-color: #f7f7f7;
+        color: #444444;
+        padding: 10px 20px;
+        border-top: 1px solid #dddddd;
+        font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .footer-top-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* 고객센터 정보 */
+    .footer-customer-service {
+        margin: 10px 20px;
+        min-width: 200px;
+    }
+
+    .cs-title {
+        font-size: 1.2em;
+        color: #333333;
+        margin-bottom: 5px;
+    }
+
+    .cs-phone {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #555555;
+        margin: 5px 0 10px 0;
+    }
+
+    .cs-links a {
+        color: #007bff;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+
+    /* 네비게이션 그룹 */
+    .footer-navigation {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        margin: 10px 0;
+    }
+
+    .nav-group {
+        text-align: left;
+    }
+
+    .nav-group h4 {
+        font-size: 1em;
+        color: #555555;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #eeeeee;
+        padding-bottom: 3px;
+    }
+
+    .nav-group ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .nav-group li {
+        margin-bottom: 3px;
+    }
+
+    .nav-group a {
+        color: #666666;
+        text-decoration: none;
+    }
+
+    /* 소셜 미디어 및 인증 */
+    .footer-social {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 20px;
+    }
+
+    .footer-social a {
+        font-size: 1.5em;
+        color: #555555;
+        margin: 0 5px;
+    }
+
+    .icon-instagram,
+    .icon-youtube {
+        font-style: normal;
+        font-size: 0.7em;
+        border: 1px solid #999999;
+        padding: 2px 5px;
+        border-radius: 3px;
+        display: inline-block;
+    }
+
+    .security-marks img {
+        max-width: 80px;
+        opacity: 0.9;
+    }
+
+    .footer-bottom-section {
+        line-height: 1.6;
+        margin-top: 20px;
+    }
+
+    .company-name {
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555555;
+    }
+
+    .company-info,
+    .company-address {
+        color: #777777;
+    }
+
+    .footer-legal-links {
+        margin: 15px 0;
+    }
+
+    .footer-legal-links a {
+        color: #777777;
+        text-decoration: none;
+        font-weight: normal;
+        padding: 0 5px;
+    }
+
+    .copyright {
+        color: #999999;
+        font-size: 0.8em;
+        margin-top: 5px;
+    }
+</style>
+<footer class="footer-container">
+    <div class="footer-top-section">
+        {# 고객센터 정보 #}
+        <div class="footer-customer-service">
+            <h3 class="cs-title">고객센터</h3>
+            <p class="cs-phone">15XX-XXXX</p>
+            <p class="cs-hours">평일 09:00 ~ 18:00 (점심시간 12:00 ~ 13:00)</p>
+            <p class="cs-hours">(주말 및 공휴일 휴무)</p>
+            <div class="cs-links">
+                <p class="link-faq">FAQ&nbsp;|&nbsp;1:1 문의</p>
+            </div>
+        </div>
+
+        {# 네비게이션 그룹 #}
+        <div class="footer-navigation">
+            <div class="nav-group">
+                <h4>뮤지컬 예매</h4>
+                <ul>
+                    <li><a href="/main">뮤지컬 전체 목록</a></li>
+                    <li><a href="/main">장르별 검색</a></li>
+                    <li><a href="/main">지역별 검색</a></li>
+                    <li><a href="/main">랭킹/인기 공연</a></li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <h4>말랑뮤즈 안내</h4>
+                <ul>
+                    <li>
+                        <p>회사소개</p>
+                    </li>
+                    <li>
+                        <p>공연장 정보</p>
+                    </li>
+                    <li>
+                        <p>공지사항</p>
+                    </li>
+                    <li>
+                        <p>이벤트/할인 정보</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <h4>기타 정보</h4>
+                <ul>
+                    <li>
+                        <p>파트너십/제휴 문의</p>
+                    </li>
+                    <li>
+                        <p>사이트맵</p>
+                    </li>
+                    <li>
+                        <p>모바일 앱 다운로드</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-section">
+            <p class="company-name">(주) 말랑뮤즈</p>
+            <p class="company-info">
+                대표자: ONOP | 사업자등록번호: 123-45-67890
+            </p>
+            <address class="company-address">
+                주소: 창원시 성산구 연덕로 123 (테크노파크)
+            </address>
+
+            <div class="footer-legal-links">
+                <p>개인정보처리방침 | 이용약관 | 이메일 무단 수집 거부</p>
+            </div>
+
+            <p class="copyright">
+                Copyright &copy; **{{ year }}** 말랑뮤즈. All rights reserved.
+            </p>
+        </div>
+</footer>

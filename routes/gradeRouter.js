@@ -9,6 +9,12 @@ router.get('/', (req, res) => {
     console.log('email', req.session.email)
     const email = req.session?.email || req.session?.kakao_email;
     const loginout = req.session.email || req.session.kakao_email && req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
+
     const name = req.session.user_name
 
     let resvCurMonthSQL = `SELECT

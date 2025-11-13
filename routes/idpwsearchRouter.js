@@ -13,7 +13,14 @@ router.use(express.urlencoded({ extended: true }));
 
 // 화면 띄우기
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/mypage/idpwsearch.html'));
+    const loginout = req.session.email || req.session.kakao_email
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
+    res.render(`../views/mypage/idpwsearch.html`, data,loginout, name,)
+    // res.sendFile(path.join(__dirname, '../views/mypage/idpwsearch.html'));
 });
 
 async function findUserByEmail(email) {
