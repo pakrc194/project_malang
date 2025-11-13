@@ -69,13 +69,11 @@ app.get('/', (req, res) => {
     res.redirect('/main')
 })
 
-
-
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error('세션 삭제 에러 :', err.message);
-            return res.status(500).send('로그아웃 실퍂');
+            return res.status(500).send('로그아웃 실패');
         }
         res.clearCookie('connect.sid')
         res.redirect('/main');

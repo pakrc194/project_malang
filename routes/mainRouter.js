@@ -16,7 +16,11 @@ router.get('/', (req, res) => {
 
 
     const loginout = req.session.email || req.session.kakao_email
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
     // 1. 메인배너(현재 상영)
     const mainbenner = `
@@ -89,7 +93,7 @@ ORDER BY
                 } 
                 console.log('배우 조회 성공')
 
-                    res.render('../views/main.html', { loginout, main_bennr, coming_benner, actor_benner, name })
+                    res.render('../views/main.html', { loginout, main_bennr, coming_benner, actor_benner, name, data })
             })
         })
     })
@@ -105,6 +109,11 @@ router.get('/grade', (req, res) => {
             console.log('등급 조회 성공', resQuery)
             console.log('등급 조회 성공', resQuery[0])
             console.log('등급 조회 성공', resQuery[0].grade_score)
+
+            for (resq of resQuery){
+                resq.grade_score = Number(resq.grade_score).toLocaleString()
+            }
+             
             res.render('../views/grade.html', { grade_list: resQuery })
         }
     })

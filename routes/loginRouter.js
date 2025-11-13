@@ -18,7 +18,7 @@ router.use(express.json());
 router.get('/', (req, res) => {
 
     loginout = req.session.email || req.session.kakao_access_token
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
 
     if (req.session.email || req.session.kakao_access_token) {
         // 이미 로그인되어 있으면 메인화면
@@ -88,30 +88,41 @@ router.post('/login', (req, res) => {
 // 회원가입
  router.get('/joinmem', (req, res) => {
     loginout = req.session.email || req.session.kakao_access_token
-    const name = req.session.user_name
-    res.render('../views/mypage/joinmem.html', loginout, name)
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
+    res.render('../views/mypage/joinmem.html', loginout, name, data)
     //  res.sendFile(path.join(__dirname, '../views/mypage/joinmem.html'));
  });
 router.get('/clauseagree', (req, res) => {
     loginout = req.session.email || req.session.kakao_access_token
-    const name = req.session.user_name
-    res.render('../views/mypage/clauseagree.html', loginout, name)
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
+    res.render('../views/mypage/clauseagree.html', loginout, name, data)
 //   res.sendFile(path.join(__dirname, '../views/mypage/clauseagree.html'));
 });
 
 // 아이디비번찾기
 router.get('/idpwsearch', (req, res) => {
     loginout = req.session.email || req.session.kakao_access_token
-    const name = req.session.user_name
+    const name = req.session.user_name || req.session.kakao_name
+    const data = {
+        year: new Date().getFullYear(),
+        pageTitle: '말랑뮤즈 - 메인 페이지'
+    };
 
-    res.render('../views/mypage/idpwsearch.html', loginout, name)
+    res.render('../views/mypage/idpwsearch.html', loginout, name, data)
     // res.sendFile(path.join(__dirname, '../views/mypage/idpwsearch.html'));
 });
 
 // 예외 처리
 router.use((err, req, res, next) => {
-    loginout = req.session.email || req.session.kakao_access_token
-    const name = req.session.user_name
+
     console.log('예외처리');
     res.status(500).send(`500 : 에러 처리 => ${err.message} <br/>`);
 });

@@ -133,13 +133,6 @@
       text-align: center;
     }
 
-    footer {
-      width: 100%;
-      height: 100px;
-      text-align: center;
-      line-height: 100px;
-      background-color: #fa0;
-    }
 
   </style>
 </head>
@@ -210,38 +203,34 @@
       </div>
     </section>
   </wrapper>
-
-  <footer>푸터</footer>
+<br><br>
+  {% include './footer.html' %}
 
   <script>
-    const bannerItems = document.querySelectorAll('.banner_item')
-    const itemsPerPage = 3
-    let currentIndex = 0
+  const bannerItems = document.querySelectorAll('.banner_item');
+  const bannerList = document.getElementById('bannerList');
+  const itemsPerPage = 3;
+  let currentIndex = 0;
 
-    function showItems() {
-      bannerItems.forEach((item, index) => {
-        if (index >= currentIndex && index < currentIndex + itemsPerPage) {
-          item.style.display = 'block'
-        } else {
-          item.style.display = 'none'
-        }
-      })
+  function showItems() {
+    const totalItems = bannerItems.length;
+    bannerList.innerHTML = '';
+
+    for (let i = 0; i < itemsPerPage; i++) {
+      const index = (currentIndex + i) % totalItems;
+      const clone = bannerItems[index].cloneNode(true);
+      bannerList.appendChild(clone);
     }
+  }
 
-    function moveSlide(direction) {
-      const totalItems = bannerItems.length;
-      const maxIndex = totalItems - itemsPerPage;
-
-      currentIndex += direction * itemsPerPage;
-      if (currentIndex < 0) currentIndex = maxIndex;
-      if (currentIndex > maxIndex) currentIndex = 0;
-
-      showItems();
-    }
-
-
+  function moveSlide(direction) {
+    const totalItems = bannerItems.length;
+    currentIndex = (currentIndex + direction + totalItems) % totalItems;
     showItems();
-  </script>
+  }
+
+  showItems(); 
+</script>
 </body>
 
 </html>

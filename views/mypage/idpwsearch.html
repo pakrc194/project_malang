@@ -28,6 +28,7 @@
         }
 
         section {
+            margin-top: 30px;
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -251,37 +252,37 @@
             });
 
             // 비밀번호 변경 
-            submit3.addEventListener("click", (e) => {
-                e.preventDefault();
-                const email = emailInput.value.trim();
-                const pw1 = newpw1.value.trim();
-                const pw2 = newpw2.value.trim();
+             submit3.addEventListener("click", (e) => {
+                 e.preventDefault();
+                 const email = emailInput.value.trim();
+                 const pw1 = newpw1.value.trim();
+                 const pw2 = newpw2.value.trim();
 
-                if (!pw1 || !pw2) return alert("비밀번호를 입력하세요.");
-                if (pw1 !== pw2) return alert("비밀번호가 일치하지 않습니다.");
+                 if (!pw1 || !pw2) return alert("비밀번호를 입력하세요.");
+                 if (pw1 !== pw2) return alert("비밀번호가 일치하지 않습니다.");
 
-                // 비밀번호 유효성 검사
-                const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#&*])[A-Za-z\d!@#&*]{8,16}$/;
-                if (!pwRegex.test(pw1)) {
-                    return alert("비밀번호는 8~16자, 영문자/숫자/특수문자(!,@,#,&,*)를 포함해야 합니다.");
-                }
+                 // 비밀번호 유효성 검사
+                 const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#&*])[A-Za-z\d!@#&*]{8,16}$/;
+                 if (!pwRegex.test(pw1)) {
+                     return alert('비밀번호는 8~16자, 영문자, 숫자, 특수문자를 포함해야 합니다.');
+                 }
 
-                fetch(`/idpwsearch/changepw`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, newchangepw: pw1 })
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("비밀번호가 성공적으로 변경되었습니다!");
-                            location.href = "/login";
-                        } else {
-                            alert(data.message || "비밀번호 변경 실패");
-                        }
-                    })
-                    .catch(err => console.error("에러:", err));
-            });
+                 fetch(`/idpwsearch/changepw`, {
+                     method: "POST",
+                     headers: { "Content-Type": "application/json" },
+                     body: JSON.stringify({ email, newchangepw: pw1 })
+                 })
+                     .then(res => res.json())
+                     .then(data => {
+                         if (data.success) {
+                             alert("비밀번호가 성공적으로 변경되었습니다!");
+                             location.href = "/login";
+                         } else {
+                             alert(data.message || "비밀번호 변경 실패");
+                         }
+                     })
+                     .catch(err => console.error("에러:", err));
+             });
 
 
             // --------------------------------------------------------------------------------- 비밀번호 변경 누르면 발생하는 거
@@ -289,37 +290,42 @@
 
 
             // post로 해당 부분 값 보내서 db 비교 후 맞으면 생성 시키기(비밀번호 찾기 버튼 클릭)
-            document.querySelector("#submit3").addEventListener("click", (e) => {
-                e.preventDefault();
+            // document.querySelector("#submit3").addEventListener("click", (e) => {
+            //     e.preventDefault();
 
-                const email = document.querySelector('#email').value.trim();
-                const newchangepw = newpw1.value.trim()
-                const newchangepw2 = newpw2.value.trim()
+            //     const email = document.querySelector('#email').value.trim();
+            //     const newchangepw = newpw1.value.trim()
+            //     const newchangepw2 = newpw2.value.trim()
 
-                if (!newchangepw || !newchangepw2) { return alert('비밀번호 입력') }
-                if (newchangepw !== newchangepw2) { return alert('비밀번호 불일치') }
+            //     if (!newchangepw || !newchangepw2) { return alert('비밀번호 입력') }
+            //     if (newchangepw !== newchangepw2) { return alert('비밀번호 불일치') }
 
-                fetch(`/idpwsearch/changepw`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+            //     const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#&*])[A-Za-z\d!@#&*]{8,16}$/;
+            //     if (!pwRegex.test(pw1)) {
+            //         return;
+            //     }
 
-                    },
-                    body: JSON.stringify({ newchangepw, email })
+            //     fetch(`/idpwsearch/changepw`, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
 
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.href = "/login";
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(err => console.log('에러 :', err.message))
+            //         },
+            //         body: JSON.stringify({ newchangepw, email })
 
-            })
+            //     })
+            //         .then(res => res.json())
+            //         .then(data => {
+            //             if (data.success) {
+            //                 alert(data.message);
+            //                 location.href = "/login";
+            //             } else {
+            //                 alert(data.message);
+            //             }
+            //         })
+            //         .catch(err => console.log('에러 :', err.message))
+
+            // })
         }
     </script>
 </head>
@@ -392,7 +398,7 @@
             </form>
         </section>
     </wrapper>
-    <footer>푸터영역</footer>
+    {% include '../footer.html' %}
 </body>
 
 </html>

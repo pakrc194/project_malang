@@ -31,6 +31,7 @@
     
 </head>
 <body>
+    <wrapper>
     <div class="big_poster" onclick="ck_big()"><img src="../img/{{perf.poster_url}}"><div class="b_p_tx">클릭하여 창 나가기</div></div>
     {% include '../header.html' %}
     <div class="Big">
@@ -92,10 +93,8 @@
         </div>
         <div class="seat">
             <img src="../img/seat.png" alt="">
-        </div>
-        <div class="footer">
-            <img src="../img/footer.png" alt="">
-        </div>
-    </div>
+        </div></div>
+        </wrapper>
+        {% include '../footer.html' %}
 </body>
 </html>
