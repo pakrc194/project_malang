@@ -354,7 +354,7 @@ router.post('/payment', async (req, res)=>{
     console.log(seat_arr)
     let pay_id = await conn.query(`SELECT payment_id FROM payment_info where transaction_id = "${t_id}"`)
     // user_id, schedule_id, resv_number, total_amount, discount_rate, final_amount, resv_date, resv_status, resv_count, seat_id_arr, payment_id
-    let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-6, `${s_arr}`, `${pay_id[0].payment_id}`]
+    let reservI = [u_id[0].user_id, s_id[0].schedule_id, `${Date.now()}`, req.body.items[4], req.body.items[1].split(' ')[2], req.body.items[5], pay_date, "PAID", req.body.items.length-7, `${s_arr}`, `${pay_id[0].payment_id}`]
     conn.query(reservQ, reservI)
     // s_id, u_id, seat_arr, pay_id
     // 뮤지컬 포스터, 이름, 공연 일시, 회차

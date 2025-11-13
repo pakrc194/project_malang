@@ -100,7 +100,6 @@ router.get('/myInfo', (req, res) => {
             res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt, interestCnt, loginout, name, data })
         }
 
-        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout, name })
     })
     //res.render("../views/list.html")
 })

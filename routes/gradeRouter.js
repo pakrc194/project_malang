@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
         pageTitle: '말랑뮤즈 - 메인 페이지'
     };
 
-    const name = req.session.user_name
 
     let resvCurMonthSQL = `SELECT
         DATE_FORMAT(resv_date, '%Y-%m') AS resv_month,
