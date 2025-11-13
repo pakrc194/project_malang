@@ -1,0 +1,88 @@
+#img_search_actor,
+#img_search_perf {
+        width: 150px;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+img{
+    border-radius: 13px;
+}
+
+h1{
+    margin-bottom: 10px;
+    font-size: 1.7rem
+}
+
+h2{
+    color:#333;
+    border-bottom: 2px solid #EEEEEE;
+    padding-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 1.4rem;
+}
+
+a{
+    text-decoration: none;
+}
+
+.div_span_text{
+    text-align: left;
+    padding-bottom: 15px;
+}
+
+.span_name{
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: black;
+}
+
+.span_info{
+    font-size: 0.9rem;
+    color: #333;
+}
+
+
+/*배우 부분*/
+.actor_box{
+ /* border-bottom: 2px solid #EEEEEE; */
+ margin: 10px;
+ width: 200px;
+}
+
+.actor_list {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+    padding: 10px 0; 
+}
+
+
+/*공연 부분*/
+.perf_box{
+ /* border-bottom: 2px solid #EEEEEE; */
+ margin: 10px;
+ width: 160px;
+}
+
+.perf_list {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 50px; 
+    padding: 10px 0; 
+}
+
+.perf_text{
+    color:black;
+}
+
+.perf_name{
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: black;
+}
+

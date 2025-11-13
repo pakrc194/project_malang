@@ -72,23 +72,29 @@ router.get('/myInfo', (req, res) => {
 
     let selectSQL = 'select * from user_info join user_grade on user_info.grade_id = user_grade.grade_id where email = ?'
     let reservSQL = 'select count(*) from reservation_info where user_id = ?'
+    let interestSQL = 'select count(*) from user_interest_actor where user_id = ?'
     let tasks = []
 
     let reservCnt = 0
+    let interestCnt = 0
     conn.query(selectSQL, [email], async (userInfoErr, userInfoQuery) => {
         console.log(userInfoQuery)
         if (userInfoQuery.length > 0) {
             let userId = userInfoQuery[0].user_id
             tasks.push(conn.query(reservSQL, [userId]))
+            tasks.push(conn.query(interestSQL, [userId]))
 
-            let [reservQuery, couponQuery] = await Promise.all(tasks)
+            let [reservQuery, interestQuery] = await Promise.all(tasks)
             console.log('reserv----', reservQuery)
             console.log(reservQuery[0]['count(*)'])
             reservCnt = reservQuery[0]['count(*)']
+            interestCnt = interestQuery[0]['count(*)']
             console.log(sessionuserid)
-        }
+           
+            userInfoQuery[0].score = Number(userInfoQuery[0].score).toLocaleString()
 
-        res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt: reservCnt, loginout, name })
+            res.render("../views/mypage/mypage.html", { mainUrl: 'myInfo', myInfo: userInfoQuery[0], reservCnt, interestCnt, loginout, name })
+        }
     })
     //res.render("../views/list.html")
 })

@@ -7,7 +7,7 @@ const {multer} = require('../func/multer')
 router.get('/', async (req, res)=>{
     console.log('search word : ', req.query.word)
     let word = `${req.query.word}%`
-    let searchPerfSQL = 'select * from performance_info where perf_name like ?'
+    let searchPerfSQL = 'select * from performance_info where perf_name like ? and is_hidden = 0'
     let searchActorSQL = 'select * from actor_info where actor_name like ?'
     
     let tasks = []

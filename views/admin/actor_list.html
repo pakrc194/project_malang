@@ -5,40 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>배우 목록</title>
     <style>
-        img {
-            width: 50px;
-        }
-        .actor_list {
-            width: 1000px;
-            height: 500px;
-            overflow: auto;
-        }
+    /* ============================================== */
+    /* 배우 목록 페이지 (actor_list) 스타일 */
+    /* ============================================== */
+    body {
+        font-family: Arial, sans-serif;
+        /* 💡 배경색 제거 */
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- 목록 컨테이너 설정 --- */
+    wrapper {
+        max-width: 800px; 
+        margin: 30px auto;
+        display: block;
+    }
+
+    /* --- 테이블 공통 스타일 --- */
+    .actor_list_header table,
+    .actor_list table {
+        width: 100%;
+        border-collapse: collapse; 
+        table-layout: fixed; 
+        border: none; /* 외곽선 제거 */
+    }
+
+    /* 스크롤바 너비를 고려하여 헤더 테이블의 너비를 조정 */
+    .actor_list_header table {
+        width: calc(100% - 17px); /* 스크롤바 공간 확보 (약 17px) */
+        margin-top: 10px;
+        border-top: 2px solid #1f3f6e; /* 상단 강조선 */
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    /* 목록 테이블 컨테이너 (스크롤 영역) */
+    .actor_list {
+        max-width: 800px; 
+        margin: 0 auto;
+        
+        max-height: 70vh; /* 최대 높이 설정 */
+        overflow-y: auto; /* Y축 스크롤 적용 */
+        
+        border: none; /* 외곽선 제거 */
+        border-radius: 0; 
+    }
+
+    /* --- 헤더 스타일 --- */
+    .actor_list_header tr {
+        /* 💡 배경색 제거 */
+        color: #333;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd; /* 헤더 하단 구분선 */
+    }
+
+    .actor_list_header td {
+        padding: 12px 10px;
+        border: none; /* 셀 테두리 제거 */
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* --- 목록 행 스타일 --- */
+    .actor_list tr td {
+        padding: 15px 10px;
+        border: none; /* 셀 테두리 제거 */
+        border-bottom: 1px solid #eee; /* 행 하단 구분선 */
+        vertical-align: middle;
+        text-align: center;
+    }
+    /* 목록 테이블의 마지막 행 구분선 제거 */
+    .actor_list table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* --- 열 너비 및 이미지 설정 --- */
+    .actor_list_no { width: 8%; }
+    .actor_list_name { width: 25%; }
+    .actor_list_profile { width: 15%; }
+    .actor_list_birth { width: 15%; }
+    .actor_list_gender { width: 15%; }
+
+    /* 배우 프로필 이미지 스타일 */
+    .actor_list_profile img {
+        width: 60px;
+        height: 90px;
+        object-fit: cover; 
+        display: block;
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+
+    /* 배우 등록 버튼 스타일 */
+    a[href="/admin/actor/upload"] {
+        display: block;
+        width: 120px;
+        margin: 20px auto;
+        padding: 10px 0;
+        text-align: center;
+        text-decoration: none;
+        background-color: #5a80d4;
+        color: white;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.2s;
+    }
+    a[href="/admin/actor/upload"]:hover {
+        background-color: #4369b3;
+    }
     </style>
 </head>
 <body>
     {% include './admin_header.html' %}
-    <h1>배우 목록</h1>
-    <div class="actor_list">
-        <table border="">
-            <tr>
-                <td>번호</td>
-                <td>이름</td>
-                <td>사진</td>
-                <td>출생년도</td>
-                <td>성별</td>
-            </tr>
-            {%for actor in res%}
+    <wrapper>
+        <div class="actor_list_header">
+            <table border="">
                 <tr>
-                    <td>{{loop.index}}</td>
-                    <td>{{actor.actor_name}}</td>
-                    <td><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
-                    <td>{{actor.actor_birth_year}}</td>
-                    <td>{{actor.actor_gender}}</td>
-                </tr>    
-            {%endfor%}
-        </table>
-    </div>
-     
+                    <td class="actor_list_no">번호</td>
+                    <td class="actor_list_name">이름</td>
+                    <td class="actor_list_profile">사진</td>
+                    <td class="actor_list_birth">출생년도</td>
+                    <td class="actor_list_gender">성별</td>
+                </tr>
+            </table>
+        </div>
+        <div class="actor_list">
+            <table border="">
+                {%for actor in res%}
+                    <tr>
+                        <td class="actor_list_no">{{loop.index}}</td>
+                        <td class="actor_list_name">{{actor.actor_name}}</td>
+                        <td class="actor_list_profile"><img src="/img/{{actor.actor_profile_url}}" alt=""></td>
+                        <td class="actor_list_birth">{{actor.actor_birth_year}}</td>
+                        <td class="actor_list_gender">
+                            {% if actor.actor_gender == "M" %}
+                                남자
+                            {% else %}
+                                여자
+                            {% endif %}
+                            
+                        </td>
+                    </tr>    
+                {%endfor%}
+            </table>
+        </div>
+    </wrapper>
     <a href="/admin/actor/upload">배우등록</a>
 </body>
 </html>

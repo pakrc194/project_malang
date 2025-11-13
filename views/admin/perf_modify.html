@@ -6,24 +6,271 @@
     <title>공연 수정</title>
 </head>
 <style>
-    * {
+    /* --- 기본 스타일 리셋 및 폰트 --- */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
         margin: 0;
         padding: 0;
+    }
 
+    h1 {
+        text-align: center;
+        color: #1f3f6e;
+        padding: 20px 0;
+        margin-bottom: 0;
     }
-    td > input {
+
+    hr {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin: 20px 0;
+    }
+
+    /* --- 폼 컨테이너 (Grid 레이아웃) --- */
+    .admin-form-wrapper {
+        max-width: 850px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 폼 내부의 주요 입력 필드들을 Grid로 배치 */
+    .input-grid-section {
+        display: grid;
+        /* 레이블 120px, 필드 1fr */
+        grid-template-columns: 120px 1fr; 
+        gap: 15px 20px; 
+        align-items: center; /* 세로 중앙 정렬 */
+        margin-bottom: 20px;
+    }
+
+    /* Grid 레이블 스타일 */
+    .input-grid-section > label, 
+    .input-grid-section > div:first-child:not(.date-range-group) { /* div로 감싸지 않은 레이블에도 적용 */
+        font-weight: 600;
+        color: #555;
+    }
+
+    /* 입력 필드 (input, select) 공통 스타일 */
+    .input-grid-section input[type="text"],
+    .input-grid-section input[type="date"],
+    .input-grid-section select,
+    .admin_tb_cast select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
         width: 100%;
-        height: 100%;
+        box-sizing: border-box; /* 패딩이 너비를 늘리지 않도록 */
     }
-    .admin_actor_list, .admin_upload_actor {
-        width: 1200px;
-        height: 150px;
+
+    /* 파일 입력 필드 (기본 스타일 숨김 및 커스텀 레이블 적용 권장) */
+    input[type="file"] {
+        padding: 0;
+        border: none;
     }
-    .admin_actor_list > .admin_actor_info, .admin_upload_actor > .admin_actor_info {
-        width:100px;
-        height:150px;
-        float: left;
+
+    /* --- 날짜 입력 그룹 (Flexbox) --- */
+    .date-range-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
+    .date-range-group input {
+        flex-grow: 1;
+    }
+    /* ~ 기호의 공간 확보 */
+    .date-range-group span {
+        color: #333;
+    }
+
+    /* --- 좌석 가격 그룹 (R, S, A) --- */
+    .seat-price-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3개의 가격을 3열로 배치 */
+        gap: 15px;
+        margin-top: 10px;
+        grid-column: 2 / 3;
+    }
+    .seat-price-container div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .seat-price-container input {
+        flex-grow: 1;
+        text-align: right;
+    }
+    .seat-price-label {
+        grid-column: 1 / 2; /* "좌석별 가격" 레이블을 첫 열에 고정 */
+    }
+    /* 💡 [출연 배우 관리] 컨테이너 스타일 추가 */
+    .admin_upload_actor {
+        /* Flexbox 설정: 항목들을 가로로 나열 */
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: flex-start; 
+        align-items: flex-start;
+        
+        padding: 15px 5px;
+        margin-bottom: 20px;
+        min-height: 100px; /* 배우가 없더라도 영역을 확보 */
+        border: 1px solid #ddd; /* 구분선을 추가하여 영역을 명확히 함 */
+        border-radius: 6px;
+        background-color: #fff;
+    }
+    /* --- 출연 목록 (배우 갤러리) --- */
+    .admin_actor_list {
+        overflow-y: auto; 
+        max-height: 250px; 
+        display: flex; 
+        flex-wrap: wrap;
+        padding: 15px 5px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+
+    .admin_actor_info {
+        width: 100px; /* 카드 너비 고정 */
+        text-align: center;
+        margin-right: 15px;
+
+        padding: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border 0.2s, background-color 0.2s;
+        vertical-align: top;
+    }
+    .admin_actor_info:hover {
+        background-color: #efefef;
+        border-radius: 4px;
+    }
+    .admin_actor_info img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+    }
+    .admin_actor_info p {
+        font-size: 0.8em;
+        margin: 0;
+        white-space: normal; /* 텍스트 줄바꿈 허용 */
+    }
+
+    /* --- 출연 배역 테이블 --- */
+    .admin_tb_cast {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .admin_tb_cast th, .admin_tb_cast td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    .admin_tb_cast tr:first-child {
+        background-color: #e9ecef;
+        font-weight: bold;
+        color: #333;
+    }
+    .admin_tb_cast td:last-child {
+        text-align: center;
+        width: 50px;
+    }
+    .admin_tb_cast select {
+        /* 테이블 td 내에서 select가 td 너비를 꽉 채우도록 설정 */
+        width: 100%;
+        /* 기본 브라우저 화살표를 숨기고 싶다면 appearance 속성을 사용합니다. */
+        /* appearance: none;
+        -webkit-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg ...>'); (커스텀 화살표) */
+    }
+
+    /* --- 배역 추가 입력 필드 --- */
+    .cast-add-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .cast-add-group input[type="text"] {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        flex-grow: 1;
+    }
+    #admin_tb_add_btn {
+        padding: 8px 20px;
+        background-color: #5a80d4;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    /* --- 최종 버튼 그룹 --- */
+    .final-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding-top: 20px;
+    }
+    #btn_modify {
+        padding: 10px 30px;
+        background-color: #1f3f6e; /* 진한 남색 */
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    #btn_modify:hover {
+        background-color: #2a538d;
+    }
+    .final-buttons a {
+        text-decoration: none;
+        padding: 10px 30px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        color: #555;
+        background-color: #fff;
+        line-height: 1.5; /* 버튼과 높이 맞추기 */
+    }
+    .removeBtn {
+        background-color: #dc3545; /* 빨간색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .castBtn {
+        background-color: #007bff; /* 파란색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .initCastBtn {
+        background-color: #6c757d; /* 회색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }    
 </style>
 <script>
     window.onload = function() {
@@ -34,6 +281,23 @@
         var castArr = []
         var actArr = []
         var perfCastArr = []
+
+        let divUploadActor = document.querySelector(".admin_upload_actor")
+        let divActorList = document.querySelector(".admin_actor_list")
+        let divActorInfoList = document.querySelectorAll('.admin_actor_info')
+        for(let divActorInfo of divActorInfoList) {
+            let actorInfoId = divActorInfo.id.split('actor')[1]
+            divActorInfo.dataset.id = actorInfoId
+            if(divActorInfo.parentNode===divActorList) {
+                let pActorName = document.querySelector(`#actorName${actorInfoId}`)
+                let actorName = pActorName.innerHTML
+                let actorData = {id:`actor${actorInfoId}`, name:actorName}
+                actArr.push(actorData)
+                castArrIdx++;
+            }       
+        }
+
+
 
         document.querySelector("#admin_tb_add_btn").onclick = (e)=>{
             const newCastData = {
@@ -56,6 +320,7 @@
             removeBtn.setAttribute("type", "button")
             removeBtn.setAttribute("value", "-")
             removeBtn.id = `removeBtn${castArrIdx}`
+            removeBtn.className = 'removeBtn'
             removeBtn.addEventListener("click", (e) => {
                 tbCast.removeChild(trCast)
                 
@@ -89,6 +354,7 @@
             castBtn.setAttribute("type", "button")
             castBtn.setAttribute("value", "지정")
             castBtn.id = `castBtn${castArrIdx}`
+            castBtn.className = `castBtn`
             
             let tdCastList = document.createElement("td")
             let spanCastList = document.createElement("span")
@@ -119,6 +385,7 @@
             initCastBtn.setAttribute("type", "button")
             initCastBtn.setAttribute("value", "초기화")
             initCastBtn.id = `initCastBtn${castArrIdx}`
+            initCastBtn.className = `initCastBtn`
             tdInitCast.append(initCastBtn)
             initCastBtn.addEventListener("click", (e) => {
                 spanCastList.innerHTML = ''
@@ -142,9 +409,7 @@
             perfCastArr.push(prefCastData)
         }
 
-        let divUploadActor = document.querySelector(".admin_upload_actor")
-        let divActorList = document.querySelector(".admin_actor_list")
-        let divActorInfoList = document.querySelectorAll('.admin_actor_info')
+
         
         
         for(const divActorInfo of divActorInfoList) {
@@ -220,41 +485,79 @@
     }
 </script>
 <body>
+<div class="admin-form-wrapper">
     <h1>modify</h1>
     <form action="/admin/perf/modify" method="POST" enctype="multipart/form-data" name="modifyFrm">
-        공연이름 <input type="text" name="fname" value="{{perfInfo.name}}" readonly><br/>
-        포스터 <input type="file" name="fposter" id="fposter"><br/>
-        시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
-        공연장르 <select name="fgenre" id="fgenre">
-            <option value="오리지널">오리지널</option>
-            <option value="창작">창작</option>
-            <option value="라이선스">라이선스</option>
-            <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
-        </select><br/>
-        러닝타임 <input type="text" name="frunning" value="{{perfInfo.running_time}}"><br/>
-        공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
-        공연장 <select name="ftheator" id="ftheator">
-            <option value="1">샤롯데씨어터</option>
-            <option value="2">드림씨어터</option>
-            <option value="3">대학로예술극장</option>
-            <option value="4">창원성산아트홀</option>
-        </select><br/>
-        좌석별 가격<br/>
-        R<input type="text" name="fclassR" id="seatR"><br/>
-        S<input type="text" name="fclassS" id="seatS"><br/>
-        A<input type="text" name="fclassA" id="seatA"><br/>
+        
+        <div class="input-grid-section">
+            
+            <label for="iName">공연이름</label> 
+            <input type="text" name="fname" value="{{perfInfo.perf_name}}" readonly>
+            
+            <label for="fposter">포스터</label> 
+            <input type="file" name="fposter" id="fposter">
+            
+            <label for="fsynopsis">시놉시스</label> 
+            <input type="file" name="fsynopsis" id="fsynopsis">
+            
+            <label for="fgenre">공연장르</label> 
+            <select name="fgenre" id="fgenre">
+                <option value="오리지널"{%if perfInfo.genre=='오리지널'%}selected{%endif%}>오리지널</option>
+                <option value="창작"{%if perfInfo.genre=='창작'%}selected{%endif%}>창작</option>
+                <option value="라이선스"{%if perfInfo.genre=='라이선스'%}selected{%endif%}>라이선스</option>
+                <option value="넌버벌퍼포먼스"{%if perfInfo.genre=='넌버벌퍼포먼스'%}selected{%endif%}>넌버벌퍼포먼스</option>
+            </select>
+            
+            <label for="iRunning">러닝타임</label> 
+            <input type="text" name="frunning" value="{{perfInfo.running_time}}">
 
-        <hr/>
-        출연 배우
-        <div class="admin_upload_actor">
+            <label>공연기간</label>
+            <div class="date-range-group">
+                <input type="text" name="fstart" value="{{perfInfo.start_date}}" readonly>
+                <span>~</span>
+                <input type="text" name="fend" value="{{perfInfo.end_date}}" readonly>
+            </div>
 
+            <label for="ftheator">공연장</label> 
+            <select name="ftheator" id="ftheator">
+                <option value="1"{%if perfInfo.venue_id==1%}selected{%endif%}>샤롯데씨어터</option>
+                <option value="2"{%if perfInfo.venue_id==2%}selected{%endif%}>드림씨어터</option>
+                <option value="3"{%if perfInfo.venue_id==3%}selected{%endif%}>대학로예술극장</option>
+                <option value="4"{%if perfInfo.venue_id==4%}selected{%endif%}>창원성산아트홀</option>
+            </select>
+            
+            <label class="seat-price-label">좌석별 가격</label>
+            <div class="seat-price-container">
+                {% for price in perfPriceArr %}
+                    <div>
+                        {{price.grade_code}} <input type="text" value='{{price.price}}' name="fclass{{price.grade_code}}" readonly>
+                    </div>
+                {% endfor %}
+            </div>
+            
         </div>
-        출연 목록
-        <div class="admin_actor_list">
-            {%for actor in res%}
+        <hr/>
+        
+        <h2>출연 배우 관리</h2>
+        <div class="admin_upload_actor">
+            {%for actor in castActorArr%}
                 <div class="admin_actor_info" id="actor{{actor.actor_id}}">
                     <div>
-                        <img src="../../img/{{actor.actor_profile_url}}" width="50px" alt="">
+                        <img src="/img/{{actor.actor_profile_url}}" alt="배우 사진">
+                    </div>
+                    <p id="actorName{{actor.actor_id}}">
+                        {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
+                    </p>
+                </div>
+            {%endfor%}
+        </div>
+        
+        <h3>출연 목록 (선택 가능한 배우)</h3>
+        <div class="admin_actor_list">
+            {%for actor in actorList%}
+                <div class="admin_actor_info" id="actor{{actor.actor_id}}">
+                    <div>
+                        <img src="/img/{{actor.actor_profile_url}}" alt="배우 사진">
                     </div>
                     <p id="actorName{{actor.actor_id}}">
                         {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
@@ -263,23 +566,60 @@
             {%endfor%}
         </div>
 
-        출연 배역 
-        <table class="admin_tb_cast" border="">
-            <tr>
+        <h3>출연 배역 지정</h3> 
+        <table class="admin_tb_cast">
+             <tr>
                 <td>배역</td>
                 <td>줄거리</td>
                 <td>삭제</td>
+                <td>배우 선택</td>
+                <td>지정</td>
+                <td>배우 목록</td>
+                <td>초기화</td>
             </tr>
+            {% for cast in castArr %}
+                <tr data-cast-id="{{cast.cast_id}}">
+                    <td>{{cast.cast_name}}</td>
+                    <td>{{cast.cast_story}}</td>
+                    <td><input type="button" value="-" id="removeBtn{{cast.cast_id}}" class="removeBtn"></td>
+                    <td>
+                        <select id="selectActor{{cast.cast_id}}">
+                            {% for actor in castActorArr %}
+                                <option value = 'actor{{actor.actor_id}}'>{{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="button" value="지정" id="castBtn{{cast.cast_id}}" class="castBtn"></td>
+                    <td><span id="castList{{cast.cast_id}}"></span></td>
+                    <td><input type="button" value="초기화" id="initCastBtn{{cast.cast_id}}" class="initCastBtn"></td>
+                </tr>    
+            {%endfor%}
         </table>
-        <hr/>
-        배역 <input type="text" id="admin_tb_add_cast"/>
-        줄거리 <input type="text" id="admin_tb_add_bg"/>
-        <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
         
         <hr/>
-        <input type="button" value="업로드" id="btn_upload">
-        <a href="/admin/perf">뒤로</a>
+        
+        <div class="cast-add-group">
+            배역 <input type="text" id="admin_tb_add_cast"/>
+            줄거리 <input type="text" id="admin_tb_add_bg"/>
+            <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
+        </div>
+        
+        <hr/>
+
+        <div class="reservation-status-group">
+            <label>예매 허용</label>
+            Y<input type="radio" name="fstatus" value="y" {% if perfInfo.status == 'y' %}checked{% endif %}> 
+            N<input type="radio" name="fstatus" value="n" {% if perfInfo.status == 'n' %}checked{% endif %}>
+        </div>
+        
+        <hr/>
+        
+        <div class="final-buttons">
+            <input type="button" value="수정" id="btn_modify">
+            <a href="/admin/perf">뒤로</a>
+        </div>
         <hr/>
     </form>
+</div>
 </body>
 </html>

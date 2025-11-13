@@ -6,24 +6,304 @@
     <title>공연 등록</title>
 </head>
 <style>
-    * {
+    /* --- 기본 스타일 리셋 및 폰트 --- */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
         margin: 0;
         padding: 0;
+    }
 
+    h1 {
+        text-align: center;
+        color: #1f3f6e;
+        padding: 20px 0;
+        margin-bottom: 0;
     }
-    td > input {
+
+    hr {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin: 20px 0;
+    }
+
+    /* --- 폼 컨테이너 (Grid 레이아웃) --- */
+    .admin-form-wrapper {
+        max-width: 850px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 폼 내부의 주요 입력 필드들을 Grid로 배치 */
+    .input-grid-section {
+        display: grid;
+        /* 레이블 120px, 필드 1fr */
+        grid-template-columns: 120px 1fr; 
+        gap: 15px 20px; 
+        align-items: center; /* 세로 중앙 정렬 */
+        margin-bottom: 20px;
+    }
+
+    /* Grid 레이블 스타일 */
+    .input-grid-section > label, 
+    .input-grid-section > div:first-child:not(.date-range-group) { /* div로 감싸지 않은 레이블에도 적용 */
+        font-weight: 600;
+        color: #555;
+    }
+
+    /* 입력 필드 (input, select) 공통 스타일 */
+    .input-grid-section input[type="text"],
+    .input-grid-section input[type="date"],
+    .input-grid-section select,
+    .admin_tb_cast select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
         width: 100%;
-        height: 100%;
+        box-sizing: border-box; /* 패딩이 너비를 늘리지 않도록 */
     }
-    .admin_actor_list, .admin_upload_actor {
-        width: 1200px;
-        height: 150px;
-        overflow: auto;
+
+    /* 파일 입력 필드 (기본 스타일 숨김 및 커스텀 레이블 적용 권장) */
+    input[type="file"] {
+        padding: 0;
+        border: none;
     }
-    .admin_actor_list > .admin_actor_info, .admin_upload_actor > .admin_actor_info {
-        width:100px;
-        height:150px;
-        float: left;
+
+    /* --- 날짜 입력 그룹 (Flexbox) --- */
+    .date-range-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .date-range-group input {
+        flex-grow: 1;
+    }
+    /* ~ 기호의 공간 확보 */
+    .date-range-group span {
+        color: #333;
+    }
+
+    /* --- 좌석 가격 그룹 (R, S, A) --- */
+    .seat-price-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3개의 가격을 3열로 배치 */
+        gap: 15px;
+        margin-top: 10px;
+        grid-column: 2 / 3;
+    }
+    .seat-price-container div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .seat-price-container input {
+        flex-grow: 1;
+        text-align: right;
+    }
+    .seat-price-label {
+        grid-column: 1 / 2; /* "좌석별 가격" 레이블을 첫 열에 고정 */
+    }
+    /* 💡 [출연 배우 관리] 컨테이너 스타일 추가 */
+    .admin_upload_actor {
+        /* Flexbox 설정: 항목들을 가로로 나열 */
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: flex-start; 
+        align-items: flex-start;
+        
+        padding: 15px 5px;
+        margin-bottom: 20px;
+        min-height: 100px; /* 배우가 없더라도 영역을 확보 */
+        border: 1px solid #ddd; /* 구분선을 추가하여 영역을 명확히 함 */
+        border-radius: 6px;
+        background-color: #fff;
+    }
+    /* --- 출연 목록 (배우 갤러리) --- */
+    .admin_actor_list {
+        overflow-y: auto; 
+        max-height: 250px; 
+        display: flex; 
+        flex-wrap: wrap;
+        padding: 15px 5px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+
+    .admin_actor_info {
+        width: 100px; /* 카드 너비 고정 */
+        text-align: center;
+        margin-right: 15px;
+
+        padding: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border 0.2s, background-color 0.2s;
+        vertical-align: top;
+    }
+    .admin_actor_info:hover {
+        background-color: #efefef;
+        border-radius: 4px;
+    }
+    .admin_actor_info img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+    }
+    .admin_actor_info p {
+        font-size: 0.8em;
+        margin: 0;
+        white-space: normal; /* 텍스트 줄바꿈 허용 */
+    }
+
+    /* --- 출연 배역 테이블 --- */
+    .admin_tb_cast {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .admin_tb_cast th, .admin_tb_cast td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    .admin_tb_cast tr:first-child {
+        background-color: #e9ecef;
+        font-weight: bold;
+        color: #333;
+    }
+    .admin_tb_cast td:last-child {
+        text-align: center;
+        width: 50px;
+    }
+    .admin_tb_cast select {
+        /* 테이블 td 내에서 select가 td 너비를 꽉 채우도록 설정 */
+        width: 100%;
+        /* 기본 브라우저 화살표를 숨기고 싶다면 appearance 속성을 사용합니다. */
+        /* appearance: none;
+        -webkit-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg ...>'); (커스텀 화살표) */
+    }
+
+    /* --- 배역 추가 입력 필드 --- */
+    .cast-add-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .cast-add-group input[type="text"] {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        flex-grow: 1;
+    }
+    #admin_tb_add_btn {
+        padding: 8px 20px;
+        background-color: #5a80d4;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    /* --- 최종 버튼 그룹 --- */
+    .final-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding-top: 20px;
+    }
+    #btn_upload {
+        padding: 10px 30px;
+        background-color: #1f3f6e; /* 진한 남색 */
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    #btn_upload:hover {
+        background-color: #2a538d;
+    }
+    .final-buttons a {
+        text-decoration: none;
+        padding: 10px 30px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        color: #555;
+        background-color: #fff;
+        line-height: 1.5; /* 버튼과 높이 맞추기 */
+    }
+    .removeBtn {
+        background-color: #dc3545; /* 빨간색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .castBtn {
+        background-color: #007bff; /* 파란색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .initCastBtn {
+        background-color: #6c757d; /* 회색 배경 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }    
+
+
+    /* 1. 셀렉트 필드 그룹에 Flexbox 적용 */
+    .venue_select_group {
+        display: flex;
+        gap: 10px; /* Select와 버튼 사이 간격 */
+        align-items: center;
+        width: 100%; /* 부모 컨테이너 너비 채우기 */
+    }
+
+    /* 2. Select 필드가 남은 공간을 채우도록 설정 */
+    .venue_select_group select {
+        flex-grow: 1; /* Select가 최대한 넓게 확장 */
+        /* 💡 여기서 기존 input-grid-section 스타일을 상속받습니다. */
+    }
+
+    /* 3. 조회 버튼 스타일 */
+    #search_venue_btn {
+        flex-shrink: 0; /* 버튼 크기 유지 */
+        padding: 8px 15px;
+        background-color: #1f3f6e; /* 관리자 UI 파란색 계열 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        
+        /* 💡 Select와 높이를 맞추기 위해 box-sizing 속성 추가 */
+        box-sizing: border-box; 
+    }
+
+    #search_venue_btn:hover {
+        background-color: #2a528a;
     }
 </style>
 <script>
@@ -46,16 +326,20 @@
             let trCast = document.createElement("tr")
             trCast.id = `trCast${castArrIdx}`
             trCast.dataset.id = castArrIdx;
+
             let tdCastName = document.createElement("td")
             tdCastName.innerHTML = ipAddCast.value
             ipAddCast.value = '';
+
             let tdCastBg = document.createElement("td")
             tdCastBg.innerHTML = ipAddBg.value
             ipAddBg.value = '';
+
             let tdRemoveBtn = document.createElement("td")
             let removeBtn = document.createElement("input")
             removeBtn.setAttribute("type", "button")
             removeBtn.setAttribute("value", "-")
+            removeBtn.className = 'removeBtn'
             removeBtn.id = `removeBtn${castArrIdx}`
             removeBtn.addEventListener("click", (e) => {
                 tbCast.removeChild(trCast)
@@ -66,7 +350,18 @@
                     let filterId = item.id.split('tempCast')[1]
                     return filterId != removeId
                 });
-                
+
+                perfCastArr = perfCastArr.filter((item, index) => {
+                    // trCast.dataset.id는 배역이 생성될 때의 고유 ID(castArrIdx)를 가리킵니다.
+                    // castArr와 perfCastArr는 생성 시점에 인덱스를 공유했으므로, 
+                    // 해당 인덱스(removeId)를 제거하는 것이 맞습니다.
+                    // 다만, castArr는 내부 id로 필터링했으므로, perfCastArr도 해당 인덱스를 제거해야 합니다.
+                    // *주의*: castArrIdx를 사용한 trCast.dataset.id는 인덱스가 재배열되면 더 이상 배열 인덱스와 일치하지 않을 수 있습니다. 
+                    // 가장 안전한 방법은 `perfCastArr.splice(removeId, 1)` 후 모든 `data-id`를 업데이트하거나,
+                    // 단순하게 `perfCastArr`에서도 필터링을 진행하여 길이를 맞추는 것입니다.
+                    return index !== removeId;
+                });
+                        
                 console.log('삭제 후 castArr:', castArr)
             })
             tdRemoveBtn.append(removeBtn)
@@ -90,28 +385,35 @@
             castBtn.setAttribute("type", "button")
             castBtn.setAttribute("value", "지정")
             castBtn.id = `castBtn${castArrIdx}`
+            castBtn.className = `castBtn`
             
             let tdCastList = document.createElement("td")
             let spanCastList = document.createElement("span")
             spanCastList.id = `castList${castArrIdx}`
             tdCastList.append(spanCastList)
 
-            let prefCastData = {}
+            // let prefCastData = {}
             
             
             castBtn.addEventListener("click", (e) => {
                 console.log(slActor.value, slActor.options[slActor.selectedIndex].innerHTML.trim())
                 let selectOptionName = slActor.options[slActor.selectedIndex].innerHTML.trim()
-                let cast_id = castBtn.id.split('castBtn')[1]
+                //let cast_id = castBtn.id.split('castBtn')[1]
+                let castIdx = Number(trCast.dataset.id); // 👈 해당 배역의 인덱스 가져오기
+                let castKey = `tempCast${castIdx}`;      // 👈 키 생성 (tempCast0, tempCast1 등)
+
+                // perfCastArr의 해당 인덱스 객체에 접근
+                let currentPrefCast = perfCastArr[castIdx];
+
                 if(spanCastList.innerHTML) {
                     
                     spanCastList.innerHTML += `,${selectOptionName}`
-                    prefCastData[`tempCast${cast_id}`] += `,${slActor.value.split('actor')[1]}`
+                    currentPrefCast[`${castKey}`] += `,${slActor.value.split('actor')[1]}`
                 } else {
                     spanCastList.innerHTML = `${selectOptionName}`
-                    prefCastData[`tempCast${cast_id}`] = `${slActor.value.split('actor')[1]}`
+                    currentPrefCast[`${castKey}`] = `${slActor.value.split('actor')[1]}`
                 }
-                console.log("prefCast",prefCastData)
+                console.log("perfCastArr",perfCastArr)
             })
             tdCastBtn.append(castBtn)
 
@@ -120,10 +422,15 @@
             initCastBtn.setAttribute("type", "button")
             initCastBtn.setAttribute("value", "초기화")
             initCastBtn.id = `initCastBtn${castArrIdx}`
+            initCastBtn.className = `initCastBtn`
             tdInitCast.append(initCastBtn)
             initCastBtn.addEventListener("click", (e) => {
+                let castIdx = Number(trCast.dataset.id); // 👈 해당 배역의 인덱스 가져오기
+                let castKey = `tempCast${castIdx}`;
+
                 spanCastList.innerHTML = ''
-                prefCastData[castBtn.id.split('castBtn')[1]] = ''
+                perfCastArr[castIdx][castKey] = '' // 👈 올바른 배열 인덱스에 접근
+                console.log("초기화 후 perfCastArr:", perfCastArr)
             })
 
 
@@ -137,10 +444,8 @@
             tbCast.append(trCast)
 
             castArr.push(newCastData)
-
+            perfCastArr.push({})
             castArrIdx++;
-
-            perfCastArr.push(prefCastData)
         }
 
         let divUploadActor = document.querySelector(".admin_upload_actor")
@@ -180,18 +485,158 @@
 
         let selectorTh = document.querySelector('#ftheator')
         let seatR = document.querySelector('#seatR')
+        let selectedVenueId = 1
         selectorTh.addEventListener('change', (e)=>{
             console.log('theator change', e.target.value)
-            if(e.target.value=="1" || e.target.value=="2") {
-                seatR.disabled = false
-            } else {
-                seatR.disabled = true
-            }
+            selectedVenueId = e.target.value
+            flag_search_venue = false
+            // if(e.target.value=="1" || e.target.value=="2") {
+            //     seatR.disabled = false
+            // } else {
+            //     seatR.disabled = true
+            // }
         })
+
+
+        let flag_search_venue = false
+        let btn_search_venue = document.querySelector('#search_venue_btn')
+
+        btn_search_venue.addEventListener('click', (e)=>{
+            let iStartVal = document.querySelector('#iStart').value.trim()
+            let iEndVal = document.querySelector('#iEnd').value.trim()
+            let iVenueVal = document.querySelector('#iEnd').value.trim()
+
+            if (iStartVal == '') {
+                alert('조회할 공연 시작 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            if (iEndVal == '') {
+                alert('조회할 공연 종료 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            if (new Date(iStartVal) > new Date(iEndVal)) {
+                alert('공연 시작 날짜는 종료 날짜보다 늦을 수 없습니다.');
+                event.preventDefault();
+                return;
+            }
+
+            let search_data = {
+                start_date : iStartVal,
+                end_date : iEndVal,
+                venue_id : selectedVenueId
+            }
+            console.log(search_data)
+            fetch(`/admin/upload/check`,{
+                    method:'POST',
+                    headers : {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(search_data)
+                })     
+            .then(answer=> answer.json())
+            .then(data=> {
+                    console.log(data)
+                    if(data.msg=='success') {
+                        alert('공연장 이용이 가능합니다')
+                        flag_search_venue = true
+                        document.querySelector('#iStart').readOnly = true
+                        document.querySelector('#iEnd').readOnly = true
+                    } else {
+                        alert(`선택기간내에 다른 공연이 있습니다.\n${data.start_date}~${data.end_date}외 기간이나 다른 공연장을 선택해주세요`)
+                    }
+            })
+            .catch(err=>console.log('에러 : ',err.message))
+        })
+
+
 
         let btn_upload = document.querySelector('#btn_upload')
 
         btn_upload.addEventListener('click', (e)=>{
+            let iNameVal = document.querySelector('#iName').value.trim()
+            let isPosterSelected = document.querySelector('#iPoster').files.length > 0
+            let isSynopsisSelected = document.querySelector('#iSynopsis').files.length > 0
+            let iRunningVal = document.querySelector('#iRunning').value.trim()
+            let iStartVal = document.querySelector('#iStart').value.trim()
+            let iEndVal = document.querySelector('#iEnd').value.trim()
+            let iSeatRVal = document.querySelector('#iSeatR').value.trim()
+            let iSeatSVal = document.querySelector('#iSeatS').value.trim()
+            let iSeatAVal = document.querySelector('#iSeatA').value.trim()
+
+        // 텍스트/날짜 필드 검사
+            if (iNameVal === '') {
+                alert('공연 이름을 입력해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            // 파일 필드 검사 (포스터)
+            if (!isPosterSelected) {
+                alert('포스터 이미지를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            // 파일 필드 검사 (시놉시스)
+            if (!isSynopsisSelected) {
+                alert('시놉시스 파일을 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            if (iRunningVal === '') {
+                alert('런닝 타임(공연 시간)을 입력해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+
+            if (iStartVal === '') {
+                alert('공연 시작 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            if (iEndVal === '') {
+                alert('공연 종료 날짜를 선택해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+
+            if(!flag_search_venue) {
+                alert('조회로 공연 기간을 확인하세요');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            
+            // 좌석 가격 필드 검사 (숫자형 입력으로 가정)
+            if (iSeatRVal === '') {
+                alert('R석 가격을 입력해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            if (iSeatSVal === '') {
+                alert('S석 가격을 입력해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+            if (iSeatAVal === '') {
+                alert('A석 가격을 입력해 주세요.');
+                event.preventDefault(); // 제출 중단
+                return;
+            }
+
+            // 3. (옵션) 날짜 유효성 추가 검사: 시작일이 종료일보다 늦으면 안 됨
+            if (new Date(iStartVal) > new Date(iEndVal)) {
+                alert('공연 시작 날짜는 종료 날짜보다 늦을 수 없습니다.');
+                event.preventDefault();
+                return;
+            }
+
+
+            
             const uploadData = new FormData(document.uploadFrm)
             
             uploadData.append('castData', JSON.stringify(castArr))
@@ -207,80 +652,119 @@
                     // header 불필요 FormData 가 자동 생성
                     body:uploadData
                 })     
-               .then(answer=> answer.text())
-               .then(data=> {
+            .then(answer=> answer.text())
+            .then(data=> {
                     console.log(data)
                     if(data=='success') {
                         alert('공연 등록 완료')
                         location.href='/admin/perf/list'
                     }
-               })
-               .catch(err=>console.log('에러 : ',err.message))
-            
+            })
+            .catch(err=>console.log('에러 : ',err.message))
         })
     }
 </script>
 <body>
-    <h1>insert</h1>
+
+<div class="admin-form-wrapper">
+    <h1>공연 등록</h1>
     <form action="/admin/perf/upload" method="POST" enctype="multipart/form-data" name="uploadFrm">
-        공연이름 <input type="text" name="fname"><br/>
-        포스터 <input type="file" name="fposter" id="fposter"><br/>
-        시놉시스 <input type="file" name="fsynopsis" id="fsynopsis"><br/>
-        공연장르 <select name="fgenre" id="fgenre">
-            <option value="오리지널">오리지널</option>
-            <option value="창작">창작</option>
-            <option value="라이선스">라이선스</option>
-            <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
-        </select><br/>
-        러닝타임 <input type="text" name="frunning"><br/>
-        공연기간 <input type="date" name="fstart">~<input type="date" name="fend"><br/>
-        공연장 <select name="ftheator" id="ftheator">
-            <option value="1">샤롯데씨어터</option>
-            <option value="2">드림씨어터</option>
-            <option value="3">대학로예술극장</option>
-            <option value="4">창원성산아트홀</option>
-        </select><br/>
-        좌석별 가격<br/>
-        R<input type="text" name="fclassR" id="seatR"><br/>
-        S<input type="text" name="fclassS" id="seatS"><br/>
-        A<input type="text" name="fclassA" id="seatA"><br/>
+        
+        <div class="input-grid-section">
+            
+            <label for="iName">공연이름</label> 
+            <input type="text" name="fname" id="iName">
+            
+            <label for="iPoster">포스터</label> 
+            <input type="file" name="fposter" id="iPoster">
+            
+            <label for="iSynopsis">시놉시스</label> 
+            <input type="file" name="fsynopsis" id="iSynopsis">
+            
+            <label for="fgenre">공연장르</label> 
+            <select name="fgenre">
+                <option value="오리지널">오리지널</option>
+                <option value="창작">창작</option>
+                <option value="라이선스">라이선스</option>
+                <option value="넌버벌퍼포먼스">넌버벌퍼포먼스</option>
+            </select>
+            
+            <label for="iRunning">러닝타임</label> 
+            <input type="text" name="frunning" id="iRunning">
 
-        <hr/>
-        출연 배우
-        <div class="admin_upload_actor">
+            <label>공연기간</label>
+            <div class="date-range-group">
+                <input type="date" name="fstart" id="iStart">
+                <span>~</span>
+                <input type="date" name="fend" id="iEnd">
+            </div>
 
+            <label for="ftheator">공연장</label> 
+            <div class="venue_select_group">
+                <select name="ftheator" id="ftheator">
+                    <option value="1">샤롯데씨어터</option>
+                    <option value="2">드림씨어터</option>
+                    <option value="3">대학로예술극장</option>
+                    <option value="4">창원성산아트홀</option>
+                </select>
+                <input type="button" id="search_venue_btn" value="조회"/>
+            </div>
+            
+            <label class="seat-price-label">좌석별 가격</label>
+            <div class="seat-price-container">
+                <div>R<input type="text" name="fclassR" id="iSeatR"></div>
+                <div>S<input type="text" name="fclassS" id="iSeatS"></div>
+                <div>A<input type="text" name="fclassA" id="iSeatA"></div>
+            </div>
+            
         </div>
-        출연 목록
+        <hr/>
+        
+        <h2>출연 배우 관리</h2>
+        <div class="admin_upload_actor">
+        </div>
+        
+        <h3>출연 목록 (선택 가능한 배우)</h3>
         <div class="admin_actor_list">
-            {%for actor in res%}
+            {% for actor in res %}
                 <div class="admin_actor_info" id="actor{{actor.actor_id}}">
                     <div>
-                        <img src="../../img/{{actor.actor_profile_url}}" width="50px" alt="">
+                        <img src="../../img/{{actor.actor_profile_url}}" alt="배우 사진">
                     </div>
                     <p id="actorName{{actor.actor_id}}">
                         {{actor.actor_name}}({{actor.actor_birth_year}}/{{actor.actor_gender}})
                     </p>
                 </div>
-            {%endfor%}
+            {% endfor %}
         </div>
 
-        출연 배역 
-        <table class="admin_tb_cast" border="">
+        <h3>출연 배역 지정</h3> 
+        <table class="admin_tb_cast">
             <tr>
                 <td>배역</td>
                 <td>줄거리</td>
                 <td>삭제</td>
+                <td>배우 선택</td>
+                <td>지정</td>
+                <td>배우 목록</td>
+                <td>초기화</td>
             </tr>
         </table>
-        <hr/>
-        배역 <input type="text" id="admin_tb_add_cast"/>
-        줄거리 <input type="text" id="admin_tb_add_bg"/>
-        <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
+        
+        <div class="cast-add-group">
+            배역 <input type="text" id="admin_tb_add_cast"/>
+            줄거리 <input type="text" id="admin_tb_add_bg"/>
+            <input type="button" name="fadd" value="추가" id="admin_tb_add_btn"/>
+        </div>
         
         <hr/>
-        <input type="button" value="업로드" id="btn_upload">
-        <a href="/admin/perf">뒤로</a>
+        
+        <div class="final-buttons">
+            <input type="button" value="업로드" id="btn_upload">
+            <a href="/admin/perf">뒤로</a>
+        </div>
         <hr/>
     </form>
+</div>
 </body>
 </html>

@@ -145,8 +145,14 @@
 </head>
 
 <body>
-  {% include './header.html' %}
+    <!-- <h1>main</h1>
+    <a href="/admin/perf">admin</a>
+    <a href="/perf">perflist</a>
+    <a href="/payment">payment</a>
+    <a href="/myactor">myactor</a> -->
 
+    
+  {% include './header.html' %}
   <wrapper>
     <br>
     <section class="main_banner">
@@ -233,6 +239,9 @@
       const maxIndex = totalItems - itemsPerPage;
 
       currentIndex += direction * itemsPerPage;
+
+      console.log('currentIndex',currentIndex, maxIndex)
+
       if (currentIndex < 0) currentIndex = maxIndex;
       if (currentIndex > maxIndex) currentIndex = 0;
 

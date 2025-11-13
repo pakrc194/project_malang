@@ -1,4 +1,4 @@
--- Active: 1761632592171@@127.0.0.1@3306@malang_db
+-- Active: 1761802030139@@127.0.0.1@3306@malang_db
 DROP TABLE seat_status;
 CREATE TABLE seat_status (
     status_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -38,7 +38,7 @@ WITH RECURSIVE r AS (
 )
 SELECT n FROM r;
 
--- 🔹 2. 1~450까지 temp_s 생성
+-- 🔹 2. 1~270까지 temp_s 생성
 DROP TEMPORARY TABLE IF EXISTS temp_s;
 CREATE TEMPORARY TABLE temp_s AS
 WITH RECURSIVE s AS (

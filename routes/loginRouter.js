@@ -5,6 +5,7 @@ const path = require('path');
 const conn = require('../db/db');
 
 const kakaoRouter = require('../func/kakaoLogin');
+const { nowGrade } = require('../func/grade');
 router.use('/kakao', kakaoRouter);
 
 // 정적 처리
@@ -40,7 +41,7 @@ router.post('/login', (req, res) => {
         return res.json({ success: false, message: '이메일 또는 비밀번호를 입력하세요' })
     }
     // DB 조회(이메일, 비밀번호, 회원주소, 활성화 상태)
-    const sql = 'SELECT user_id, user_name, email, password, sign_method, account_status FROM USER_INFO WHERE email = ?';
+    const sql = 'SELECT user_id, user_name, email, password, score, sign_method, account_status FROM USER_INFO WHERE email = ?';
     conn.query(sql, [email], (err, results) => {
         if (err) {
             console.error('DB 에러 발생:', err);
@@ -74,6 +75,44 @@ router.post('/login', (req, res) => {
         console.log('로그인 성공:', user.sign_method);
         console.log('로그인 성공:', user.user_id);
         console.log('로그인 성공:', user.user_name);
+
+        let resvCurMonthSQL = `SELECT
+            SUM(final_amount) AS total_amount_last_6_months 
+            FROM
+                reservation_info
+            WHERE
+            final_amount IS NOT NULL AND final_amount > 0 
+            AND resv_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+            and user_id = ?;`
+
+        let updateGradeSQL = `UPDATE user_info
+            SET 
+            score = ?, 
+            grade_id = ?
+            WHERE user_id = ?;` 
+
+        conn.query(resvCurMonthSQL, [user.user_id], (scoreErr, scoreQuery)=>{
+            if(scoreErr) {
+                console.log(scoreErr.message)
+            } else {
+                console.log('scoreQuery', scoreQuery)
+                console.log(user)
+                let nowScore = scoreQuery[0].total_amount_last_6_months | 0;
+                console.log('비교', user.score, nowScore)
+                
+                if(eval(user.score) != eval(nowScore)) {
+                    conn.query(updateGradeSQL, [nowScore, nowGrade(nowScore), user.user_id], (updateErr, updateQuery)=>{
+                        if(updateErr)
+                            console.log(updateErr.message)
+                        else {
+                            console.log(updateQuery)
+                        }
+                    })
+                }
+            }
+        })
+        
+
 
         // 관리자인 경우 managermain.html 으로 이동
         if (user.sign_method === 'admin') {

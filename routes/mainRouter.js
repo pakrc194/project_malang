@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
     SELECT * FROM performance_info
     WHERE start_date > NOW() and is_hidden = 0
     ORDER BY start_date ASC
-    LIMIT 5
+    LIMIT 4
   `;
 
     // 3. 배우 추천
@@ -71,6 +71,7 @@ ORDER BY
                 row.start_date = base_date_format(row.start_date);
                 row.end_date = base_date_format(row.end_date);
             }
+            console.log(main_bennr)
         }
 
         conn.query(comingbenner, (err2, coming_benner) => {
@@ -95,20 +96,64 @@ ORDER BY
     })
 })
 
-router.get('/grade', (req, res) => {
-    conn.query('select * from user_grade', (err, resQuery) => {
-        if (err) {
-            console.log('등급 조회 실패', err.message)
 
+
+
+router.get('/grade', (req, res) => {
+    let gradeSql = `select * from user_grade`
+   
+    conn.query(gradeSql, (err, resQuery)=>{
+        if(err) {
+            console.log('sql 실패', err.message)
             res.render('../views/grade.html')
         } else {
-            console.log('등급 조회 성공', resQuery)
-            console.log('등급 조회 성공', resQuery[0])
-            console.log('등급 조회 성공', resQuery[0].grade_score)
-            res.render('../views/grade.html', { grade_list: resQuery })
+            console.log('sql 성공', resQuery)
+            res.render('../views/grade.html', {grade_list : resQuery})
         }
     })
+
+    // res.render('../views/grade.html', {aaa:111, bbb:'2등급'})
+    //nunjucks 모듈 <<< html에 데이터를 전달을 쉽게하게 돕는 모듈
+
+    
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// router.get('/grade', (req, res) => {
+//     conn.query('select * from user_grade', (err, resQuery) => {
+//         if (err) {
+//             console.log('등급 조회 실패', err.message)
+
+//             res.render('../views/grade.html')
+//         } else {
+//             console.log('등급 조회 성공', resQuery)
+//             console.log('등급 조회 성공', resQuery[0])
+//             console.log('등급 조회 성공', resQuery[0].grade_score)
+//             res.render('../views/grade.html', { grade_list: resQuery })
+//         }
+//     })
+// })
 
 
 module.exports = router
