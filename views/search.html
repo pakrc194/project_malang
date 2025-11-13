@@ -10,8 +10,14 @@
     {% include './header.html' %}
     <h1>검색결과</h1>
 
+    
+    {% if actorResult.length == 0 %}
+       
+    {% else %}
     <h2>배우</h2>
     <div class="actor_list">
+        
+
         {% for actor in actorResult %}
         <div class="actor_box">
             <a href="/actor/{{actor.actor_id}}">
@@ -24,7 +30,13 @@
         </div>   
         {% endfor %}
     </div>
+    {% endif %}
+
     <!-- <hr> -->
+
+    {% if perfResult.length == 0 %}
+
+    {% else %}
     <h2>공연</h2>
     <div class="perf_list">
         {% for perf in perfResult %}
@@ -39,5 +51,6 @@
         </div>
         {% endfor %}
     </div>
+    {% endif %}
 </body>
 </html>

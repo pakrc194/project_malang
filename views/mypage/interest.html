@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="/style/my_actor.css" />
 
 <div class="actor_list">
+    {% if actorList.length == 0 %}
+        <span class="zero">관심있는 배우를 추가해주세요</span>
+    {% endif %}
     {%for actor in actorList%}
     <a href="/actor/{{actor.actor_id}}">
         <div class="actor_box">

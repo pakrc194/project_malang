@@ -10,6 +10,12 @@
     <h1>관심배우</h1>
 
     <div class="actor_list">
+        {% if res.length == 0 %}
+        0이지롱
+        {% else %}
+        0아니지롱
+        {% endif %}
+        
         {%for actor in res%}
         <a href="/actor/{{actor.actor_id}}">
             <div class="actor_box">

@@ -20,7 +20,10 @@ router.get("/:id", (req, res)=>{
             res.render('../views/actorInfo.html')
         } else {
             console.log('actorInfo sql 성공', resQuery)
+            resQuery[0].start_date = base_date_format(resQuery[0].start_date)
+            resQuery[0].end_date = base_date_format(resQuery[0].end_date)
             res.render('../views/actorInfo.html', {res : resQuery})
+            
         }
     })
 })
