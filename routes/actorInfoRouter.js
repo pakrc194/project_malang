@@ -16,7 +16,8 @@ router.get("/:id", (req, res)=>{
         
         join perf_cast on actor_info.actor_id = perf_cast.actor_id 
         join performance_info on perf_cast.perf_id = performance_info.perf_id
-        where actor_info.actor_id = ?`  
+        where actor_info.actor_id = ?
+        and performance_info.is_hidden = 0`  
      
         conn.query(actorInfoSql, [req.params.id], async (err, resQuery)=>{
             if(err) {

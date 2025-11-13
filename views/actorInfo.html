@@ -61,7 +61,7 @@
         <h4>상영작품</h4>
         {% for perfNow in res%}
             <div class = "perf_now">
-                <img src="/img/{{perfNow.poster_url}}" alt=""><br/>
+                <a href="/desc/{{perfNow.perf_id}}"><img src="/img/{{perfNow.poster_url}}" alt=""></a><br/>
                 <div class="perf_text">
                     <b>출연작품  </b> {{perfNow.perf_name}}<br/>
                     <b>공연 시작일  </b> {{perfNow.start_date}}<br/>
