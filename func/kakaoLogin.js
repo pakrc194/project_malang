@@ -8,11 +8,13 @@ const path = require("path")
 const conn = require('../db/db')
 const port = 80
 
+'.M./.3`./.G./.A./.B./.O./.X.'
+
 // 변수 지정
 const client_id = "9010fbf47377b2f34b0e443ad62a2326"
 const client_secret = "XeIcIaPxVYR4u4ZKhOT8VUDqAxGzuyhc"
 // 이거 리다이렉트 URL이니까 주소마다 바꿔줘야함.
-const domain = "http://192.168.0.22/login/kakao"
+const domain = "http://192.168.200.184/login/kakao"
 const redirect_uri = `${domain}/redirect`
 const token_uri = "https://kauth.kakao.com/oauth/token"
 const api_host = "https://kapi.kakao.com"
@@ -77,7 +79,7 @@ router.get("/redirect", async function (req, res) {
   req.session.key = rtn.access_token
   req.session.isLoggedIn = true
 
-  
+
   const uri = api_host + "/v2/user/me"
   const header2 = {
     "content-type": "application/x-www-form-urlencoded",
@@ -100,9 +102,8 @@ router.get("/redirect", async function (req, res) {
   if (!email) {
     return res.status(400).send("이메일 정보를 불러오지 못합니다")
 
-
   }
-
+  
   //
   const originMember = "SELECT * FROM USER_INFO WHERE email = ?"
   conn.query(originMember, [email], (err, results) => {
