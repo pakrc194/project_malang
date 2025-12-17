@@ -79,14 +79,6 @@
             width: 1200px;
         }
 
-        .review {
-            /* height: 200px; */
-            background-color: #3cf;
-        }
-        .review > img {
-            width: 1200px;
-        }
-
         .footer {
             /* height: 200px; */
             background-color: #f77;
@@ -101,7 +93,7 @@
             text-align: center;
             border: 1px solid #000;
             width: 400px;
-            height: 800px;
+            height: 900px;
         }
 
         .seat_aside > .m_title > div:first-of-type {
@@ -110,21 +102,25 @@
             flex-wrap: wrap;
             height: 70px;
             line-height: 30px;
+            /* align-items: center; */
+            margin-top: 10px;
         }
 
-        .show_th {
-            height: 30px;
-        }
 
         .m_title {
             height: 100px;
-            background-color: #dbf;
+            /* background-color: #dbf; */
+            /* border-bottom: 1px solid #000; */
         }
 
         .seatG {
-            height: 80px;
+            height: 150px;
             /* line-height: 100px; */
-            background-color: #3cf;
+            /* background-color: #3cf; */
+            /* border-bottom: 1px solid #000; */
+            font-size: 20px;
+            text-align: left;
+            padding-left: 30px;
         }
 
         .seatC {
@@ -136,7 +132,7 @@
         .doneBtn {
             height: 100px;
             /* line-height: 100px; */
-            background-color: #afa;
+            /* background-color: #afa; */
             bottom: 0;
         }
 
@@ -148,11 +144,178 @@
         .select_done {
             height: 50px;
             width: 300px;
+            /* margin-top: 30px; */
             
         }
+        .choiceDate {
+            height: 400px;
+        }
         .choiceDate > img{
-            height: 350px;
+            height: 300px;
             width: 200px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .first > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            margin-left: 5px;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: yellowgreen;
+            border: 3px solid yellowgreen;
+            /* margin-left: 8px; */
+        }
+        .R{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: yellowgreen;
+            border: 3px solid yellowgreen;
+            margin-right: 10px;
+        }
+        .first > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .second > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: violet;
+            border: 3px solid violet;
+            margin-left: 5px;
+        }
+        .S{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: violet;
+            border: 3px solid violet;
+            margin-right: 10px;
+        }
+        .second > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .third > .section > input{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            background-color: skyblue;
+            border: 3px solid skyblue;
+            margin-left: 5px;
+        }
+        .A{
+            appearance: none;
+            box-sizing: border-box;
+            background-clip: content-box;
+            width: 15px;
+            height: 15px;
+            /* cursor: pointer; */
+            background-color: skyblue;
+            border: 3px solid skyblue;
+            margin-right: 10px;
+        }
+        .third > .section > input:checked {
+            border-color: #f00;
+            /* background-color: yellowgreen; */
+        }
+
+        .seat_wrapper {
+            /* display: flex; */
+
+            width: 800px;
+            /* height: 800px; */
+            border: 1px solid #ccc;
+            /* box-sizing: border-box; */
+        }
+        .first {
+            width: 800px;
+            height: 100px;
+            display: flex;
+        }
+        .second {
+            width: 800px;
+            height: 100px;
+            display: flex;
+        }
+        .third {
+            width: 800px;
+            height: 100px;
+            display: flex;
+        }
+
+        .stair {
+            width: 25px;
+            height: 100px;
+            text-align: center;
+            font-size: 13px;
+            /* background-color: #ff0; */
+        }
+
+        .stage {
+            width: 800px;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            font-size: 100px;
+            font-weight: 600;
+            margin-bottom: 100px;
+        }
+
+        .section {
+            width: 250px;
+            height: 100px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            padding: 5px;
+            padding-top: 10px;
+        }
+
+        .hallway {
+            width: 800px;
+            height: 20px;
+            /* background-color: #ff0; */
+        }
+
+        
+
+        /* .second > .section:nth-of-type(1) {
+            display: flex;
+        } */
+
+        .stair > div {
+            margin-top: 5px;
+        }
+
+        .stair > div:first-of-type {
+            margin-top: 10px;
+        }
+
+        .section > .Sold {
+            border-color: #555;
+            background-color: #555;
+            cursor: default;
         }
 
     </style>
@@ -163,18 +326,60 @@
         // 1 웹소켓 서버에 연결시도
         const socket = new WebSocket({host: '0.0.0.0', port: 80})
         // 2 웹소켓 서버에 연결성공
-        // socket.onopen = ()=>{
-        //     // 3.1 클라이언트가 송신
-        //     socket.send('reserve')
-        // }
+        socket.onopen = ()=>{
+            // 3.1 클라이언트가 송신
+            // socket.send(`user_id {{user_id}}`)
+            socket.send('reserve')
+        }
         // 3.2 클라이언트가 수신
         socket.onmessage = (e)=>{
 
+            // document.querySelectorAll("#indiseat").forEach(seat =>{
+            //     if (seat.className == "Sold") {
+            //         seat.style.borderColor = "#555"
+            //         seat.style.backgroundColor= "#555"
+            //         seat.style.cursor= "default";
+            //     }
+            //     else if (seat.className == "Reserved"){
+            //         seat.style.borderColor = "#555"
+            //         seat.style.backgroundColor= "#fff"
+            //         seat.style.cursor= "default";
+            //     }
+            // })
+
             // let data = e.data
             const data = JSON.parse(e.data);
+            let result = data.result
             console.log(`reserve에서 수신: `, data)
 
-            if (data.type == 'temp') {
+            // 좌석 정보를 받아와서 sold, reserved 상태 표시
+            if (data.type == 'avoid') {
+                // console.log(result)
+                for (let i of result) {
+                    document.querySelectorAll("#indiseat").forEach(seat =>{
+                        console.log(seat.className)
+                        let arr = seat.value.split(' ')
+                        if(arr[1] == i.area && arr[2] == i.seat_row && arr[3] == i.seat_number) {
+
+                            if (i.seat_status == "Sold"){
+                                seat.className = "Sold"
+                                seat.style.borderColor = "#555"
+                                seat.style.backgroundColor= "#555"
+                                seat.style.cursor= "default";
+                            }
+                            else if (i.seat_status == "Reserved") {
+                                // 예약 상태일 때
+                                seat.className = "Reserved"
+                                seat.style.borderColor = "#555"
+                                seat.style.backgroundColor= "#fff"
+                                seat.style.cursor= "default";
+                            }
+                        }
+
+                    })
+                }
+            }
+            else if (data.type == 'temp') {
                 if (data.error) {
                     console.log('데이터 받아오기 실패: ', data.error)
                 }
@@ -184,6 +389,7 @@
                     
                     let totprice = 0
                     for (let i = 0; i < data.result.length; i++) {
+                        let user_id = JSON.stringify(data.result[i].user_id).replace(/\"/g, '')
                         let grade = JSON.stringify(data.result[i].grade).replace(/\"/g, '')
                         let area = JSON.stringify(data.result[i].area).replace(/\"/g, '')
                         let s_row = JSON.stringify(data.result[i].s_row).replace(/\"/g, '')
@@ -196,8 +402,10 @@
                         
                     }
                     
-                    
-                    document.querySelector(".select_done").value = `${totprice}원     좌석 선택 완료`
+                    let bot = totprice%1000
+                    let top = (totprice - (totprice%1000))/1000
+
+                    document.querySelector(".select_done").value = `${top},000원     좌석 선택 완료`
                     document.querySelector(".itemsInput").value = JSON.stringify(arr)
                     document.querySelector(".Total").value = totprice
                     if (totprice != 0) {
@@ -208,16 +416,231 @@
                     }
                 }
             }
+            else if (data.type == "seat_status" && data.result.length > 0) {
+                console.log("seat_status")
+
+                // let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+                // let row = ["first", "second", "third"]
+                // let grade = ["R", "S", "A"]
+                // let seat_id = 1
+                
+                // document.querySelector(`.first > .section`).innerHTML = ''
+                // document.querySelector(`.first > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.first > .section ~ .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.second > .section`).innerHTML = ''
+                // document.querySelector(`.second > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.second > .section ~ .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.third > .section`).innerHTML = ''
+                // document.querySelector(`.third > .section ~ .section`).innerHTML = ''
+                // document.querySelector(`.third > .section ~ .section ~ .section`).innerHTML = ''
+                
+                // for(let aa = 0; aa < 3; aa++) {
+                
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 1; j < 11; j++) {
+                //             document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 0; j < 10; j++) {
+                //             document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+
+                //     for (let i = 0; i < 3; i++) {
+                //         for (let j = 0; j < 10; j++) {
+                //             document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                //         }
+                //     }
+                //     for (let i = 1; i < 3*10+1; i++) {
+                //         document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                //     }
+                // }
+
+                console.log('seat_status 스케쥴 아이디: ', "{{sche_id}}", data.result[0])
+                if ("{{sche_id}}" == data.result[0].schedule_id){
+
+                    document.querySelectorAll("#indiseat").forEach(seat =>{
+                    for (let i of data.result){
+                        if (i.user_id != "{{user_id}}"){
+                            arr = seat.value.split(' ')
+                            // console.log('좌석: ', arr)
+                            if (arr[0] == i.grade && arr[1] == i.area && arr[2] == i.s_row && arr[3] == i.s_col){
+                                seat.className = `${i.seat_status}`
+                                if (i.seat_status == "Sold"){
+                                    seat.className = "Sold"
+                                    seat.style.borderColor = "#555"
+                                    seat.style.backgroundColor= "#555"
+                                    seat.style.cursor= "default";
+                                }
+                                else {
+                                    // 예약 상태일 때
+                                    seat.className = "Reserved"
+                                    seat.style.borderColor = "#555"
+                                    seat.style.backgroundColor= "#fff"
+                                    seat.style.cursor= "default";
+                                }
+                            }
+                            
+                        }
+                    }
+                })
+
+                }
+            }
+            else if (data.type == "A" && data.result.length > 0) {
+                console.log('A 스케쥴 아이디: ', data.schedule_id, "{{sche_id}}")
+                if (data.schedule_id == "{{sche_id}}"){
+
+                    document.querySelectorAll("#indiseat").forEach(seat =>{
+                        arr = seat.value.split(' ')
+                        // console.log('좌석: ', arr)
+                        if (arr[1] == result[0].area && arr[2] == result[0].seat_row && arr[3] == result[0].seat_number){
+                            seat.className = `Available`
+                            if (arr[0] == "R") {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "yellowgreen";
+                                seat.style.borderColor="yellowgreen";
+                            }
+                            else if (arr[0] == "S") {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "violet";
+                                seat.style.borderColor="violet";
+                            }
+                            else {
+                                seat.style.cursor="pointer";
+                                seat.style.backgroundColor= "skyblue";
+                                seat.style.borderColor="skyblue";
+                            }
+                        }
+                    })
+
+                }
+            }
+
+            
                     
         }
 
         
         window.addEventListener('DOMContentLoaded', function(){
+            // console.log("{{avoid}}")
+            // console.log('avoid.length: ', "{{avoid.length}}")
+            // if ("{{avoid.length}}" > 0) {
+            //     for (let i in "{{avoid}}") {
+            //         console.log(i)
+            //     }
+            // }
+
+            
+            let area = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+            let row = ["first", "second", "third"]
+            let grade = ["R", "S", "A"]
+            let seat_id = 1
+                
+                
+            for(let aa = 0; aa < 3; aa++) {
+            
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 1; j < 11; j++) {
+                        document.querySelector(`.${row[aa]} > .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3]} ${i+1} ${j}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 3*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section:nth-of-type(1) > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+1]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 3*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        document.querySelector(`.${row[aa]} > .section ~ .section ~ .section`).innerHTML += `<input type="checkbox" value="${grade[aa]} ${area[aa*3+2]} ${i+1} ${j+1}" id="indiseat" class="Available" onclick="ck_cnt(this)">`
+                    }
+                }
+                for (let i = 1; i < 3*10+1; i++) {
+                    document.querySelector(`.${row[aa]} > .section ~ .section ~ .section > input:nth-of-type(${i})`).style.marginLeft = "8px"
+                }
+            }
+
+            document.querySelectorAll("#indiseat").forEach(seat =>{
+                if (seat.className == "Sold") {
+                    seat.style.borderColor = "#555"
+                    seat.style.backgroundColor= "#555"
+                    seat.style.cursor= "default";
+                }
+                else if (seat.className == "Reserved"){
+                    seat.style.borderColor = "#555"
+                    seat.style.backgroundColor= "#fff"
+                    seat.style.cursor= "default";
+                }
+
+            })
+
             let frm = document.forms.frm
             document.querySelector(".select_done").onclick = function() {
                frm.submit()
             }
         })
+
+        let seat_cnt = 0
+        // 예매 개수 4개로 제한
+        function ck_cnt(obj) {
+
+            if (obj.className == "Available") {
+
+                socket.send([obj.value, "{{user_id}} {{id}} {{arr.date}} {{arr.time}}"].join(' '))
+                if (obj.checked == true){
+                    seat_cnt++
+                    obj.style.borderColor = "#f00"
+                }
+                else {
+                    seat_cnt--
+                    if (obj.value.split(' ')[0] == "R") {
+                        obj.style.borderColor = "yellowgreen"
+
+                    }
+                    else if (obj.value.split(' ')[0] == "S"){
+                        obj.style.borderColor = "violet"
+                    }
+                    else {
+                        obj.style.borderColor = "skyblue"
+                    }
+                }
+    
+                if (seat_cnt > 4) {
+                    alert('선택 가능한 좌석 지정을 초과했습니다.')
+                    obj.checked = false
+                    seat_cnt--
+                    if (obj.value.split(' ')[0] == "R") {
+                        obj.style.borderColor = "yellowgreen"
+
+                    }
+                    else if (obj.value.split(' ')[0] == "S"){
+                        obj.style.borderColor = "violet"
+                    }
+                    else {
+                        obj.style.borderColor = "skyblue"
+                    }
+                    // socket1.send(obj.value)
+                    socket.send([obj.value, "{{user_id}} {{id}} {{arr.date}} {{arr.time}}"].join(' '))
+
+                }
+                
+                console.log([obj.value, "{{user_id}} {{id}} {{arr.date}} {{arr.time}}"].join(' '))
+            }
+        }
 
     </script>
 
@@ -229,8 +652,90 @@
         <!-- <div class="musical_name">뮤지컬 〈MAD HATTER〉</div> -->
         <div class="musical_info">
             <div class="musical_seat">
+                <div class="stage">STAGE</div>
+                <div class="seat_wrapper">
+                    <div class="first">
+                        <div class="section">
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                        </div>
 
-                {%  include 'reserv/seatB1.html' %} 
+                    </div>
+                    <div class="hallway"></div>
+                    
+                    <div class="second">
+                        <div class="section">
+                            
+                            
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                            
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                            
+                        </div>
+
+                    </div>
+                    
+                    <div class="hallway"></div>
+                    <div class="third">
+                        <div class="section">
+                            
+                            
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                            
+                        </div>
+                        <div class="stair">
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                        </div>
+                        <div class="section">
+                            
+                            
+                        </div>
+                    </div>
+                    <!-- <input type="checkbox"> -->
+                    
+                </div>
+
+
+
+
+
 
             </div>
             <div class="seat_aside">
@@ -241,10 +746,12 @@
                 
                 <div  class="choiceDate">
                     <img src="../../img/{{perf.poster_url}}">
+                    <br/>
                     {{arr.date}} {{arr.time}}회차
                 </div>
                 <div class="seatG">
                     {% for i in seat %}
+                    <input type="checkbox" class="{{i.grade_code}}" disabled>
                     {{i.grade_code}}석 {{i.price}}원<br/>
                     {% endfor %}
                     <!-- [yellowgreen] R석 160,000원<br/>
@@ -257,6 +764,7 @@
                     <!-- <div class="seat_tot_price">좌석의 가격 합산 정보</div> -->
                         <input type="hidden" name="items" class="itemsInput">
                         <input type="hidden" name="items" class="Total">
+                        <input type="hidden" name="items" value="{{arr.name}}">
                         <input type="submit" class="select_done" name="seat_select" value="좌석을 선택해주세요" disabled>
                    
                 </div>

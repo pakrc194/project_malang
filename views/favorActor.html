@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/my_actor.css" />
+</head>
+<body>
+    <h1>관심배우</h1>
+
+    <div class="actor_list">
+        {%for actor in res%}
+        <a href="/actor/{{actor.actor_id}}">
+            <div class="actor_box">
+                <img src="/img/{{actor.actor_profile_url}}" alt="">
+                <div class="actor_info">   
+                    <span class="name">{{actor.actor_name}}</span><br/>
+                    <span>{{actor.actor_gender}}</span><br/>
+                    <span>{{actor.actor_birth_year}}</span><br/>
+                </div> 
+            </div>
+        </a>
+        {%endfor%}
+    </div>
+
+</body>
+</html>

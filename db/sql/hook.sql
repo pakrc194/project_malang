@@ -1,4 +1,4 @@
--- Active: 1761802030139@@127.0.0.1@3306@malang_db
+-- Active: 1761830225502@@127.0.0.1@3306@malang_db
 insert into venue_info (venue_name, region, venue_type, seat_class) VALUES 
     ("샤롯데씨어터", "서울", "대극장", "R,S,A"),
     ("드림씨어터", "부산", "대극장", "R,S,A"),
@@ -14,7 +14,7 @@ CREATE TABLE venue_info (
     seat_class VARCHAR(10)
 );
 
-insert into actor_info (actor_name, profile_image_url, birth_year, gender) VALUES 
+insert into actor_info (actor_name, actor_profile_url, actor_birth_year, actor_gender) VALUES 
     ('박규원', 'hook_pkw_841761909473010.png','1984','M'),
     ('최호승', 'hook_chs_851761909445555.png','1985','M'),
     ('박상혁', 'hook_psh_991761909601674.png','1999','M'),

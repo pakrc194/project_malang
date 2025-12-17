@@ -3,57 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .schedule_list {
-            width: 1000px;
-            height: 500px;
-            overflow: auto;
+    <title>{{perfInfo.perf_name}}</title>
+ <style>
+    /* ... (기존 .detail-wrapper, h2 스타일 유지) ... */
+    .detail-wrapper {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+    }
+
+    .detail-wrapper h1, .detail-wrapper h2 {
+        text-align: center;
+        color: #1f3f6e;
+        margin-bottom: 20px;
+    }
+
+    .detail-wrapper h2 {
+        font-size: 1.2em;
+        color: #dc3545; /* 숨김처리 강조 */
+    }
+
+    /* ------------------------------------------- */
+    /* 💡 1. 포스터 + 기본 정보 최상단 영역 (Flex) */
+    /* ------------------------------------------- */
+    .perf-detail-top {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        align-items: flex-start; /* 상단 정렬 */
+    }
+
+    /* 포스터 영역 */
+    .poster-area {
+        flex-shrink: 0; /* 포스터 크기 유지 */
+        width: 200px; /* 고정 너비 설정 */
+    }
+    .poster-area img {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+        display: block;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 상세 정보 영역 */
+    .info-area {
+        flex-grow: 1; /* 남은 공간 모두 사용 */
+    }
+    
+    .perf-title {
+        font-size: 1.8rem; /* 💡 공연명 글자 크기 확대 */
+        color: #1f3f6e;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    /* ------------------------------------------- */
+    /* 💡 2. 상세 정보 Grid */
+    /* ------------------------------------------- */
+    .perf-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2열 레이아웃 */
+        gap: 15px 30px;
+    }
+    
+    /* 모든 정보 텍스트 글자 크기 확대 */
+    .perf-info-grid div, .venue-info-area div {
+        font-size: 1.1rem; /* 💡 정보 텍스트 크기 확대 */
+        font-weight: 500;
+        color: #333;
+    }
+
+    .venue-separator {
+        border: none;
+        border-top: 1px dashed #ccc;
+        margin: 15px 0;
+        grid-column: 1 / 3;
+    }
+    
+    .venue-info-area {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px 30px;
+        margin-top: 10px;
+    }
+
+    /* ------------------------------------------- */
+    /* 💡 3. 시놉시스 영역 (크기 문제 해결) */
+    /* ------------------------------------------- */
+    .synopsis-area {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+    .synopsis-area img {
+        max-width: 100%; /* 💡 이미지가 컨테이너를 벗어나지 않도록 최대 너비 설정 */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+
+    /* --- 캐스팅 목록 (기존 스타일 유지) --- */
+    .cast-list-container {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: flex-start;
+        gap: 20px;
+        padding: 20px 0;
+        margin-bottom: 30px;
+        border-top: 2px solid #5a80d4;
+        border-bottom: 1px solid #eee;
+        overflow-x: auto;
+    }
+
+
+        /* --- 캐스팅 목록 (가로 배열) 스타일링 --- */
+        .cast-list-container {
+            display: flex;
+            flex-wrap: wrap; /* 내용이 넘치면 다음 줄로 */
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-top: 2px solid #5a80d4;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto; /* 혹시 모를 오버플로우 대비 */
         }
-        img {
-            width: 100px;
+
+        /* 개별 캐스트 항목 (Nunjucks 루프 내의 출력 결과) */
+        .cast-item { 
+            /* cast.actor_name, img, cast.cast_name 을 감싸는 <div> 태그를 HTML에 추가한다고 가정합니다. */
+            text-align: center;
+            min-width: 100px; /* 최소 너비 지정 */
+        }
+
+        /* 배우 프로필 이미지 */
+        .cast-list-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            border: 3px solid #ccc;
+            transition: border-color 0.2s;
+        }
+        .cast-list-container img:hover {
+            border-color: #5a80d4;
+        }
+
+        /* 캐스트 이름과 배우 이름 스타일 */
+        .cast-item br {
+            display: none; /* br 태그 제거 */
+        }
+        .cast-item p { 
+            font-size: 0.9em;
+            margin: 0;
+            padding: 2px 0;
+        }
+        .cast-item .actor-name {
+            font-weight: bold;
+        }
+        .cast-item .cast-role {
+            color: #777;
+        }
+
+
+        /* --- 구분선 --- */
+        .detail-wrapper hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
+        }
+                /* 등록 버튼 스타일 */
+        a[href="/admin/perf/list"],
+        a[href="/admin/perf/modify/{{perfInfo.perf_id}}"],
+        a[href="/admin/perf/delete/{{perfInfo.perf_id}}"],
+        a[href="/admin/perf/schedule/{{perfInfo.perf_id}}"] {
+            display: block;
+            width: 120px;
+            margin: 20px auto;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #5a80d4;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        a[href="/admin/perf/list"]:hover,
+        a[href="/admin/perf/modify/{{perfInfo.perf_id}}"]:hover,
+        a[href="/admin/perf/delete/{{perfInfo.perf_id}}"]:hover,
+        a[href="/admin/perf/schedule/{{perfInfo.perf_id}}"]:hover {
+            background-color: #4369b3;
+        }
+        .a-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
         }
     </style>
 </head>
 <body>
-    <h1>detail</h1>
+<div class="detail-wrapper">
     <h2>{% if perfInfo.is_hidden > 0 %}숨김처리{% endif %}</h2>
-    {{perfInfo.perf_name}}<br/>
-    <img src="/img/{{perfInfo.poster_url}}" alt=""><br/>
-    <img src="/img/{{perfInfo.synopsis_url}}" alt=""><br/>
-    {{perfInfo.start_date}}<br/>
-    {{perfInfo.end_date}}<br/>
-    {{perfInfo.genre}}<br/>
-    {{perfInfo.reg_date}}<br/>
-    {{perfInfo.resv_status}}<hr/>
-    {{venueInfo.venue_name}}<br/>
-    {{venueInfo.perf_region}}<hr/>
-    {% for cast in perfCast%}
-        {{cast.actor_name}}<br/>
-        <img src="/img/{{cast.actor_profile_url}}" alt=""><br/>
-        {{cast.cast_name}}<hr/>
-    {% endfor %}
-    <div class="schedule_list">
-        <table border="">
-            {% for schedule in perfScedule %}
-                <tr>
-                    <td>{{schedule.schedule_date}}</td>
-                    <td>{{schedule.schedule_time}}</td>
-                    <td>{{schedule.schedule_round}}</td>
-                    <td>{{schedule.cast_name}} : {{schedule.actor_name}}</td>
-                    <td><img src="/img/{{schedule.actor_profile_url}}" alt=""></td>
-                </tr>
-            {% endfor %}
-        </table>
+    
+    <div class="perf-detail-top"> 
+        
+        <div class="poster-area">
+            <img src="/img/{{perfInfo.poster_url}}" alt="포스터">
+        </div>
+
+        <div class="info-area">
+            <h3 class="perf-title">{{perfInfo.perf_name}}</h3>
+            
+            <div class="perf-info-grid">
+                <div>기간: {{perfInfo.start_date}} ~ {{perfInfo.end_date}}</div>
+                <div>장르: {{perfInfo.genre}}</div>
+                <div>등록일: {{perfInfo.reg_date}}</div>
+                <div>예매상태: {%if perfInfo.schedule_date > 0 %}    
+                                D-{{perfInfo.schedule_date}}
+                            {% elif perfInfo.resv_status == 'PREPARING'%}
+                                준비중
+                            {% elif perfInfo.resv_status == 'OPEN'%}
+                                예매중
+                            {% else %}
+                                종료
+                            {% endif%}</div>
+            </div>
+            
+            <hr class="venue-separator"/>
+            
+            <div class="venue-info-area">
+                <div>공연장: {{venueInfo.venue_name}}</div>
+                <div>지역: {{venueInfo.venue_region}}</div>
+            </div>
+        </div>
     </div>
     
+    <hr/>
     
-    <a href="/admin/perf/list">뒤로</a>
-    <a href="/admin/perf/modify/{{perfInfo.perf_id}}">수정</a>
-    {% if perfInfo.is_hidden == 0 %}
+    <h3>출연진</h3>
+    <div class="cast-list-container">
+        {% for cast in perfCast%}
+            <div class="cast-item">
+                <p class="actor-name">{{cast.actor_name}}</p>
+                <img src="/img/{{cast.actor_profile_url}}" alt="{{cast.actor_name}} 프로필">
+                <p class="cast-role">({{cast.cast_name}} 역)</p>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <hr/>
+    
+    <h3>시놉시스</h3>
+    <div class="synopsis-area">
+        <img src="/img/{{perfInfo.synopsis_url}}" alt="시놉시스">
+    </div>
+    <div class="a-list">
+        <a href="/admin/perf/list">목록</a>
+        <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄</a>
+        <a href="/admin/perf/modify/{{perfInfo.perf_id}}">수정</a>
         <a href="/admin/perf/delete/{{perfInfo.perf_id}}">삭제</a>
-    {% endif %}
-    <a href="/admin/perf/schedule/{{perfInfo.perf_id}}">스케줄관리</a>
-    {# <a href="/admin/test/{{perfInfo.perf_id}}">테스트</a> #}
+    </div>
+</div>
 </body>
 </html>

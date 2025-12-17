@@ -3,11 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>공연 삭제</title>
+<style>
+/* 1. 전체 섹션(Section) 중앙 정렬 및 스타일 (기존 유지) */
+section {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. 포스터 컨테이너 및 이미지 스타일 (기존 유지) */
+.perf_poster {
+    margin: 0 auto 20px auto;
+    width: 120px;
+}
+.perf_poster img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+}
+
+/* 3. 경고 메시지 (perf_warn) 스타일 (기존 유지) */
+.perf_warn {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* 4. 버튼 컨테이너 (perf_submit) 수정 */
+.perf_submit {
+    margin-top: 20px;
+    display: flex; /* 💡 Flexbox 적용 */
+    justify-content: center; /* 💡 버튼들을 중앙에 배치 */
+    gap: 15px; /* 버튼 사이 간격 */
+}
+
+/* 5. 버튼 공통 스타일 */
+.perf_submit input[type="button"] {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+    min-width: 80px; /* 버튼 최소 너비 지정 */
+}
+
+/* 6. 삭제 버튼 (#btnHide) - 주 색상 (경고/삭제) */
+#btnHide {
+    color: white;
+    background-color: #dc3545; /* 붉은색 */
+}
+#btnHide:hover {
+    background-color: #c82333;
+}
+
+/* 7. 취소 버튼 (#btnCancel) - 보조 색상 (일반/취소) */
+#btnCancel {
+    color: #555;
+    background-color: #f0f0f0; /* 연한 회색 배경 */
+    border: 1px solid #ccc;
+}
+#btnCancel:hover {
+    background-color: #e0e0e0;
+}
+</style>
 </head>
 <script>
     window.onload = function() {
         let btnHide = document.querySelector('#btnHide')
+        let btnCancel = document.querySelector('#btnCancel')
         let perfId = document.querySelector('#perf_id')
         btnHide.addEventListener('click', (e)=>{
             console.log('perf_id : ', perfId.value)
@@ -26,13 +99,26 @@
             })
             .catch(err => console.log('에러 :', err.message))
         })
+
+        btnCancel.addEventListener('click', (e)=>{
+            location.href=`/admin/perf/detail/${perfId.value}`
+        })
     }
 </script>
 <body>
-    <h1>공연 삭제</h1>
     <input type="hidden" id="perf_id" value="{{perf.perf_id}}">
-    {{perf.perf_name}}<br/>
-    {{perf.poster_url}}<hr/>
-    <input type="button" id="btnHide" value="숨김"/>
+    <section>
+        <div class="perf_poster">
+            <img src="/img/{{perf.poster_url}}" alt="">
+        </div>
+        <div class="perf_warn">
+            '{{perf.perf_name}}' 공연을 삭제 처리하겠습니까?<br>
+            삭제할 경우 데이터는 남아있으나 수정 및 예매가 불가합니다.
+        </div>
+        <div class="perf_submit">
+            <input type="button" id="btnHide" value="삭제"/>
+            <input type="button" id="btnCancel" value="취소"/>
+        </div>
+    </section>
 </body>
 </html>

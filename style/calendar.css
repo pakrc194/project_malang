@@ -7,7 +7,7 @@
 .big {
     width: 250px;
 
-    border: 1px solid #ff0;
+    /* border: 1px solid #ff0; */
     margin: auto;
 }
 
@@ -19,7 +19,7 @@
     padding: 25px;
     /* margin: auto; */
     /* background-color: #ff7; */
-    border: 1px solid #000;
+    border: 1px solid #ccc;
 }
 
 .wrapper > .header > .nav {
@@ -119,9 +119,6 @@
     margin-top: 10px;
 }
 
-.select {
-    border: 1px solid #f00;
-}
 
 label {
     cursor: pointer;

@@ -94,9 +94,9 @@
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
-                    if (data.msg == 'success') {
-                        alert('환불 완료되었습니다')
-                        location.href = '/mypage/reserveSelect'
+                    if(data.msg=='success') {
+                        alert('취소가 완료되었습니다.')
+                        location.href='/mypage/reserveSelect'    
                     }
 
                 })
