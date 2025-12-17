@@ -87,7 +87,7 @@ router.get('/:id', (req, res)=>{
 
     conn.query(query, (err, resPerf)=>{
         // console.log(resPerf)
-        venue_id = resPerf[0].venue_id
+        venue_id = resPerf[0] .venue_id
         // 공연장에 해당하는 좌석 가격 가져오기
         conn.query(`select * from perf_price where venue_id=${venue_id} AND perf_id=${init_perf_id}`, (err, resP)=>{
             console.log('resP', resP)
